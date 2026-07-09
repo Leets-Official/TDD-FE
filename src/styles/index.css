@@ -1,0 +1,12 @@
+@import "tailwindcss";
+@import "pretendard/dist/web/static/pretendard.css";
+@import "./tokens.css";
+
+:root {
+  color-scheme: light dark;
+}
+
+body {
+  margin: 0;
+  font-family: var(--font-sans);
+}

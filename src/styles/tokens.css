@@ -1,0 +1,142 @@
+
+@theme {
+  /* Colors — Primitive */
+  --color-*: initial;
+
+  --color-white: #ffffff;
+  --color-black: #000000;
+
+  --color-gray-50: #fcfbfa;
+  --color-gray-100: #f7f4f2;
+  --color-gray-200: #f0edeb;
+  --color-gray-300: #e0ddda;
+  --color-gray-400: #c8c4c2;
+  --color-gray-500: #aaa6a3;
+  --color-gray-600: #807b78;
+  --color-gray-700: #4c4745;
+  --color-gray-800: #41414b;
+  --color-gray-900: #2a2624;
+
+  --color-orange-50: #fff3e0;
+  --color-orange-100: #ffdfb2;
+  --color-orange-200: #ffb54d;
+  --color-orange-300: #ff9501;
+  --color-orange-400: #f57803;
+  --color-orange-500: #ff610d;
+  --color-orange-600: #e8590c;
+  --color-orange-700: #b54609;
+  --color-orange-800: #8c3607;
+  --color-orange-900: #6b2905;
+
+  /* Colors — Semantic*/
+
+  /* Brand */
+  --color-primary: var(--color-orange-500);
+  --color-secondary: var(--color-orange-100);
+
+  /* Background */
+  --color-bg-1: var(--color-white);
+  --color-bg-2: var(--color-gray-50);
+  --color-bg-3: var(--color-gray-100);
+  --color-bg-4: var(--color-gray-200);
+  --color-bg-color: var(--color-gray-300);
+
+  /* Text */
+  --color-text-1: #111111; 
+  --color-text-2: var(--color-gray-800);
+  --color-text-3: var(--color-gray-700);
+  --color-text-4: var(--color-gray-600);
+  --color-text-5: #aaa5a2; 
+  --color-text-1-color: var(--color-orange-500); 
+  --color-text-1-w: var(--color-white); 
+
+  /* Divider */
+  --color-divider-1: #eae5e2;
+  --color-divider-2: var(--color-gray-500);
+  --color-divider-3: var(--color-orange-100);
+
+  /* Feedback */
+  --color-error: #de3412;
+  --color-error-subtle: #fad8d2;
+  --color-success: #03cc2f; 
+  --color-success-subtle: #d0f7d8;
+  --color-warning: #ffb114;
+  --color-warning-subtle: #fcefd4;
+
+  /* Typography */
+  --font-sans: "Pretendard", sans-serif;
+
+  /* Typography — Primitive (Scale) */
+  --text-xxl: 24px;
+  --text-xl: 20px;
+  --text-l: 16px;
+  --text-m: 14px;
+  --text-s: 12px;
+  --text-xs: 10px;
+  --text-xxs: 8px;
+
+  /* Typography — Primitive / Line height */
+  --leading-l: 24px;
+  --leading-m: 20px;
+  --leading-s: 16px;
+
+  /* Typography — Primitive / Font weight */
+  --font-weight-sb: 600;
+  --font-weight-m: 500;
+  --font-weight-r: 400;
+
+  /* Title 1 */
+  --text-title-1: var(--text-xxl);
+  --text-title-1--line-height: 1.25;
+  --text-title-1--font-weight: var(--font-weight-sb);
+
+  /* Title 2 */
+  --text-title-2: var(--text-xl);
+  --text-title-2--line-height: 1.25;
+  --text-title-2--font-weight: var(--font-weight-sb);
+
+  /* Label */
+  --text-label: var(--text-l);
+  --text-label--line-height: var(--leading-l);
+  --text-label--font-weight: var(--font-weight-sb);
+
+  /* Body 1 */
+  --text-body-1: var(--text-l);
+  --text-body-1--line-height: var(--leading-l);
+  --text-body-1--font-weight: var(--font-weight-r);
+
+  /* Body 2 */
+  --text-body-2: var(--text-m);
+  --text-body-2--line-height: var(--leading-m);
+  --text-body-2--font-weight: var(--font-weight-r);
+
+  /* Caption 1 */
+  --text-caption-1: var(--text-s);
+  --text-caption-1--line-height: var(--leading-s);
+  --text-caption-1--font-weight: var(--font-weight-m);
+
+  /* Radius */
+  --radius-l: 36px;
+  --radius-m: 22px;
+  --radius-s: 16px;
+
+  /* Spacing — Primitive (Scale) */
+  --spacing-xxl: 24px;
+  --spacing-xl: 20px;
+  --spacing-l: 16px;
+  --spacing-m: 14px;
+  --spacing-s: 12px;
+  --spacing-xs: 10px;
+  --spacing-xxs: 8px;
+
+  /* Spacing — Semantic / Margin */
+  --spacing-margin-l: var(--spacing-xxl);
+  --spacing-margin-m: var(--spacing-xl);
+  --spacing-margin-s: var(--spacing-l);
+
+  /* Spacing — Semantic / Padding */
+  --spacing-padding-l: var(--spacing-xxl);
+  --spacing-padding-m: var(--spacing-l);
+  --spacing-padding-s: var(--spacing-s);
+  --spacing-padding-xxs: var(--spacing-xxs);
+}
