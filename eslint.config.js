@@ -24,5 +24,21 @@ export default defineConfig([
       globals: globals.browser,
     },
   },
+  {
+    files: ["**/*.{ts,tsx}"],
+    ignores: ["src/utils/cn.ts"],
+    rules: {
+      "no-restricted-imports": [
+        "error",
+        {
+          paths: [
+            {
+              name: "tailwind-variants",
+            },
+          ],
+        },
+      ],
+    },
+  },
   ...storybook.configs["flat/recommended"],
 ]);
