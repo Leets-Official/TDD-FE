@@ -20,10 +20,12 @@ jobs:
 
       - name: Parse issue and create branch
         env:
-          ISSUE_BODY: ${{ github.event.issue.body }}
           ISSUE_NUMBER: ${{ github.event.issue.number }}
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
+          # Re-run 시에도 최신 이슈 본문을 반영하도록 event payload 대신 API로 직접 조회
+          ISSUE_BODY=$(gh issue view "${ISSUE_NUMBER}" --json body -q .body)
+
           TYPE=$(echo "$ISSUE_BODY" | awk '/브랜치 유형/{found=1; next} found && NF{print; exit}' | tr -d '\r' | xargs)
           WORK=$(echo "$ISSUE_BODY" | awk '/브랜치에 포함될 작업 내용/{found=1; next} found && NF{print; exit}' | tr -d '\r' | xargs)
 
