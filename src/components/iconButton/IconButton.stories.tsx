@@ -33,13 +33,3 @@ export const Default: Story = {
     </div>
   ),
 };
-
-export const Disabled: Story = {
-  args: { disabled: true },
-  render: (args) => (
-    <div className="flex items-center gap-l">
-      <IconButton {...args} size="big" />
-      <IconButton {...args} size="medium" />
-    </div>
-  ),
-};
