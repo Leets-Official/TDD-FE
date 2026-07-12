@@ -33,6 +33,13 @@
   --color-primary: var(--color-orange-500);
   --color-secondary: var(--color-orange-100);
 
+  /* State */
+  --color-primary-hover: var(--color-orange-400);
+  --color-primary-pressed: var(--color-orange-600);
+  --color-secondary-hover: var(--color-orange-50);
+  --color-secondary-pressed: var(--color-orange-100);
+  --color-disabled: var(--color-gray-500);
+
   /* Background */
   --color-bg-1: var(--color-white);
   --color-bg-2: var(--color-gray-50);
@@ -115,9 +122,9 @@
   --text-caption-1--font-weight: var(--font-weight-m);
 
   /* Radius */
-  --radius-l: 36px;
-  --radius-m: 22px;
-  --radius-s: 16px;
+  --radius-lg: 36px;
+  --radius-md: 22px;
+  --radius-sm: 16px;
 
   /* Spacing — Primitive (Scale) */
   --spacing-xxl: 24px;
