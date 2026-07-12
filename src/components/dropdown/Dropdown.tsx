@@ -4,6 +4,7 @@ import {
   useRef,
   useState,
   type ComponentPropsWithRef,
+  type KeyboardEvent as ReactKeyboardEvent,
 } from "react";
 
 import { type VariantProps } from "../../utils/cn";
@@ -67,11 +68,13 @@ export function Dropdown({
     () => defaultValue ?? (multiple ? [] : "")
   );
 
-  const isControlled = value !== undefined;
+  const [isControlled] = useState(() => value !== undefined);
   const currentValue = isControlled ? value : uncontrolled;
 
   const rootRef = useRef<HTMLDivElement>(null);
   const triggerRef = useRef<HTMLButtonElement>(null);
+  const optionRefs = useRef<(HTMLLIElement | null)[]>([]);
+  const pendingFocusIndexRef = useRef<number | null>(null);
 
   useOutsideClick(rootRef, () => setOpen(false), open);
 
@@ -79,7 +82,10 @@ export function Dropdown({
     if (!open) return;
 
     const onKeyDown = (event: KeyboardEvent) => {
-      if (event.key === "Escape") {
+      if (
+        event.key === "Escape" &&
+        rootRef.current?.contains(document.activeElement)
+      ) {
         setOpen(false);
         triggerRef.current?.focus();
       }
@@ -87,6 +93,13 @@ export function Dropdown({
 
     document.addEventListener("keydown", onKeyDown);
     return () => document.removeEventListener("keydown", onKeyDown);
+  }, [open]);
+
+  useEffect(() => {
+    if (open && pendingFocusIndexRef.current !== null) {
+      optionRefs.current[pendingFocusIndexRef.current]?.focus();
+      pendingFocusIndexRef.current = null;
+    }
   }, [open]);
 
   function commit(next: string | string[]) {
@@ -112,6 +125,40 @@ export function Dropdown({
       commit(option.value);
       setOpen(false);
       triggerRef.current?.focus();
+    }
+  }
+
+  function handleTriggerKeyDown(event: ReactKeyboardEvent<HTMLButtonElement>) {
+    if (event.key !== "ArrowDown" && event.key !== "ArrowUp") return;
+    if (options.length === 0) return;
+
+    event.preventDefault();
+    const nextIndex = event.key === "ArrowDown" ? 0 : options.length - 1;
+
+    if (open) {
+      optionRefs.current[nextIndex]?.focus();
+    } else {
+      pendingFocusIndexRef.current = nextIndex;
+      setOpen(true);
+    }
+  }
+
+  function handleOptionKeyDown(
+    event: ReactKeyboardEvent<HTMLLIElement>,
+    option: DropdownOption,
+    index: number
+  ) {
+    if (event.key === "ArrowDown" || event.key === "ArrowUp") {
+      event.preventDefault();
+      const delta = event.key === "ArrowDown" ? 1 : -1;
+      const nextIndex = Math.min(
+        Math.max(index + delta, 0),
+        options.length - 1
+      );
+      optionRefs.current[nextIndex]?.focus();
+    } else if (event.key === "Enter" || event.key === " ") {
+      event.preventDefault();
+      handleSelect(option);
     }
   }
 
@@ -165,6 +212,7 @@ export function Dropdown({
         aria-controls={listboxId}
         className={styles.trigger()}
         onClick={() => setOpen((prev) => !prev)}
+        onKeyDown={handleTriggerKeyDown}
       >
         <span className={styles.triggerText()}>{triggerLabel}</span>
         <ChevronDownIcon />
@@ -176,11 +224,14 @@ export function Dropdown({
           aria-multiselectable={multiple || undefined}
           className={styles.panel()}
         >
-          {options.map((option) => {
+          {options.map((option, index) => {
             const isSelected = selectedValues.includes(option.value);
             return (
               <li
                 key={option.value}
+                ref={(el) => {
+                  optionRefs.current[index] = el;
+                }}
                 role="option"
                 aria-selected={isSelected}
                 aria-disabled={option.disabled || undefined}
@@ -189,6 +240,7 @@ export function Dropdown({
                 tabIndex={-1}
                 className={styles.option()}
                 onClick={() => handleSelect(option)}
+                onKeyDown={(event) => handleOptionKeyDown(event, option, index)}
               >
                 {option.label}
               </li>

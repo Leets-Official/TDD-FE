@@ -7,8 +7,9 @@ export const dropdownVariants = tv({
     trigger:
       "inline-flex w-full cursor-pointer appearance-none items-center justify-between border border-text-5 bg-bg-1 text-left text-text-1 transition-colors disabled:cursor-not-allowed disabled:border-text-5 disabled:bg-bg-3 disabled:text-disabled [&_svg]:shrink-0 [&_svg]:text-text-1 [&_svg]:transition-transform",
     triggerText: "truncate",
+    // Windows Chrome's native "Fluent" scrollbar can still render step buttons here regardless of ::-webkit-scrollbar-button rules; accepted as a known limitation.
     panel:
-      "absolute z-10 w-full [scrollbar-width:thin] [scrollbar-color:#D9D9D9_transparent] overflow-y-auto rounded-sm bg-bg-1 [color-scheme:light] shadow-[0px_8px_24px_0px_rgba(0,0,0,0.10)] [&::-webkit-scrollbar-button]:hidden [&::-webkit-scrollbar-button]:size-0 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-[#D9D9D9] [&::-webkit-scrollbar-track]:bg-transparent",
+      "absolute z-10 w-full [scrollbar-width:thin] [scrollbar-color:var(--color-scrollbar-thumb)_transparent] overflow-y-auto rounded-sm bg-bg-1 [color-scheme:light] shadow-[0px_8px_24px_0px_rgba(0,0,0,0.10)] [&::-webkit-scrollbar-button]:hidden [&::-webkit-scrollbar-button]:size-0 [&::-webkit-scrollbar-button:vertical:end]:hidden [&::-webkit-scrollbar-button:vertical:end]:size-0 [&::-webkit-scrollbar-button:vertical:start]:hidden [&::-webkit-scrollbar-button:vertical:start]:size-0 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-scrollbar-thumb [&::-webkit-scrollbar-track]:bg-transparent",
     option:
       "flex cursor-pointer items-center text-text-1 transition-colors hover:bg-secondary-hover data-[disabled=true]:cursor-not-allowed data-[disabled=true]:text-disabled data-[selected=true]:bg-secondary",
   },
