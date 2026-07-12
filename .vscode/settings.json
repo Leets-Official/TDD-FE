@@ -7,5 +7,10 @@
   "search.exclude": {
     "**/dist": true,
     "**/storybook-static": true
-  }
+  },
+  "tailwindCSS.classFunctions": ["tv", "cn"],
+  "typescript.preferences.autoImportSpecifierExcludeRegexes": [
+    "^tailwind-variants$",
+    "^tailwind-merge$"
+  ]
 }
