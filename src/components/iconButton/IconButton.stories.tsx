@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 
-import PlusIcon from "../../assets/icons/PlusIcon.svg?react";
+import PlusIcon from "@/assets/icons/PlusIcon.svg?react";
 
 import { IconButton } from "./IconButton";
 

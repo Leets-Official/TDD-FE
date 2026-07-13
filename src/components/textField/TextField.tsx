@@ -5,10 +5,10 @@ import {
   type ReactNode,
 } from "react";
 
-import { type VariantProps } from "../../utils/cn";
+import { type VariantProps } from "@/utils/cn";
 
-import EyeIcon from "../../assets/icons/EyeIcon.svg?react";
-import EyeOffIcon from "../../assets/icons/EyeOffIcon.svg?react";
+import EyeIcon from "@/assets/icons/EyeIcon.svg?react";
+import EyeOffIcon from "@/assets/icons/EyeOffIcon.svg?react";
 
 import { textFieldVariants } from "./TextField.variants";
 

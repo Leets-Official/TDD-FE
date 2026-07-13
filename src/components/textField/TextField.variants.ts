@@ -1,4 +1,4 @@
-import { tv } from "../../utils/cn";
+import { tv } from "@/utils/cn";
 
 export const textFieldVariants = tv({
   slots: {

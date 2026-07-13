@@ -1,4 +1,4 @@
-import { tv } from "../../utils/cn";
+import { tv } from "@/utils/cn";
 
 export const buttonVariants = tv({
   base: "inline-flex cursor-pointer items-center justify-center gap-1 transition-colors disabled:cursor-not-allowed",

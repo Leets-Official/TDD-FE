@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 
-import { Button } from "../button/Button";
+import { Button } from "@/components/button/Button";
 
 import { TextField } from "./TextField";
 
