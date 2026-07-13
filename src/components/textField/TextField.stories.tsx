@@ -35,7 +35,7 @@ export const Default: Story = {
 };
 
 export const WithoutLabel: Story = {
-  args: { label: undefined },
+  args: { label: undefined, "aria-label": "내용" },
   render: (args) => (
     <div className="w-87">
       <TextField {...args} />
@@ -53,7 +53,7 @@ export const WithoutFeedback: Story = {
 };
 
 export const WithoutLabelAndFeedback: Story = {
-  args: { label: undefined, feedback: undefined },
+  args: { label: undefined, feedback: undefined, "aria-label": "내용" },
   render: (args) => (
     <div className="w-87">
       <TextField {...args} />
@@ -73,6 +73,7 @@ export const Password: Story = {
 export const WithButton: Story = {
   args: {
     label: undefined,
+    "aria-label": "이메일",
     placeholder: "이메일을 입력하세요",
     feedback: undefined,
     defaultValue: "gachon123@gachon.ac.kr",
