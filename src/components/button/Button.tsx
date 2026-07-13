@@ -1,6 +1,6 @@
 import type { ComponentPropsWithRef } from "react";
 
-import { type VariantProps } from "../../utils/cn";
+import { type VariantProps } from "@/utils/cn";
 
 import { buttonVariants } from "./Button.variants";
 

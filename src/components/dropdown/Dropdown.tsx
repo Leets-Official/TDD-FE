@@ -7,10 +7,10 @@ import {
   type KeyboardEvent as ReactKeyboardEvent,
 } from "react";
 
-import { type VariantProps } from "../../utils/cn";
+import { type VariantProps } from "@/utils/cn";
 
-import ChevronDownIcon from "../../assets/icons/ChevronDownIcon.svg?react";
-import { useOutsideClick } from "../../hooks/useOutsideClick";
+import ChevronDownIcon from "@/assets/icons/ChevronDownIcon.svg?react";
+import { useOutsideClick } from "@/hooks/useOutsideClick";
 
 import { dropdownVariants } from "./Dropdown.variants";
 

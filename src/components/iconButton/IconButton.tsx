@@ -1,6 +1,6 @@
 import type { ComponentPropsWithRef, ReactNode } from "react";
 
-import { type VariantProps } from "../../utils/cn";
+import { type VariantProps } from "@/utils/cn";
 
 import { iconButtonVariants } from "./IconButton.variants";
 
