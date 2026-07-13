@@ -11,7 +11,7 @@ export const dropdownVariants = tv({
     panel:
       "absolute z-10 w-full [scrollbar-width:thin] [scrollbar-color:var(--color-scrollbar-thumb)_transparent] overflow-y-auto rounded-sm bg-bg-1 [color-scheme:light] shadow-[0px_8px_24px_0px_rgba(0,0,0,0.10)] [&::-webkit-scrollbar-button]:hidden [&::-webkit-scrollbar-button]:size-0 [&::-webkit-scrollbar-button:vertical:end]:hidden [&::-webkit-scrollbar-button:vertical:end]:size-0 [&::-webkit-scrollbar-button:vertical:start]:hidden [&::-webkit-scrollbar-button:vertical:start]:size-0 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-scrollbar-thumb [&::-webkit-scrollbar-track]:bg-transparent",
     option:
-      "flex cursor-pointer items-center text-text-1 transition-colors hover:bg-secondary-hover data-[disabled=true]:cursor-not-allowed data-[disabled=true]:text-disabled data-[selected=true]:bg-secondary",
+      "flex cursor-pointer items-center text-text-1 transition-colors hover:bg-secondary-hover focus:bg-secondary-hover focus:outline-none data-[disabled=true]:cursor-not-allowed data-[disabled=true]:text-disabled data-[selected=true]:bg-secondary",
   },
   variants: {
     variant: {

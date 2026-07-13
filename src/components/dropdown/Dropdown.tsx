@@ -151,11 +151,28 @@ export function Dropdown({
     if (event.key === "ArrowDown" || event.key === "ArrowUp") {
       event.preventDefault();
       const delta = event.key === "ArrowDown" ? 1 : -1;
-      const nextIndex = Math.min(
-        Math.max(index + delta, 0),
-        options.length - 1
-      );
+
+      let nextIndex = index;
+      for (let i = index + delta; i >= 0 && i < options.length; i += delta) {
+        if (!options[i].disabled) {
+          nextIndex = i;
+          break;
+        }
+      }
       optionRefs.current[nextIndex]?.focus();
+    } else if (event.key === "Home" || event.key === "End") {
+      event.preventDefault();
+      const delta = event.key === "Home" ? 1 : -1;
+      const start = event.key === "Home" ? 0 : options.length - 1;
+
+      let targetIndex = -1;
+      for (let i = start; i >= 0 && i < options.length; i += delta) {
+        if (!options[i].disabled) {
+          targetIndex = i;
+          break;
+        }
+      }
+      if (targetIndex !== -1) optionRefs.current[targetIndex]?.focus();
     } else if (event.key === "Enter" || event.key === " ") {
       event.preventDefault();
       handleSelect(option);
