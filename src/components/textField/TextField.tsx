@@ -18,7 +18,6 @@ export interface TextFieldProps
     VariantProps<typeof textFieldVariants> {
   label?: string;
   feedback?: string;
-  /** 입력창 오른쪽에 들어갈 커스텀 요소 (버튼, 타이머 등). 비밀번호 타입일 때 생략하면 눈 아이콘이 기본으로 들어감 */
   rightElement?: ReactNode;
   wrapperClassName?: string;
 }
@@ -62,7 +61,8 @@ export function TextField({
     </button>
   );
 
-  const resolvedRightElement = rightElement ?? passwordToggle;
+  const resolvedRightElement =
+    rightElement === undefined ? passwordToggle : rightElement;
 
   return (
     <div className={wrapper({ className: wrapperClassName })}>
