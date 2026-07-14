@@ -42,6 +42,7 @@ export function Slider({
   const [lo, hi] = currentValue;
 
   const trackRef = useRef<HTMLDivElement>(null);
+  const dragIndexRef = useRef<number | null>(null);
 
   if (max <= min) {
     // 개발 환경에서만 경고 메시지를 출력
@@ -81,6 +82,7 @@ export function Slider({
   function handleThumbPointerDown(event: ReactPointerEvent<HTMLButtonElement>) {
     event.stopPropagation();
     event.currentTarget.setPointerCapture(event.pointerId);
+    dragIndexRef.current = null;
   }
 
   function handleThumbPointerMove(
@@ -89,7 +91,18 @@ export function Slider({
   ) {
     if (!event.currentTarget.hasPointerCapture(event.pointerId)) return;
     const next = valueFromPointer(event.clientX);
-    if (next !== null) moveThumb(index, next);
+    if (next === null) return;
+
+    // 두 썸이 겹친 상태에서 드래그를 시작하면 첫 이동 방향의 썸을 움직임
+    if (dragIndexRef.current === null) {
+      if (lo === hi) {
+        if (next === lo) return;
+        dragIndexRef.current = next < lo ? 0 : 1;
+      } else {
+        dragIndexRef.current = index;
+      }
+    }
+    moveThumb(dragIndexRef.current, next);
   }
 
   function handleTrackPointerDown(event: ReactPointerEvent<HTMLDivElement>) {
@@ -165,11 +178,7 @@ export function Slider({
             aria-valuemax={index === 0 ? hi : max}
             aria-valuenow={thumbValue}
             className={styles.thumb()}
-            style={{
-              left: `${toPercent(thumbValue)}%`,
-              // 두 썸이 오른쪽 끝에 겹치면 아래쪽(최솟값) 썸을 위로 올려 잡을 수 있게 함
-              zIndex: index === 0 && lo === max ? 1 : undefined,
-            }}
+            style={{ left: `${toPercent(thumbValue)}%` }}
             onPointerDown={handleThumbPointerDown}
             onPointerMove={(event) => handleThumbPointerMove(event, index)}
             onKeyDown={(event) => handleThumbKeyDown(event, index)}
