@@ -6,6 +6,7 @@ import { Avatar } from "./Avatar";
 import { avatarGroupVariants } from "./AvatarGroup.variants";
 
 export interface AvatarGroupItem {
+  id: string;
   src?: string;
   alt: string;
 }
@@ -39,9 +40,9 @@ export function AvatarGroup({
 
   return (
     <div className={styles.root({ className })} {...props}>
-      {visibleAvatars.map((avatar, index) => (
+      {visibleAvatars.map((avatar) => (
         <Avatar
-          key={`${avatar.alt}-${index}`}
+          key={avatar.id}
           src={avatar.src}
           alt={avatar.alt}
           size={size}

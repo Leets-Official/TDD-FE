@@ -17,7 +17,11 @@ export const avatarGroupVariants = tv({
       36: { overflow: "size-9 text-xs", empty: "size-9" },
       24: { overflow: "size-6 text-xxs", empty: "size-6" },
       20: { overflow: "size-5 text-[7px]", empty: "size-5" },
-      15: { overflow: "size-[15px] text-[6px]", empty: "size-[15px]" },
+      15: {
+        root: "-space-x-[7px]",
+        overflow: "size-[15px] text-[6px]",
+        empty: "size-[15px]",
+      },
     },
   },
   defaultVariants: {

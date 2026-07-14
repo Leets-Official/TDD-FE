@@ -43,3 +43,10 @@ export const Fallback: Story = {
     alt: "이미지 없는 참여자",
   },
 };
+
+export const LoadError: Story = {
+  args: {
+    src: "/missing-avatar.png",
+    alt: "로드 실패 참여자",
+  },
+};

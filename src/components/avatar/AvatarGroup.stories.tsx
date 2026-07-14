@@ -3,11 +3,11 @@ import type { Meta, StoryObj } from "@storybook/react-vite";
 import { AvatarGroup, type AvatarGroupItem } from "./AvatarGroup";
 
 const avatars: AvatarGroupItem[] = [
-  { src: "https://i.pravatar.cc/96?img=1", alt: "참여자 1" },
-  { src: "https://i.pravatar.cc/96?img=2", alt: "참여자 2" },
-  { src: "https://i.pravatar.cc/96?img=3", alt: "참여자 3" },
-  { src: "https://i.pravatar.cc/96?img=4", alt: "참여자 4" },
-  { src: "https://i.pravatar.cc/96?img=5", alt: "참여자 5" },
+  { id: "1", src: "https://i.pravatar.cc/96?img=1", alt: "참여자 1" },
+  { id: "2", src: "https://i.pravatar.cc/96?img=2", alt: "참여자 2" },
+  { id: "3", src: "https://i.pravatar.cc/96?img=3", alt: "참여자 3" },
+  { id: "4", src: "https://i.pravatar.cc/96?img=4", alt: "참여자 4" },
+  { id: "5", src: "https://i.pravatar.cc/96?img=5", alt: "참여자 5" },
 ];
 
 const meta = {

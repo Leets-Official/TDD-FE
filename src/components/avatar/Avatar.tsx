@@ -15,10 +15,10 @@ export interface AvatarProps
 }
 
 export function Avatar({ src, alt, size, className, ...props }: AvatarProps) {
-  const [imageError, setImageError] = useState(false);
+  const [failedSrc, setFailedSrc] = useState<string>();
 
   const styles = avatarVariants({ size });
-  const showFallback = !src || imageError;
+  const showFallback = !src || failedSrc === src;
 
   return (
     <span className={styles.root({ className })} {...props}>
@@ -32,7 +32,7 @@ export function Avatar({ src, alt, size, className, ...props }: AvatarProps) {
           src={src}
           alt={alt}
           className={styles.image()}
-          onError={() => setImageError(true)}
+          onError={() => setFailedSrc(src)}
         />
       )}
     </span>
