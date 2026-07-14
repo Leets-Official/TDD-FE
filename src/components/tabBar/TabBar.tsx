@@ -36,7 +36,12 @@ export function TabBar({
   );
 
   const [isControlled] = useState(() => value !== undefined);
-  const currentValue = isControlled ? value : uncontrolled;
+
+  // tabs가 늦게 채워지거나 선택된 탭이 제거되면 uncontrolled 값이 목록에 없을 수 있어 첫 탭으로 보정
+  const uncontrolledValue = tabs.some((tab) => tab.value === uncontrolled)
+    ? uncontrolled
+    : (tabs[0]?.value ?? "");
+  const currentValue = isControlled ? value : uncontrolledValue;
 
   const tabRefs = useRef<(HTMLButtonElement | null)[]>([]);
   const [focusedIndex, setFocusedIndex] = useState<number | null>(null);
