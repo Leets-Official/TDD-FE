@@ -31,7 +31,7 @@
 
   /* Brand */
   --color-primary: var(--color-orange-500);
-  --color-secondary: var(--color-orange-100);
+  --color-secondary: var(--color-orange-50);
 
   /* State */
   --color-primary-hover: var(--color-orange-400);
