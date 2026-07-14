@@ -45,6 +45,8 @@
   --color-bg-2: var(--color-gray-50);
   --color-bg-3: var(--color-gray-100);
   --color-bg-4: var(--color-gray-200);
+  --color-bg-5: var(--color-gray-300);
+  --color-bg-6: var(--color-gray-700);
   --color-bg-color: var(--color-gray-300);
 
   /* Text */
