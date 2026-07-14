@@ -42,7 +42,10 @@ export function Slider({
   const [lo, hi] = currentValue;
 
   const trackRef = useRef<HTMLDivElement>(null);
-  const dragIndexRef = useRef<number | null>(null);
+  // 드래그 중인 포인터와 이동 대상 썸 (하나의 포인터만 허용)
+  const dragRef = useRef<{ pointerId: number; index: number | null } | null>(
+    null
+  );
 
   if (max <= min) {
     // 개발 환경에서만 경고 메시지를 출력
@@ -81,31 +84,46 @@ export function Slider({
 
   function handleThumbPointerDown(event: ReactPointerEvent<HTMLButtonElement>) {
     event.stopPropagation();
+    if (dragRef.current !== null) return;
+
     event.currentTarget.setPointerCapture(event.pointerId);
-    dragIndexRef.current = null;
+    dragRef.current = { pointerId: event.pointerId, index: null };
   }
 
   function handleThumbPointerMove(
     event: ReactPointerEvent<HTMLButtonElement>,
     index: number
   ) {
+    const drag = dragRef.current;
+    if (drag === null || drag.pointerId !== event.pointerId) return;
     if (!event.currentTarget.hasPointerCapture(event.pointerId)) return;
+
     const next = valueFromPointer(event.clientX);
     if (next === null) return;
 
     // 두 썸이 겹친 상태에서 드래그를 시작하면 첫 이동 방향의 썸을 움직임
-    if (dragIndexRef.current === null) {
+    if (drag.index === null) {
       if (lo === hi) {
         if (next === lo) return;
-        dragIndexRef.current = next < lo ? 0 : 1;
+        drag.index = next < lo ? 0 : 1;
       } else {
-        dragIndexRef.current = index;
+        drag.index = index;
       }
     }
-    moveThumb(dragIndexRef.current, next);
+    moveThumb(drag.index, next);
+  }
+
+  function handleThumbLostPointerCapture(
+    event: ReactPointerEvent<HTMLButtonElement>
+  ) {
+    if (dragRef.current?.pointerId === event.pointerId) {
+      dragRef.current = null;
+    }
   }
 
   function handleTrackPointerDown(event: ReactPointerEvent<HTMLDivElement>) {
+    if (dragRef.current !== null) return;
+
     const next = valueFromPointer(event.clientX);
     if (next === null) return;
 
@@ -181,6 +199,7 @@ export function Slider({
             style={{ left: `${toPercent(thumbValue)}%` }}
             onPointerDown={handleThumbPointerDown}
             onPointerMove={(event) => handleThumbPointerMove(event, index)}
+            onLostPointerCapture={handleThumbLostPointerCapture}
             onKeyDown={(event) => handleThumbKeyDown(event, index)}
           />
         ))}
