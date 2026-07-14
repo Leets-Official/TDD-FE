@@ -41,6 +41,10 @@ export function TabBar({
   const uncontrolledValue = tabs.some((tab) => tab.value === uncontrolled)
     ? uncontrolled
     : (tabs[0]?.value ?? "");
+  if (!isControlled && uncontrolled !== uncontrolledValue) {
+    setUncontrolled(uncontrolledValue);
+  }
+
   const currentValue = isControlled ? value : uncontrolledValue;
 
   const tabRefs = useRef<(HTMLButtonElement | null)[]>([]);
