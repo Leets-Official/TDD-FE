@@ -29,11 +29,12 @@ export function AvatarGroup({
   className,
   ...props
 }: AvatarGroupProps) {
-  const visibleAvatars = avatars.slice(0, max);
+  const displayLimit = Number.isInteger(max) && max >= 0 ? max : 0;
+  const visibleAvatars = avatars.slice(0, displayLimit);
   const overflowCount = avatars.length - visibleAvatars.length;
   const emptyCount =
     total !== undefined
-      ? Math.max(0, Math.min(total, max) - visibleAvatars.length)
+      ? Math.max(0, Math.min(total, displayLimit) - visibleAvatars.length)
       : 0;
 
   const styles = avatarGroupVariants({ size });
@@ -42,7 +43,7 @@ export function AvatarGroup({
     <div className={styles.root({ className })} {...props}>
       {visibleAvatars.map((avatar) => (
         <Avatar
-          key={avatar.id}
+          key={`avatar-${avatar.id}`}
           src={avatar.src}
           alt={avatar.alt}
           size={size}
