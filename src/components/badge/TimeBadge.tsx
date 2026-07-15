@@ -1,27 +1,23 @@
 import type { ComponentPropsWithRef } from "react";
 
-import { useCountdown } from "@/hooks/useCountdown";
-
 import { timeBadgeVariants } from "./TimeBadge.variants";
 
 export interface TimeBadgeProps extends Omit<
   ComponentPropsWithRef<"span">,
   "children"
 > {
-  deadline: number;
-  urgentThresholdMs?: number;
+  timeLabel: string;
+  isUrgent: boolean;
+  isExpired: boolean;
 }
 
 export function TimeBadge({
-  deadline,
-  urgentThresholdMs,
+  timeLabel,
+  isUrgent,
+  isExpired,
   className,
   ...props
 }: TimeBadgeProps) {
-  const { timeLabel, isUrgent, isExpired } = useCountdown(deadline, {
-    urgentThresholdMs,
-  });
-
   return (
     <span
       className={timeBadgeVariants({

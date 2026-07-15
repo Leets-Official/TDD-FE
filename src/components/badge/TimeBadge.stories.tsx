@@ -1,18 +1,39 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { useState } from "react";
 
-import { TimeBadge, type TimeBadgeProps } from "./TimeBadge";
+import { useCountdown } from "@/hooks/useCountdown";
+
+import { TimeBadge } from "./TimeBadge";
+
+interface TimeBadgeDemoProps {
+  deadline: number;
+  urgentThresholdMs?: number;
+}
+
+function TimeBadgeDemo({ deadline, urgentThresholdMs }: TimeBadgeDemoProps) {
+  const { timeLabel, isUrgent, isExpired } = useCountdown(deadline, {
+    urgentThresholdMs,
+  });
+
+  return (
+    <TimeBadge
+      timeLabel={timeLabel}
+      isUrgent={isUrgent}
+      isExpired={isExpired}
+    />
+  );
+}
 
 const meta = {
   title: "Components/Badge/TimeBadge",
-  component: TimeBadge,
+  component: TimeBadgeDemo,
   parameters: {
     layout: "centered",
   },
   args: {
     deadline: Date.now() + 7 * 60 * 1000 + 32 * 1000,
   },
-} satisfies Meta<typeof TimeBadge>;
+} satisfies Meta<typeof TimeBadgeDemo>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;
@@ -25,7 +46,10 @@ export const Urgent: Story = {
   },
 };
 
-interface TimeBadgePlaygroundProps extends Omit<TimeBadgeProps, "deadline"> {
+interface TimeBadgePlaygroundProps extends Omit<
+  TimeBadgeDemoProps,
+  "deadline"
+> {
   secondsRemaining: number;
 }
 
@@ -34,7 +58,9 @@ function TimeBadgePlayground({
   ...props
 }: TimeBadgePlaygroundProps) {
   const [baseTime] = useState(() => Date.now());
-  return <TimeBadge {...props} deadline={baseTime + secondsRemaining * 1000} />;
+  return (
+    <TimeBadgeDemo {...props} deadline={baseTime + secondsRemaining * 1000} />
+  );
 }
 
 export const Playground: StoryObj<Meta<typeof TimeBadgePlayground>> = {

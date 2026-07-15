@@ -27,9 +27,14 @@ export function useCountdown(
   const [remainingMs, setRemainingMs] = useState(() => deadline - Date.now());
 
   useEffect(() => {
-    const tick = () => setRemainingMs(deadline - Date.now());
-    tick();
-    const intervalId = setInterval(tick, 1000);
+    const intervalId = setInterval(() => {
+      const remaining = deadline - Date.now();
+      setRemainingMs(remaining);
+      if (remaining <= 0) {
+        clearInterval(intervalId);
+      }
+    }, 1000);
+
     return () => clearInterval(intervalId);
   }, [deadline]);
 

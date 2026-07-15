@@ -47,10 +47,11 @@ export function Card({
 }: CardProps) {
   const isResolvedStatus =
     status === "matched" || status === "arrived" || status === "cancelled";
-  const { isUrgent: isTimeUrgent, isExpired: isTimeExpired } = useCountdown(
-    deadline,
-    { urgentThresholdMs }
-  );
+  const {
+    timeLabel,
+    isUrgent: isTimeUrgent,
+    isExpired: isTimeExpired,
+  } = useCountdown(deadline, { urgentThresholdMs });
   const isClosed = isResolvedStatus || isTimeExpired;
   const effectiveStatus: StatusBadgeProps["status"] =
     !isResolvedStatus && isTimeExpired ? "cancelled" : status;
@@ -83,8 +84,9 @@ export function Card({
             {!isClosed && (
               <div className="flex items-center gap-2">
                 <TimeBadge
-                  deadline={deadline}
-                  urgentThresholdMs={urgentThresholdMs}
+                  timeLabel={timeLabel}
+                  isUrgent={isTimeUrgent}
+                  isExpired={isTimeExpired}
                 />
                 {isTimeUrgent && <FlagBadge>곧 끝나요!</FlagBadge>}
               </div>
