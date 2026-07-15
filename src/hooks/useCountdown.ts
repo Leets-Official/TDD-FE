@@ -27,6 +27,9 @@ export function useCountdown(
   const [remainingMs, setRemainingMs] = useState(() => deadline - Date.now());
 
   useEffect(() => {
+    const sync = () => setRemainingMs(deadline - Date.now());
+    sync();
+
     const intervalId = setInterval(() => {
       const remaining = deadline - Date.now();
       setRemainingMs(remaining);

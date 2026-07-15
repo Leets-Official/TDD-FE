@@ -57,10 +57,9 @@ function TimeBadgePlayground({
   secondsRemaining,
   ...props
 }: TimeBadgePlaygroundProps) {
-  const [baseTime] = useState(() => Date.now());
-  return (
-    <TimeBadgeDemo {...props} deadline={baseTime + secondsRemaining * 1000} />
-  );
+  const [deadline] = useState(() => Date.now() + secondsRemaining * 1000);
+
+  return <TimeBadgeDemo {...props} deadline={deadline} />;
 }
 
 export const Playground: StoryObj<Meta<typeof TimeBadgePlayground>> = {
@@ -72,5 +71,8 @@ export const Playground: StoryObj<Meta<typeof TimeBadgePlayground>> = {
   args: {
     secondsRemaining: 90,
   },
-  render: (args) => <TimeBadgePlayground {...args} />,
+  // secondsRemaining이 바뀔 때마다 새로 마운트되어 deadline을 현재 시각 기준으로 다시 계산
+  render: (args) => (
+    <TimeBadgePlayground key={args.secondsRemaining} {...args} />
+  ),
 };
