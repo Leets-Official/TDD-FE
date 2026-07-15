@@ -25,7 +25,7 @@ export function TimeBadge({
   return (
     <span
       className={timeBadgeVariants({
-        variant: isUrgent ? "urgent" : "default",
+        variant: !isExpired && isUrgent ? "urgent" : "default",
         className,
       })}
       {...props}
