@@ -17,6 +17,7 @@ const meta = {
     layout: "centered",
   },
   args: {
+    category: "패스트푸드",
     title: "OO햄버거 같이 배달하실분",
     avatars: avatars.slice(0, 2),
     minCount: 2,

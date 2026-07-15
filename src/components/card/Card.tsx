@@ -12,6 +12,7 @@ import { useCountdown } from "@/hooks/useCountdown";
 
 import BuildingIcon from "@/assets/icons/BuildingIcon.svg?react";
 
+import { CATEGORY_ICONS, type FoodCategory } from "./categoryIcons";
 import { cardVariants } from "./Card.variants";
 
 const STATUS_LABELS: Record<NonNullable<StatusBadgeProps["status"]>, string> = {
@@ -22,8 +23,7 @@ const STATUS_LABELS: Record<NonNullable<StatusBadgeProps["status"]>, string> = {
 };
 
 export interface CardProps {
-  image?: string;
-  imageAlt?: string;
+  category: FoodCategory;
   title: string;
   status?: StatusBadgeProps["status"];
   deadline: number;
@@ -35,8 +35,7 @@ export interface CardProps {
 }
 
 export function Card({
-  image,
-  imageAlt = "",
+  category,
   title,
   status,
   deadline,
@@ -67,14 +66,14 @@ export function Card({
       )}
 
       <div className="flex gap-[22px]">
-        <div className="size-[61px] shrink-0 overflow-hidden rounded-md bg-bg-3">
-          {image && (
-            <img
-              src={image}
-              alt={imageAlt}
-              className="size-full object-cover"
-            />
-          )}
+        <div className="flex size-[61px] shrink-0 items-center justify-center overflow-hidden rounded-md">
+          <span
+            role="img"
+            aria-label={category}
+            className="text-[46px] leading-none"
+          >
+            {CATEGORY_ICONS[category]}
+          </span>
         </div>
 
         <div className="flex flex-col justify-center gap-xl">
