@@ -1,5 +1,4 @@
 import type { Preview } from "@storybook/react-vite";
-
 import "../src/styles/index.css";
 
 const preview: Preview = {
@@ -10,6 +9,18 @@ const preview: Preview = {
         date: /Date$/i,
       },
     },
+    viewport: {
+      options: {
+        mobile: {
+          name: "Mobile (393px)",
+          styles: { width: "393px", height: "852px" },
+          type: "mobile",
+        },
+      },
+    },
+  },
+  initialGlobals: {
+    viewport: { value: "mobile", isRotated: false },
   },
 };
 
