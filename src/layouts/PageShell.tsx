@@ -19,13 +19,11 @@ export function PageShell({
   return (
     <div
       className={cn(
-        "flex min-h-0 w-full flex-1 flex-col overflow-hidden bg-white",
+        "flex min-h-0 w-full flex-1 flex-col overflow-hidden bg-white pt-[env(safe-area-inset-top)]",
         className
       )}
     >
-      {header && (
-        <div className="shrink-0 pt-[env(safe-area-inset-top)]">{header}</div>
-      )}
+      {header && <div className="shrink-0">{header}</div>}
 
       <main
         className={cn(
