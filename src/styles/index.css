@@ -9,5 +9,10 @@
 body {
   margin: 0;
   font-family: var(--font-sans);
-  background-color: #2a2624;
+}
+
+@media (min-width: 394px) {
+  body {
+    background-color: #2a2624;
+  }
 }
