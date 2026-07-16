@@ -5,6 +5,7 @@ export const iconButtonVariants = tv({
   variants: {
     size: {
       big: "[&_svg]:size-9",
+      large: "[&_svg]:size-7",
       medium: "[&_svg]:size-6",
     },
   },

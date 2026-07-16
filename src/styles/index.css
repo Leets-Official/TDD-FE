@@ -3,10 +3,16 @@
 @import "./tokens.css";
 
 :root {
-  color-scheme: light dark;
+  color-scheme: light;
 }
 
 body {
   margin: 0;
   font-family: var(--font-sans);
+}
+
+@media (min-width: 394px) {
+  body {
+    background-color: #2a2624;
+  }
 }
