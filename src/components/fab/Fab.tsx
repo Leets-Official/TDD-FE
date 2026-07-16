@@ -4,12 +4,14 @@ import PlusIcon from "@/assets/icons/PlusIcon.svg?react";
 
 import { fabVariants } from "./Fab.variants";
 
-export interface FabProps extends Omit<
-  ComponentPropsWithRef<"button">,
-  "children"
-> {
-  label?: string;
-}
+type FabBaseProps = Omit<ComponentPropsWithRef<"button">, "children">;
+
+export type FabProps =
+  | (FabBaseProps & { label: string })
+  | (Omit<FabBaseProps, "aria-label"> & {
+      label?: undefined;
+      "aria-label": string;
+    });
 
 export function Fab({ label, className, ...props }: FabProps) {
   const styles = fabVariants({ hasLabel: !!label });
