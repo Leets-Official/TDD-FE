@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useId, useRef } from "react";
 
 import { Button } from "@/components/button/Button";
 
@@ -28,6 +28,7 @@ export function Modal({
   onPrimaryClick,
 }: ModalProps) {
   const dialogRef = useRef<HTMLDialogElement>(null);
+  const titleId = useId();
   const styles = modalVariants();
 
   useEffect(() => {
@@ -52,6 +53,7 @@ export function Modal({
     <dialog
       ref={dialogRef}
       className={styles.dialog()}
+      aria-labelledby={titleId}
       onClose={onClose}
       onClick={(event) => {
         if (event.target === dialogRef.current) onClose();
@@ -60,14 +62,16 @@ export function Modal({
       <div className={styles.container()}>
         <div className={styles.contents()}>
           <div className={styles.titleBody()}>
-            <p className={styles.title()}>{title}</p>
+            <p id={titleId} className={styles.title()}>
+              {title}
+            </p>
             {description && (
               <p className={styles.description()}>{description}</p>
             )}
           </div>
           {caption && <p className={styles.caption()}>{caption}</p>}
         </div>
-        {(outlineLabel ?? primaryLabel) && (
+        {(outlineLabel || primaryLabel) && (
           <div className={styles.buttons()}>
             {outlineLabel && (
               <Button
