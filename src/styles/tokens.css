@@ -119,12 +119,17 @@
   /* Body 2 */
   --text-body-2: var(--text-m);
   --text-body-2--line-height: var(--leading-m);
-  --text-body-2--font-weight: var(--font-weight-r);
+  --text-body-2--font-weight: var(--font-weight-m);
 
   /* Caption 1 */
   --text-caption-1: var(--text-s);
   --text-caption-1--line-height: var(--leading-s);
   --text-caption-1--font-weight: var(--font-weight-m);
+
+  /* Caption 2 */
+  --text-caption-2: var(--text-xs);
+  --text-caption-2--line-height: var(--leading-s);
+  --text-caption-2--font-weight: var(--font-weight-m);
 
   /* Radius */
   --radius-lg: 36px;

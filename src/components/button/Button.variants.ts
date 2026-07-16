@@ -7,7 +7,7 @@ export const buttonVariants = tv({
       default:
         "bg-primary text-white hover:bg-primary-hover active:bg-primary-pressed disabled:bg-disabled",
       outline:
-        "border border-divider-1 text-text-1 hover:bg-secondary-hover active:bg-secondary-pressed disabled:bg-white disabled:text-disabled",
+        "border-[1.5px] border-divider-2 text-text-1 hover:bg-secondary-hover active:bg-secondary-pressed disabled:bg-white disabled:text-disabled",
       text: "text-text-1 hover:bg-secondary-hover active:bg-secondary-pressed disabled:bg-white disabled:text-disabled",
     },
     size: {
