@@ -20,6 +20,7 @@ const twMergeConfig = {
         "body-1",
         "body-2",
         "caption-1",
+        "caption-2",
       ],
       "font-weight": ["sb", "m", "r"],
       leading: ["l", "m", "s"],
