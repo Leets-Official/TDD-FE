@@ -40,7 +40,9 @@ export function Modal({
       return;
     }
 
-    dialog.showModal();
+    if (!dialog.open) {
+      dialog.showModal();
+    }
     const previousOverflow = document.body.style.overflow;
     document.body.style.overflow = "hidden";
 
