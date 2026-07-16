@@ -16,13 +16,14 @@ export interface ProfilesProps {
 }
 
 export function Profiles({ participants, maxCount, className }: ProfilesProps) {
-  const visibleParticipants = participants.slice(0, maxCount);
-  const emptyCount = Math.max(0, maxCount - visibleParticipants.length);
+  const capacity = Number.isInteger(maxCount) && maxCount >= 0 ? maxCount : 0;
+  const visibleParticipants = participants.slice(0, capacity);
+  const emptyCount = Math.max(0, capacity - visibleParticipants.length);
 
   return (
     <div className={cn("flex flex-col gap-2", className)}>
       <p className="text-label text-black">
-        {visibleParticipants.length}/{maxCount}명{" "}
+        {visibleParticipants.length}/{capacity}명{" "}
         <span className="text-body-2">참여신청 중</span>
       </p>
       <div className="flex items-start gap-12">
