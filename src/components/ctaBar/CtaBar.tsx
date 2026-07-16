@@ -50,7 +50,12 @@ export function CtaBar(props: CtaBarProps) {
             <p className="text-caption-1">채팅방에 입장해주세요</p>
           </div>
           <div className="flex items-center gap-2">
-            <AvatarGroup avatars={avatars} total={maxCount} size={24} />
+            <AvatarGroup
+              avatars={avatars}
+              total={maxCount}
+              max={maxCount}
+              size={24}
+            />
             <span className="text-label">
               {avatars.length}/{maxCount}명 참여
             </span>
@@ -77,7 +82,12 @@ function TimedCtaBar(props: RecruitingCtaBarProps | AppliedCtaBarProps) {
     <div className={BAR_CLASS}>
       <div className="flex flex-col items-start gap-2">
         <div className="flex items-center gap-2">
-          <AvatarGroup avatars={avatars} total={maxCount} size={24} />
+          <AvatarGroup
+            avatars={avatars}
+            total={maxCount}
+            max={maxCount}
+            size={24}
+          />
           <span className="text-label text-text-1">
             {avatars.length}/{maxCount}명 참여신청 중
           </span>
