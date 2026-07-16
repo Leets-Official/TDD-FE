@@ -7,8 +7,8 @@ export const chatBubbleVariants = tv({
     nickname: "text-body-2 text-black",
     wrapper: "flex items-end gap-1",
     bubble:
-      "flex shrink-0 items-center overflow-hidden px-padding-m py-padding-xxs",
-    message: "text-body-1 whitespace-nowrap",
+      "flex max-w-[70%] shrink-0 items-center px-padding-m py-padding-xxs",
+    message: "text-body-1 wrap-break-word",
     time: "shrink-0 text-caption-2 whitespace-nowrap text-text-4",
   },
   variants: {
