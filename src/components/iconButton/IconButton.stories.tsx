@@ -17,7 +17,7 @@ const meta = {
   argTypes: {
     size: {
       control: "select",
-      options: ["big", "medium"],
+      options: ["big", "large", "medium"],
     },
   },
 } satisfies Meta<typeof IconButton>;
@@ -29,6 +29,7 @@ export const Default: Story = {
   render: (args) => (
     <div className="flex items-center gap-l">
       <IconButton {...args} size="big" />
+      <IconButton {...args} size="large" />
       <IconButton {...args} size="medium" />
     </div>
   ),
