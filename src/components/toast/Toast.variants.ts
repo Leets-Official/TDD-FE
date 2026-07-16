@@ -16,7 +16,7 @@ export const toastVariants = tv({
       },
       false: {
         root: "py-padding-s",
-        message: "whitespace-nowrap",
+        message: "min-w-0 wrap-break-word",
       },
     },
   },

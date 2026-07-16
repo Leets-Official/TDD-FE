@@ -24,7 +24,12 @@ export function Toast({
 
   if (!actionLabel) {
     return (
-      <div className={styles.root({ className })} {...props}>
+      <div
+        role="status"
+        aria-live="polite"
+        className={styles.root({ className })}
+        {...props}
+      >
         <BadgeCheckIcon className={styles.icon()} aria-hidden="true" />
         <p className={styles.message()}>{message}</p>
       </div>
