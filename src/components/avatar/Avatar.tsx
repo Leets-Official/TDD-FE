@@ -18,7 +18,7 @@ export function Avatar(props: AvatarProps) {
   const styles = avatarVariants({ size: props.size });
 
   if (props.empty) {
-    const { empty, size, className, ...rest } = props;
+    const { empty: _empty, size: _size, className, ...rest } = props;
     return (
       <span
         aria-hidden="true"
@@ -28,7 +28,14 @@ export function Avatar(props: AvatarProps) {
     );
   }
 
-  const { empty, size, className, src, alt, ...spanProps } = props;
+  const {
+    empty: _empty,
+    size: _size,
+    className,
+    src,
+    alt,
+    ...spanProps
+  } = props;
   const showFallback = !src || failedSrc === src;
 
   return (
