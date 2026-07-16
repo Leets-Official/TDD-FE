@@ -1,8 +1,6 @@
 import { useEffect, useRef } from "react";
-import { createPortal } from "react-dom";
 
 import { Button } from "@/components/button/Button";
-import { useOutsideClick } from "@/hooks/useOutsideClick";
 
 import { modalVariants } from "./Modal.variants";
 
@@ -29,74 +27,71 @@ export function Modal({
   primaryLabel,
   onPrimaryClick,
 }: ModalProps) {
-  const cardRef = useRef<HTMLDivElement>(null);
+  const dialogRef = useRef<HTMLDialogElement>(null);
   const styles = modalVariants();
 
-  useOutsideClick(cardRef, onClose, isOpen);
-
   useEffect(() => {
-    if (!isOpen) return;
+    const dialog = dialogRef.current;
+    if (!dialog) return;
 
-    const onKeyDown = (event: KeyboardEvent) => {
-      if (event.key === "Escape") onClose();
-    };
+    if (!isOpen) {
+      dialog.close();
+      return;
+    }
 
-    document.addEventListener("keydown", onKeyDown);
+    dialog.showModal();
+    const previousOverflow = document.body.style.overflow;
     document.body.style.overflow = "hidden";
 
     return () => {
-      document.removeEventListener("keydown", onKeyDown);
-      document.body.style.overflow = "";
+      document.body.style.overflow = previousOverflow;
     };
-  }, [isOpen, onClose]);
+  }, [isOpen]);
 
-  if (!isOpen) return null;
-
-  return createPortal(
-    <div className={styles.backdrop()}>
-      <div
-        ref={cardRef}
-        role="dialog"
-        aria-modal="true"
-        className={styles.card()}
-      >
-        <div className={styles.container()}>
-          <div className={styles.contents()}>
-            <div className={styles.titleBody()}>
-              <p className={styles.title()}>{title}</p>
-              {description && (
-                <p className={styles.description()}>{description}</p>
-              )}
-            </div>
-            {caption && <p className={styles.caption()}>{caption}</p>}
+  return (
+    <dialog
+      ref={dialogRef}
+      className={styles.dialog()}
+      onClose={onClose}
+      onClick={(event) => {
+        if (event.target === dialogRef.current) onClose();
+      }}
+    >
+      <div className={styles.container()}>
+        <div className={styles.contents()}>
+          <div className={styles.titleBody()}>
+            <p className={styles.title()}>{title}</p>
+            {description && (
+              <p className={styles.description()}>{description}</p>
+            )}
           </div>
-          {(outlineLabel ?? primaryLabel) && (
-            <div className={styles.buttons()}>
-              {outlineLabel && (
-                <Button
-                  variant="outline"
-                  size="medium"
-                  className={styles.outlineButton()}
-                  onClick={onOutlineClick}
-                >
-                  {outlineLabel}
-                </Button>
-              )}
-              {primaryLabel && (
-                <Button
-                  variant="default"
-                  size="medium"
-                  className={styles.primaryButton()}
-                  onClick={onPrimaryClick}
-                >
-                  {primaryLabel}
-                </Button>
-              )}
-            </div>
-          )}
+          {caption && <p className={styles.caption()}>{caption}</p>}
         </div>
+        {(outlineLabel ?? primaryLabel) && (
+          <div className={styles.buttons()}>
+            {outlineLabel && (
+              <Button
+                variant="outline"
+                size="medium"
+                className={styles.outlineButton()}
+                onClick={onOutlineClick}
+              >
+                {outlineLabel}
+              </Button>
+            )}
+            {primaryLabel && (
+              <Button
+                variant="default"
+                size="medium"
+                className={styles.primaryButton()}
+                onClick={onPrimaryClick}
+              >
+                {primaryLabel}
+              </Button>
+            )}
+          </div>
+        )}
       </div>
-    </div>,
-    document.body
+    </dialog>
   );
 }

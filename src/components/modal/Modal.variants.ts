@@ -2,8 +2,8 @@ import { tv } from "@/utils/cn";
 
 export const modalVariants = tv({
   slots: {
-    backdrop: "fixed inset-0 z-50 flex items-center justify-center bg-black/40",
-    card: "flex w-[362px] flex-col items-end overflow-hidden rounded-lg bg-white",
+    dialog:
+      "m-auto w-90.5 overflow-hidden rounded-lg border-0 bg-white p-0 backdrop:bg-black/40",
     container:
       "flex w-full flex-col items-start gap-9 px-padding-l pt-9 pb-padding-l",
     contents: "flex w-full flex-col items-start gap-8",
