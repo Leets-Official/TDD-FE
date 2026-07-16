@@ -1,16 +1,12 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 
-import { Avatar } from "./Avatar";
+import { Avatar, type AvatarProps } from "./Avatar";
 
-const meta = {
+const meta: Meta<AvatarProps> = {
   title: "Components/Avatar",
   component: Avatar,
   parameters: {
     layout: "centered",
-  },
-  args: {
-    src: "https://i.pravatar.cc/96?img=1",
-    alt: "참여자 프로필",
   },
   argTypes: {
     size: {
@@ -18,20 +14,28 @@ const meta = {
       options: [56, 48, 40, 36, 24, 20, 15],
     },
   },
-} satisfies Meta<typeof Avatar>;
+};
 
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj<AvatarProps>;
 
 export const Default: Story = {
-  args: {},
+  args: {
+    src: "https://i.pravatar.cc/96?img=1",
+    alt: "참여자 프로필",
+  },
 };
 
 export const Sizes: Story = {
-  render: (args) => (
+  render: () => (
     <div className="flex items-center gap-l">
       {([56, 48, 40, 36, 24, 20, 15] as const).map((size) => (
-        <Avatar key={size} {...args} size={size} />
+        <Avatar
+          key={size}
+          src="https://i.pravatar.cc/96?img=1"
+          alt="참여자 프로필"
+          size={size}
+        />
       ))}
     </div>
   ),
@@ -39,7 +43,6 @@ export const Sizes: Story = {
 
 export const Fallback: Story = {
   args: {
-    src: undefined,
     alt: "이미지 없는 참여자",
   },
 };
@@ -48,5 +51,11 @@ export const LoadError: Story = {
   args: {
     src: "/missing-avatar.png",
     alt: "로드 실패 참여자",
+  },
+};
+
+export const Empty: Story = {
+  args: {
+    empty: true,
   },
 };

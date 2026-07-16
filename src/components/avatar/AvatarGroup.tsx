@@ -51,9 +51,10 @@ export function AvatarGroup({
         />
       ))}
       {Array.from({ length: emptyCount }, (_, index) => (
-        <span
+        <Avatar
           key={`empty-${index}`}
-          aria-hidden="true"
+          empty
+          size={size}
           className={styles.empty()}
         />
       ))}
