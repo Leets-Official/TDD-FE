@@ -52,3 +52,14 @@ export const RecruitingOpenSlots: Story = {
     total: 4,
   },
 };
+
+export const MixedProfileImages: Story = {
+  args: {
+    avatars: [
+      { id: "1", src: "https://i.pravatar.cc/96?img=1", alt: "참여자 1" },
+      { id: "2", alt: "참여자 2" },
+      { id: "3", src: "https://i.pravatar.cc/96?img=3", alt: "참여자 3" },
+      { id: "4", alt: "참여자 4" },
+    ],
+  },
+};
