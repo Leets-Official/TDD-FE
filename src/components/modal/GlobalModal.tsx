@@ -11,13 +11,15 @@ export function GlobalModal() {
   if (!modalProps) return null;
 
   const handleCancel = () => {
-    callbacks.onCancel?.();
+    const { onCancel } = callbacks;
     closeModal();
+    onCancel?.();
   };
 
   const handleConfirm = () => {
-    callbacks.onConfirm?.();
+    const { onConfirm } = callbacks;
     closeModal();
+    onConfirm?.();
   };
 
   return (

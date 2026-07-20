@@ -14,7 +14,12 @@ export function GlobalToast() {
   useEffect(() => {
     if (!isToastOpen) return;
 
-    const timer = setTimeout(closeToast, TOAST_DURATION_MS);
+    const scheduledProps = toastProps;
+    const timer = setTimeout(() => {
+      if (useToastStore.getState().toastProps === scheduledProps) {
+        closeToast();
+      }
+    }, TOAST_DURATION_MS);
     return () => clearTimeout(timer);
   }, [isToastOpen, toastProps, closeToast]);
 
