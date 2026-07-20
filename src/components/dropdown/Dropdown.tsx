@@ -1,11 +1,13 @@
 import {
   useEffect,
   useId,
+  useLayoutEffect,
   useRef,
   useState,
   type ComponentPropsWithRef,
   type KeyboardEvent as ReactKeyboardEvent,
 } from "react";
+import { createPortal } from "react-dom";
 
 import { type VariantProps } from "@/utils/cn";
 
@@ -20,6 +22,19 @@ export interface DropdownOption {
   disabled?: boolean;
 }
 
+type DropdownVariant = NonNullable<
+  VariantProps<typeof dropdownVariants>["variant"]
+>;
+
+// 옵션 한 줄의 실제 렌더링 높이(px). Dropdown.variants.ts의 option 슬롯 패딩 + text-body-1
+// line-height로부터 나오는 값이라, 그쪽 스타일이 바뀌면 여기도 같이 맞춰야 합니다.
+const OPTION_ROW_HEIGHT: Record<DropdownVariant, number> = {
+  select: 56, // py-l(16px*2) + line-height-l(24px)
+  filter: 48, // py-s(12px*2) + line-height-l(24px)
+};
+
+const DEFAULT_VISIBLE_OPTIONS = 4;
+
 interface DropdownSharedProps
   extends
     Omit<ComponentPropsWithRef<"div">, "onChange" | "defaultValue" | "value">,
@@ -28,6 +43,8 @@ interface DropdownSharedProps
   label?: string;
   placeholder?: string;
   disabled?: boolean;
+  /** 스크롤 없이 한 번에 보여줄 옵션 개수. 기본값 4, 나머지는 스크롤로 노출됩니다. */
+  visibleOptions?: number;
 }
 
 interface SingleDropdownProps extends DropdownSharedProps {
@@ -57,6 +74,7 @@ export function Dropdown({
   defaultValue,
   onChange,
   className,
+  visibleOptions = DEFAULT_VISIBLE_OPTIONS,
   ...props
 }: DropdownProps) {
   const id = useId();
@@ -73,10 +91,44 @@ export function Dropdown({
 
   const rootRef = useRef<HTMLDivElement>(null);
   const triggerRef = useRef<HTMLButtonElement>(null);
+  const panelRef = useRef<HTMLUListElement>(null);
   const optionRefs = useRef<(HTMLLIElement | null)[]>([]);
   const pendingFocusIndexRef = useRef<number | null>(null);
 
-  useOutsideClick(rootRef, () => setOpen(false), open);
+  // 옵션 패널은 document.body에 포탈로 렌더링합니다. 가로 스크롤 필터 목록처럼
+  // overflow가 걸린 조상 안에 트리거가 있으면, 패널이 absolute로 그 조상에 갇혀
+  // 잘려버리기 때문입니다 (CSS 스펙상 overflow-x가 visible이 아니면 overflow-y도
+  // 강제로 clip되어, 조상에 overflow-y-visible을 줘도 소용이 없습니다).
+  const [panelPosition, setPanelPosition] = useState<{
+    top: number;
+    left: number;
+    width?: number;
+  } | null>(null);
+
+  useOutsideClick([rootRef, panelRef], () => setOpen(false), open);
+
+  useLayoutEffect(() => {
+    if (!open) return;
+
+    function updatePosition() {
+      const rect = triggerRef.current?.getBoundingClientRect();
+      if (!rect) return;
+      setPanelPosition({
+        top: rect.bottom,
+        left: rect.left,
+        width: variant === "select" ? rect.width : undefined,
+      });
+    }
+
+    updatePosition();
+    window.addEventListener("scroll", updatePosition, true);
+    window.addEventListener("resize", updatePosition);
+
+    return () => {
+      window.removeEventListener("scroll", updatePosition, true);
+      window.removeEventListener("resize", updatePosition);
+    };
+  }, [open, variant]);
 
   useEffect(() => {
     if (!open) return;
@@ -234,37 +286,50 @@ export function Dropdown({
         <span className={styles.triggerText()}>{triggerLabel}</span>
         <ChevronDownIcon />
       </button>
-      {open && (
-        <ul
-          id={listboxId}
-          role="listbox"
-          aria-multiselectable={multiple || undefined}
-          className={styles.panel()}
-        >
-          {options.map((option, index) => {
-            const isSelected = selectedValues.includes(option.value);
-            return (
-              <li
-                key={option.value}
-                ref={(el) => {
-                  optionRefs.current[index] = el;
-                }}
-                role="option"
-                aria-selected={isSelected}
-                aria-disabled={option.disabled || undefined}
-                data-selected={isSelected}
-                data-disabled={option.disabled}
-                tabIndex={-1}
-                className={styles.option()}
-                onClick={() => handleSelect(option)}
-                onKeyDown={(event) => handleOptionKeyDown(event, option, index)}
-              >
-                {option.label}
-              </li>
-            );
-          })}
-        </ul>
-      )}
+      {open &&
+        panelPosition &&
+        createPortal(
+          <ul
+            ref={panelRef}
+            id={listboxId}
+            role="listbox"
+            aria-multiselectable={multiple || undefined}
+            className={styles.panel()}
+            style={{
+              position: "fixed",
+              top: panelPosition.top,
+              left: panelPosition.left,
+              width: panelPosition.width,
+              maxHeight: OPTION_ROW_HEIGHT[variant] * visibleOptions,
+            }}
+          >
+            {options.map((option, index) => {
+              const isSelected = selectedValues.includes(option.value);
+              return (
+                <li
+                  key={option.value}
+                  ref={(el) => {
+                    optionRefs.current[index] = el;
+                  }}
+                  role="option"
+                  aria-selected={isSelected}
+                  aria-disabled={option.disabled || undefined}
+                  data-selected={isSelected}
+                  data-disabled={option.disabled}
+                  tabIndex={-1}
+                  className={styles.option()}
+                  onClick={() => handleSelect(option)}
+                  onKeyDown={(event) =>
+                    handleOptionKeyDown(event, option, index)
+                  }
+                >
+                  {option.label}
+                </li>
+              );
+            })}
+          </ul>,
+          document.body
+        )}
     </div>
   );
 }
