@@ -36,8 +36,10 @@
   /* State */
   --color-primary-hover: var(--color-orange-400);
   --color-primary-pressed: var(--color-orange-600);
-  --color-secondary-hover: var(--color-orange-50);
-  --color-secondary-pressed: var(--color-orange-100);
+  --color-hover: var(--color-orange-50);
+  --color-pressed: var(--color-orange-100);
+  --color-secondary-hover: #ffdaa6;
+  --color-secondary-pressed: #ffca74;
   --color-disabled: var(--color-gray-500);
 
   /* Background */
