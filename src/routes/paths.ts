@@ -3,4 +3,5 @@ export const PATH = {
   ONBOARDING: "/",
   LOGIN: "/login",
   SIGNUP: "/signup",
+  ORDER_REVIEW: "/orders/:orderId/review",
 } as const;

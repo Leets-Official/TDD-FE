@@ -8,8 +8,13 @@ export const iconButtonVariants = tv({
       large: "[&_svg]:size-7",
       medium: "[&_svg]:size-6",
     },
+    tone: {
+      ghost: "",
+      manner: "rounded-md bg-bg-3 data-[selected=true]:bg-secondary-pressed",
+    },
   },
   defaultVariants: {
     size: "medium",
+    tone: "ghost",
   },
 });
