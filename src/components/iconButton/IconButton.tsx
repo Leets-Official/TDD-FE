@@ -26,6 +26,7 @@ export function IconButton({
     <button
       type={type}
       data-selected={selected}
+      aria-pressed={selected}
       className={iconButtonVariants({ size, tone, className })}
       {...props}
     >

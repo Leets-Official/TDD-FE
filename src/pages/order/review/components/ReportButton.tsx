@@ -13,6 +13,7 @@ export function ReportButton({ reported, onClick }: ReportButtonProps) {
     <Button
       variant="outline"
       size="small"
+      aria-pressed={reported}
       onClick={onClick}
       className={cn(
         "text-error hover:bg-error-subtle active:bg-error-subtle",
