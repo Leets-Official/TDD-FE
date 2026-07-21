@@ -10,11 +10,14 @@ export interface IconButtonProps
     VariantProps<typeof iconButtonVariants> {
   icon: ReactNode;
   "aria-label": string;
+  selected?: boolean;
 }
 
 export function IconButton({
   icon,
   size,
+  tone,
+  selected,
   type = "button",
   className,
   ...props
@@ -22,7 +25,8 @@ export function IconButton({
   return (
     <button
       type={type}
-      className={iconButtonVariants({ size, className })}
+      data-selected={selected}
+      className={iconButtonVariants({ size, tone, className })}
       {...props}
     >
       {icon}
