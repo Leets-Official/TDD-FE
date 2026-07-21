@@ -17,9 +17,8 @@ export default function LoginPage() {
     resolver: zodResolver(loginSchema),
   });
 
-  const onSubmit = (values: LoginFormValues) => {
+  const onSubmit = (_values: LoginFormValues) => {
     // TODO: 로그인 API 연동
-    console.log(values);
   };
 
   return (
