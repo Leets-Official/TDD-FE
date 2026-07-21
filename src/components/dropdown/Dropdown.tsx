@@ -136,7 +136,8 @@ export function Dropdown({
     const onKeyDown = (event: KeyboardEvent) => {
       if (
         event.key === "Escape" &&
-        rootRef.current?.contains(document.activeElement)
+        (rootRef.current?.contains(document.activeElement) ||
+          panelRef.current?.contains(document.activeElement))
       ) {
         setOpen(false);
         triggerRef.current?.focus();
