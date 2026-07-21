@@ -20,7 +20,7 @@ export function Chip({
       type={type}
       data-selected={selected}
       className={cn(
-        "inline-flex cursor-pointer items-center gap-xxs rounded-lg border border-divider-1 bg-white px-padding-m py-padding-s text-body-2 text-text-1 transition-colors hover:bg-secondary-hover active:bg-secondary-pressed data-[selected=true]:bg-secondary-pressed",
+        "inline-flex cursor-pointer items-center gap-xxs rounded-lg border border-divider-1 bg-white px-padding-m py-padding-s text-body-2 text-text-1 transition-colors hover:bg-hover active:bg-pressed data-[selected=true]:bg-pressed",
         className
       )}
       {...props}
