@@ -13,14 +13,17 @@ export function FilePreviewCard({ file, onRemove }: FilePreviewCardProps) {
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
 
   useEffect(() => {
-    if (!file.type.startsWith("image/")) return;
+    if (!file.type.startsWith("image/")) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
+      setPreviewUrl(null);
+      return;
+    }
 
     const url = URL.createObjectURL(file);
     // Object URLs are an external browser resource: creating and revoking
     // them must happen together in the same effect run, or React's Strict
     // Mode double-invoke (mount -> cleanup -> mount) revokes the URL the
     // <img> ends up using.
-    // eslint-disable-next-line react-hooks/set-state-in-effect
     setPreviewUrl(url);
     return () => URL.revokeObjectURL(url);
   }, [file]);
