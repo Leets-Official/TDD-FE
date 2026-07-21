@@ -1,6 +1,6 @@
 export const MANNER_TAGS: Record<"like" | "dislike", string[]> = {
   like: [
-    "시간 약속을 잘지켜요",
+    "시간 약속을 잘 지켜요",
     "주문이 순조로워요",
     "소통이 빨라요",
     "친절해요",
@@ -9,7 +9,7 @@ export const MANNER_TAGS: Record<"like" | "dislike", string[]> = {
     "답장이 너무 늦어요",
     "불쾌한 말을 했어요",
     "주문이 자주 바뀌었어요",
-    "약속이 안지켜졌어요",
+    "약속이 안 지켜졌어요",
   ],
 };
 

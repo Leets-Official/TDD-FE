@@ -12,6 +12,7 @@ interface MannerTagChipsProps {
 export function MannerTagChips({ tags }: MannerTagChipsProps) {
   const [selectedTags, setSelectedTags] = useState<Set<string>>(new Set());
   const [isCustomInputOpen, setIsCustomInputOpen] = useState(false);
+  const [customInputValue, setCustomInputValue] = useState("");
 
   function toggleTag(tag: string) {
     setSelectedTags((prev) => {
@@ -50,6 +51,8 @@ export function MannerTagChips({ tags }: MannerTagChipsProps) {
           label="직접입력"
           placeholder="직접입력"
           wrapperClassName="mt-4.75"
+          value={customInputValue}
+          onChange={(event) => setCustomInputValue(event.target.value)}
         />
       )}
     </div>
