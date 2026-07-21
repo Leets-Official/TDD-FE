@@ -26,6 +26,7 @@ export interface CardProps {
   category: FoodCategory;
   title: string;
   status?: StatusBadgeProps["status"];
+  hideStatusBadge?: boolean;
   deadline: number;
   urgentThresholdMs?: number;
   avatars: AvatarGroupItem[];
@@ -38,6 +39,7 @@ export function Card({
   category,
   title,
   status,
+  hideStatusBadge,
   deadline,
   urgentThresholdMs,
   avatars,
@@ -55,19 +57,20 @@ export function Card({
   const isClosed = isResolvedStatus || isTimeExpired;
   const effectiveStatus: StatusBadgeProps["status"] =
     !isResolvedStatus && isTimeExpired ? "cancelled" : status;
+  const showStatusBadge = !hideStatusBadge && !!effectiveStatus;
   const remainingSlots = maxCount - avatars.length;
   const isCountUrgent = remainingSlots === 1;
 
   return (
-    <div className={cardVariants({ hasStatus: !!effectiveStatus })}>
-      {effectiveStatus && (
+    <div className={cardVariants({ hasStatus: showStatusBadge })}>
+      {!hideStatusBadge && effectiveStatus && (
         <StatusBadge status={effectiveStatus} className="self-start">
           {STATUS_LABELS[effectiveStatus]}
         </StatusBadge>
       )}
 
-      <div className="flex gap-[22px]">
-        <div className="flex size-[61px] shrink-0 items-center justify-center overflow-hidden rounded-md">
+      <div className="flex gap-5.5">
+        <div className="flex size-15.25 shrink-0 items-center justify-center overflow-hidden rounded-md">
           <span
             role="img"
             aria-label={category}
