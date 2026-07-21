@@ -12,6 +12,7 @@ import {
 import { filterPods } from "@/utils/home/filterPods";
 
 import { CreatePodFab } from "./CreatePodFab";
+import { PodEmptyState } from "./PodEmptyState";
 import type { PodItem } from "../pods.mock";
 
 export interface MyPodSectionProps {
@@ -72,47 +73,53 @@ export function MyPodSection({
         />
       </div>
 
-      <div className="flex flex-col gap-9 px-xl pb-24">
-        {podState !== "past" && (
-          <section className="flex flex-col gap-l">
-            <h2 className="text-title-1 text-text-1">진행중인 배달팟</h2>
-            <ul className="flex flex-col gap-xxl">
-              {filteredInProgressPods.map((pod) => (
-                <li key={pod.id}>
-                  <button
-                    type="button"
-                    className="w-full text-left"
-                    onClick={() => onCardClick(pod)}
-                  >
-                    <Card {...pod} />
-                  </button>
-                </li>
-              ))}
-            </ul>
-          </section>
-        )}
+      {filteredInProgressPods.length === 0 && filteredPastPods.length === 0 ? (
+        <PodEmptyState onCreateClick={onCreateClick} />
+      ) : (
+        <>
+          <div className="flex flex-col gap-9 px-xl pb-24">
+            {podState !== "past" && (
+              <section className="flex flex-col gap-l">
+                <h2 className="text-title-1 text-text-1">진행중인 배달팟</h2>
+                <ul className="flex flex-col gap-xxl">
+                  {filteredInProgressPods.map((pod) => (
+                    <li key={pod.id}>
+                      <button
+                        type="button"
+                        className="w-full text-left"
+                        onClick={() => onCardClick(pod)}
+                      >
+                        <Card {...pod} />
+                      </button>
+                    </li>
+                  ))}
+                </ul>
+              </section>
+            )}
 
-        {podState !== "ongoing" && (
-          <section className="flex flex-col gap-l">
-            <h2 className="text-title-1 text-text-1">지난 배달팟</h2>
-            <ul className="flex flex-col gap-xxl">
-              {filteredPastPods.map((pod) => (
-                <li key={pod.id}>
-                  <button
-                    type="button"
-                    className="w-full text-left"
-                    onClick={() => onCardClick(pod)}
-                  >
-                    <Card {...pod} />
-                  </button>
-                </li>
-              ))}
-            </ul>
-          </section>
-        )}
-      </div>
+            {podState !== "ongoing" && (
+              <section className="flex flex-col gap-l">
+                <h2 className="text-title-1 text-text-1">지난 배달팟</h2>
+                <ul className="flex flex-col gap-xxl">
+                  {filteredPastPods.map((pod) => (
+                    <li key={pod.id}>
+                      <button
+                        type="button"
+                        className="w-full text-left"
+                        onClick={() => onCardClick(pod)}
+                      >
+                        <Card {...pod} />
+                      </button>
+                    </li>
+                  ))}
+                </ul>
+              </section>
+            )}
+          </div>
 
-      <CreatePodFab onClick={onCreateClick} />
+          <CreatePodFab onClick={onCreateClick} />
+        </>
+      )}
     </div>
   );
 }
