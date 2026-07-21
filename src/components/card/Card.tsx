@@ -63,7 +63,7 @@ export function Card({
 
   return (
     <div className={cardVariants({ hasStatus: showStatusBadge })}>
-      {!hideStatusBadge && effectiveStatus && (
+      {showStatusBadge && (
         <StatusBadge status={effectiveStatus} className="self-start">
           {STATUS_LABELS[effectiveStatus]}
         </StatusBadge>
