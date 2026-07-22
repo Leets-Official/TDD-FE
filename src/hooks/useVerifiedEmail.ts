@@ -12,6 +12,7 @@ export function useVerifiedEmail(storageKey: string) {
   };
 
   const clearVerified = () => {
+    setEmail("");
     sessionStorage.removeItem(storageKey);
   };
 
