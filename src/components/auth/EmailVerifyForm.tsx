@@ -36,6 +36,7 @@ export function EmailVerifyForm({
   });
 
   const [sentEmail, setSentEmail] = useState<string | null>(null);
+  const [isRequesting, setIsRequesting] = useState(false);
   const [deadline, setDeadline] = useState(0);
   const { timeLabel, isExpired } = useCountdown(deadline);
 
@@ -50,14 +51,20 @@ export function EmailVerifyForm({
   }, [isCodeSent, isCodeComplete, isCodeExpired, onCodeValidityChange]);
 
   const handleRequestCode = async () => {
+    if (isRequesting) return;
+
     const isValid = await trigger("email");
     if (!isValid) return;
 
     const email = getValues("email");
+    setIsRequesting(true);
     try {
       await onRequestCode(email);
     } catch {
+      // TODO: 발송 실패 문구 추후 api 연동 시 추가
       return;
+    } finally {
+      setIsRequesting(false);
     }
 
     resetField("code");
@@ -88,7 +95,7 @@ export function EmailVerifyForm({
                 variant="outline"
                 size="small"
                 className="shrink-0"
-                disabled={!emailValue}
+                disabled={!emailValue || isRequesting}
                 onClick={handleRequestCode}
               >
                 재전송
@@ -98,7 +105,7 @@ export function EmailVerifyForm({
                 type="button"
                 size="small"
                 className="shrink-0"
-                disabled={!emailValue}
+                disabled={!emailValue || isRequesting}
                 onClick={handleRequestCode}
               >
                 인증코드 받기
