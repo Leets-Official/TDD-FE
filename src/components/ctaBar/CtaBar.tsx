@@ -33,13 +33,33 @@ interface CompletedCtaBarProps extends CtaBarSharedProps {
   onEnterChat: () => void;
 }
 
+interface FullCtaBarProps {
+  status: "full";
+}
+
 export type CtaBarProps =
-  RecruitingCtaBarProps | AppliedCtaBarProps | CompletedCtaBarProps;
+  | RecruitingCtaBarProps
+  | AppliedCtaBarProps
+  | CompletedCtaBarProps
+  | FullCtaBarProps;
 
 const BAR_CLASS =
   "flex w-full items-start justify-between border-t border-divider-2 p-5";
 
 export function CtaBar(props: CtaBarProps) {
+  if (props.status === "full") {
+    return (
+      <div className={cn(BAR_CLASS, "items-center")}>
+        <span className="text-title-2 text-text-1">
+          모집완료된 배달팟입니다
+        </span>
+        <Button disabled size="medium" className="w-32.5">
+          참여 신청
+        </Button>
+      </div>
+    );
+  }
+
   if (props.status === "completed") {
     const { avatars, maxCount, onEnterChat } = props;
     return (
@@ -61,7 +81,7 @@ export function CtaBar(props: CtaBarProps) {
             </span>
           </div>
         </div>
-        <Button onClick={onEnterChat} size="medium">
+        <Button onClick={onEnterChat} size="medium" className="w-32.5">
           채팅방 입장
         </Button>
       </div>
@@ -99,11 +119,21 @@ function TimedCtaBar(props: RecruitingCtaBarProps | AppliedCtaBarProps) {
         />
       </div>
       {props.status === "recruiting" ? (
-        <Button onClick={props.onApply} disabled={isExpired} size="medium">
+        <Button
+          onClick={props.onApply}
+          disabled={isExpired}
+          size="medium"
+          className="w-32.5"
+        >
           참여 신청
         </Button>
       ) : (
-        <Button variant="outline" onClick={props.onCancel} size="medium">
+        <Button
+          variant="outline"
+          onClick={props.onCancel}
+          size="medium"
+          className="w-32.5 whitespace-nowrap"
+        >
           참여 신청 취소
         </Button>
       )}

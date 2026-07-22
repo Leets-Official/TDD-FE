@@ -70,3 +70,9 @@ export const Completed: Story = {
     onEnterChat: () => {},
   },
 };
+
+export const Full: Story = {
+  args: {
+    status: "full",
+  },
+};
