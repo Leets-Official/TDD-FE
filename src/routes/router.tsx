@@ -7,6 +7,7 @@ import DormitoryVerificationPage from "@/pages/mypage/dormitory/DormitoryVerific
 import SignupPage from "@/pages/signup/SignupPage";
 import PasswordResetPage from "@/pages/passwordReset/PasswordResetPage";
 import ReviewPage from "@/pages/order/review/ReviewPage";
+import ChatPage from "@/pages/order/chat/ChatPage";
 import { PATH } from "@/routes/paths";
 import { NotFoundPage } from "@/pages/notFound/NotFoundPage";
 
@@ -20,6 +21,7 @@ export const router = createBrowserRouter([
       { path: PATH.SIGNUP, element: <SignupPage /> },
       { path: PATH.PASSWORD_RESET, element: <PasswordResetPage /> },
       { path: PATH.MYPAGE_DORMITORY, element: <DormitoryVerificationPage /> },
+      { path: PATH.ORDER_CHAT, element: <ChatPage /> },
       { path: PATH.ORDER_REVIEW, element: <ReviewPage /> },
       { path: "*", element: <NotFoundPage /> },
     ],
