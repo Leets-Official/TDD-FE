@@ -2,10 +2,10 @@ import { tv } from "@/utils/cn";
 
 export const textFieldVariants = tv({
   slots: {
-    wrapper: "flex flex-col has-[:disabled]:opacity-30",
+    wrapper: "flex flex-col has-[input:disabled]:opacity-30",
     label: "mb-xxs text-body-1 text-text-1",
     inputWrapper:
-      "flex h-[64px] items-center gap-xxs rounded-md border border-text-5 bg-bg-1 pr-padding-m pl-padding-l transition-colors focus-within:border-text-1 has-[:disabled]:cursor-not-allowed",
+      "flex h-[64px] items-center gap-xxs rounded-md border border-text-5 bg-bg-1 pr-padding-m pl-padding-l transition-colors focus-within:border-text-1 has-[input:disabled]:cursor-not-allowed",
     input:
       "flex-1 bg-transparent text-body-1 text-text-1 outline-none placeholder:text-text-5 disabled:cursor-not-allowed",
     iconButton:
