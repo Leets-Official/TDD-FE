@@ -6,6 +6,7 @@ import { useNavigate } from "react-router";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { loginSchema, type LoginFormValues } from "@/schemas/auth";
+import { PATH } from "@/routes/paths";
 
 export default function LoginPage() {
   const navigate = useNavigate();
@@ -47,7 +48,12 @@ export default function LoginPage() {
           />
         </div>
         <div className="mt-2 flex w-full justify-between">
-          <Button variant="text" size="small" className="text-text-4">
+          <Button
+            variant="text"
+            size="small"
+            className="text-text-4"
+            onClick={() => navigate(PATH.PASSWORD_RESET)}
+          >
             비밀번호 찾기
           </Button>
           <Button
