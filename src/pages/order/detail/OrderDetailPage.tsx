@@ -45,11 +45,9 @@ export default function OrderDetailPage() {
   }
 
   function applyPod() {
-    setParticipants((prev) => {
-      const next = [...prev, ME];
-      setStatus(next.length >= pod!.maxCount ? "matched" : "applied");
-      return next;
-    });
+    const nextParticipants = [...participants, ME];
+    setParticipants(nextParticipants);
+    setStatus(nextParticipants.length >= pod!.maxCount ? "matched" : "applied");
     openToast({ message: "배달팟 참여 신청이 완료되었습니다!" });
   }
 
