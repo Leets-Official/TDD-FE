@@ -3,7 +3,7 @@ import type { Meta, StoryObj } from "@storybook/react-vite";
 import { ActionBubble } from "./ActionBubble";
 
 const meta = {
-  title: "Components/ActionBubble",
+  title: "ChatComponents/ActionBubble",
   component: ActionBubble,
   parameters: {
     layout: "centered",
