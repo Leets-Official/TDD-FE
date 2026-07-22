@@ -1,4 +1,5 @@
 import type { DropdownOption } from "@/components/dropdown/Dropdown";
+import { DORMITORY_OPTIONS } from "@/constants/dormitory";
 import {
   CATEGORY_ICONS,
   type FoodCategory,
@@ -6,9 +7,7 @@ import {
 
 export const DORM_OPTIONS: DropdownOption[] = [
   { label: "전체", value: "" },
-  { label: "1기숙사", value: "1기숙사" },
-  { label: "2기숙사", value: "2기숙사" },
-  { label: "3기숙사", value: "3기숙사" },
+  ...DORMITORY_OPTIONS,
 ];
 
 const FOOD_CATEGORIES: FoodCategory[] = [

@@ -10,16 +10,12 @@ export interface PageHeaderProps extends ComponentPropsWithRef<"header"> {
   title: string;
   onBack?: () => void;
   rightElement?: ReactNode;
-  onRightClick?: () => void;
-  rightElementAriaLabel?: string;
 }
 
 export function PageHeader({
   title,
   onBack,
   rightElement,
-  onRightClick,
-  rightElementAriaLabel,
   className,
   ...props
 }: PageHeaderProps) {
@@ -42,15 +38,7 @@ export function PageHeader({
       <h1 className="absolute left-1/2 -translate-x-1/2 text-label text-black">
         {title}
       </h1>
-      {rightElement && (
-        <IconButton
-          aria-label={rightElementAriaLabel || "추가 액션"}
-          icon={rightElement}
-          size="large"
-          className="ml-auto"
-          onClick={onRightClick}
-        />
-      )}
+      {rightElement && <div className="ml-auto">{rightElement}</div>}
     </header>
   );
 }
