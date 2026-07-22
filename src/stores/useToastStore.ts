@@ -12,6 +12,7 @@ interface ToastStore {
   toastProps: ToastContentProps | undefined;
   openToast: (props: ToastContentProps) => void;
   closeToast: () => void;
+  clearToast: () => void;
 }
 
 export const useToastStore = create<ToastStore>((set) => ({
@@ -19,5 +20,6 @@ export const useToastStore = create<ToastStore>((set) => ({
   toastProps: undefined,
 
   openToast: (props) => set({ isToastOpen: true, toastProps: props }),
-  closeToast: () => set({ isToastOpen: false, toastProps: undefined }),
+  closeToast: () => set({ isToastOpen: false }),
+  clearToast: () => set({ toastProps: undefined }),
 }));
