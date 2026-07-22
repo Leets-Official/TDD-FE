@@ -8,7 +8,11 @@ import { PageShell } from "@/layouts/PageShell";
 import { useToast } from "@/hooks/useToast";
 import { useVerifiedEmail } from "@/hooks/useVerifiedEmail";
 import { useNavigate } from "react-router";
-import type { EmailVerifyFormValues, PasswordFormValues } from "@/schemas/auth";
+import type {
+  EmailVerifyFormValues,
+  PasswordFormValues,
+  ProfileFormValues,
+} from "@/schemas/auth";
 import { PATH } from "@/routes/paths";
 
 const EMAIL_VERIFY_FORM_ID = "signup-email-verify-form";
@@ -46,9 +50,10 @@ export default function SignupPage() {
     setStep("profile");
   };
 
+  // 건너뛰기로 제출하면 nickname이 null이라 폼 값 타입을 그대로 쓸 수 없습니다.
   const submitSignup = (_profile: {
-    nickname: string | null;
-    dormitory: string | null;
+    nickname: ProfileFormValues["nickname"] | null;
+    dormitory: ProfileFormValues["dormitory"];
   }) => {
     // TODO: 회원가입 API 연동
     clearVerified();

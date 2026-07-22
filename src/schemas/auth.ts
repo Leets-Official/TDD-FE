@@ -1,9 +1,11 @@
 import { z } from "zod";
 
+import { DORMITORY_VALUES } from "@/constants/dormitory";
+
 export const emailSchema = z
   .string()
   .min(1, "이메일을 다시 확인해주세요")
-  .email("이메일을 다시 확인해주세요")
+  .pipe(z.email("이메일을 다시 확인해주세요"))
   .refine((value) => value.toLowerCase().endsWith(".ac.kr"), {
     message: "학교 이메일을 입력해주세요",
   });
@@ -59,7 +61,10 @@ export const nicknameSchema = z
 
 export const profileFormSchema = z.object({
   nickname: nicknameSchema,
-  dormitory: z.string().nullable(),
+  // 건너뛰거나 선택하지 않으면 null입니다.
+  dormitory: z
+    .enum(DORMITORY_VALUES, { error: "기숙사를 다시 선택해주세요" })
+    .nullable(),
 });
 
 export type ProfileFormValues = z.infer<typeof profileFormSchema>;
