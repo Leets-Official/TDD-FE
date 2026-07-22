@@ -5,6 +5,7 @@ import OnboardingPage from "@/pages/onboarding/OnboardingPage";
 import LoginPage from "@/pages/login/LoginPage";
 import DormitoryVerificationPage from "@/pages/mypage/dormitory/DormitoryVerificationPage";
 import SignupPage from "@/pages/signup/SignupPage";
+import OrderDetailPage from "@/pages/order/detail/OrderDetailPage";
 import ReviewPage from "@/pages/order/review/ReviewPage";
 import { PATH } from "@/routes/paths";
 import { NotFoundPage } from "@/pages/notFound/NotFoundPage";
@@ -18,6 +19,7 @@ export const router = createBrowserRouter([
       { path: PATH.LOGIN, element: <LoginPage /> },
       { path: PATH.SIGNUP, element: <SignupPage /> },
       { path: PATH.MYPAGE_DORMITORY, element: <DormitoryVerificationPage /> },
+      { path: PATH.ORDER_DETAIL, element: <OrderDetailPage /> },
       { path: PATH.ORDER_REVIEW, element: <ReviewPage /> },
       { path: "*", element: <NotFoundPage /> },
     ],
