@@ -4,7 +4,9 @@ const MS_PER_DAY = 1000 * 60 * 60 * 24;
 
 export function daysUntil(dateStr?: string | null) {
   if (!dateStr) return 0;
-  const diff = new Date(dateStr).getTime() - Date.now();
+  const time = new Date(dateStr).getTime();
+  if (Number.isNaN(time)) return 0;
+  const diff = time - Date.now();
   return Math.max(0, Math.ceil(diff / MS_PER_DAY));
 }
 
