@@ -154,6 +154,8 @@ export function useChatMessages() {
   };
 
   const handleSendMessage = (value: string) => {
+    if (!value.trim()) return;
+
     pushMessage({
       messageType: "USER",
       senderId: CURRENT_USER_ID,
