@@ -1,4 +1,4 @@
-import { useEffect, useId, useRef } from "react";
+import { useEffect, useId, useRef, type ReactNode } from "react";
 
 import { Button } from "@/components/button/Button";
 
@@ -8,7 +8,7 @@ export interface ModalProps {
   isOpen: boolean;
   onClose: () => void;
   title: string;
-  description?: string;
+  description?: ReactNode;
   caption?: string;
   outlineLabel?: string;
   onOutlineClick?: () => void;
@@ -68,7 +68,7 @@ export function Modal({
               {title}
             </p>
             {description && (
-              <p className={styles.description()}>{description}</p>
+              <div className={styles.description()}>{description}</div>
             )}
           </div>
           {caption && <p className={styles.caption()}>{caption}</p>}
