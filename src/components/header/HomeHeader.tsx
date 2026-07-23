@@ -33,6 +33,7 @@ export function HomeHeader({ className, ...props }: HomeHeaderProps) {
             </div>
           }
           size="large"
+          onClick={() => navigate(PATH.BOARD)}
         />
         <IconButton
           aria-label="마이페이지"

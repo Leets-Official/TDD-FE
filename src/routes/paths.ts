@@ -11,4 +11,7 @@ export const PATH = {
   MYPAGE_INQUIRY: "/mypage/inquiry",
   ORDER_DETAIL: "/orders/:orderId",
   ORDER_REVIEW: "/orders/:orderId/review",
+  BOARD: "/board",
+  BOARD_DETAIL: "/board/:postId",
+  BOARD_CREATE: "/board/create",
 } as const;
