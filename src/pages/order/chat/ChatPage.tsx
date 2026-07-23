@@ -80,10 +80,16 @@ export default function ChatPage() {
       >
         {/* 채팅방 부분 */}
         <div className="flex flex-col gap-4">
-          {chatMessages.map((item) => {
+          {chatMessages.map((item, index) => {
             // 현재 채팅이 나의 채팅인지 여부 (임시 하드코딩)
-            // 추후 서비스 로그인 후 서버에서 받은 유저 ID와 비교하는 방식으로 변경해야함.
             const isMine = item.senderId === CURRENT_USER_ID;
+
+            // 바로 이전 채팅과 같은 사람이 연달아 보낸 메시지면 프로필(아바타+닉네임) 생략
+            const previousItem = chatMessages[index - 1];
+            const isConsecutiveSameSender =
+              previousItem?.messageType === "USER" &&
+              previousItem.senderId === item.senderId;
+            const showNickname = !isMine && !isConsecutiveSameSender;
 
             // 배달 도착 메세지의 경우
             if (item.messageType === "DELIVERY_ARRIVED") {
@@ -162,7 +168,7 @@ export default function ChatPage() {
               <ChatBubble
                 key={item.messageId}
                 isMine={isMine}
-                nickname={isMine ? undefined : item.senderNickname}
+                nickname={showNickname ? item.senderNickname : undefined}
                 message={item.content ?? ""}
                 time={formatChatTime(item.createdAt)}
               />
