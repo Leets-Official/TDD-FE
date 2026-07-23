@@ -1,10 +1,10 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 
-import { ActionBubble } from "./ActionBubble";
+import { ActionAccountBubble } from "./ActionAccountBubble";
 
 const meta = {
-  title: "ChatComponents/ActionBubble",
-  component: ActionBubble,
+  title: "ChatComponents/ActionAccountBubble",
+  component: ActionAccountBubble,
   parameters: {
     layout: "centered",
   },
@@ -14,7 +14,7 @@ const meta = {
     secondaryText: "김*수",
     buttonLabel: "복사",
   },
-} satisfies Meta<typeof ActionBubble>;
+} satisfies Meta<typeof ActionAccountBubble>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;

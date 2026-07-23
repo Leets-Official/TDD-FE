@@ -15,7 +15,7 @@ import { formatChatTime } from "@/utils/order/formatChatTime";
 
 import MenuIcon from "@/assets/icons/MenuIcon.svg?react";
 
-import { ActionBubble } from "./components/actionBubble/ActionBubble";
+import { ActionAccountBubble } from "./components/actionAccountBubble/ActionAccountBubble";
 import { ActionDeliveryBubble } from "./components/actionDeliveryBubble/ActionDeliveryBubble";
 import { ChatBubble } from "./components/chatBubble/ChatBubble";
 import { ChatMenuBar } from "./components/ChatMenuBar";
@@ -99,7 +99,7 @@ export default function ChatPage() {
             // 정산 요청 메세지의 경우
             if (item.messageType === "SETTLEMENT_REQUEST") {
               return (
-                <ActionBubble
+                <ActionAccountBubble
                   key={item.messageId}
                   title={
                     IS_HOST

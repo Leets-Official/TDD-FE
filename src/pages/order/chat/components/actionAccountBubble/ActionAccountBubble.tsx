@@ -2,9 +2,9 @@ import type { ComponentPropsWithRef } from "react";
 
 import { Button } from "@/components/button/Button";
 
-import { actionBubbleVariants } from "./ActionBubble.variants";
+import { actionAccountBubbleVariants } from "./ActionAccountBubble.variants";
 
-export interface ActionBubbleProps extends Omit<
+export interface ActionAccountBubbleProps extends Omit<
   ComponentPropsWithRef<"div">,
   "children"
 > {
@@ -15,7 +15,7 @@ export interface ActionBubbleProps extends Omit<
   onButtonClick?: () => void;
 }
 
-export function ActionBubble({
+export function ActionAccountBubble({
   title,
   primaryText,
   secondaryText,
@@ -23,8 +23,8 @@ export function ActionBubble({
   onButtonClick,
   className,
   ...props
-}: ActionBubbleProps) {
-  const styles = actionBubbleVariants();
+}: ActionAccountBubbleProps) {
+  const styles = actionAccountBubbleVariants();
 
   return (
     <div className={styles.wrapper({ className })} {...props}>
