@@ -28,6 +28,7 @@ export function ChatMenuBar({
             variant="secondary"
             size="small"
             onClick={onDeliveryArrived}
+            aria-pressed={isDeliveryArrived}
             className={
               isDeliveryArrived
                 ? // 여기 비활성화 스타일에서 선택이 되어야 함으로 따로 정의 -> 클릭 시 배달 도착 취소가 되어야함.
