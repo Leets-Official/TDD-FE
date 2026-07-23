@@ -2,42 +2,51 @@ import type { ComponentPropsWithRef } from "react";
 
 import { Button } from "@/components/button/Button";
 
-import { actionBubbleVariants } from "./ActionBubble.variants";
+import { actionAccountBubbleVariants } from "./ActionAccountBubble.variants";
 
-export interface ActionBubbleProps extends Omit<
+export interface ActionAccountBubbleProps extends Omit<
   ComponentPropsWithRef<"div">,
   "children"
 > {
-  requesterName: string;
+  title: string;
   primaryText: string;
   secondaryText: string;
+  buttonLabel?: string;
+  buttonDisabled?: boolean;
   onButtonClick?: () => void;
 }
 
-export function ActionBubble({
-  requesterName,
+export function ActionAccountBubble({
+  title,
   primaryText,
   secondaryText,
+  buttonLabel,
+  buttonDisabled,
   onButtonClick,
   className,
   ...props
-}: ActionBubbleProps) {
-  const styles = actionBubbleVariants();
+}: ActionAccountBubbleProps) {
+  const styles = actionAccountBubbleVariants();
 
   return (
     <div className={styles.wrapper({ className })} {...props}>
       <div className={styles.content()}>
-        <p className={styles.title()}>
-          {requesterName}님이 정산을 요청하였습니다!
-        </p>
+        <p className={styles.title()}>{title}</p>
         <div className={styles.body()}>
           <p className={styles.primaryText()}>{primaryText}</p>
           <p className={styles.secondaryText()}>{secondaryText}</p>
         </div>
       </div>
-      <Button size="small" className="w-full" onClick={onButtonClick}>
-        복사
-      </Button>
+      {buttonLabel && (
+        <Button
+          size="small"
+          className="w-full"
+          disabled={buttonDisabled}
+          onClick={onButtonClick}
+        >
+          {buttonLabel}
+        </Button>
+      )}
     </div>
   );
 }

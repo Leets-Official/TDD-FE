@@ -14,6 +14,7 @@ export const chatBubbleVariants = tv({
   variants: {
     isMine: {
       true: {
+        wrapper: "w-full justify-end",
         bubble: "rounded-tl-sm rounded-br-sm rounded-bl-sm bg-secondary",
         message: "text-text-1",
       },
@@ -21,6 +22,10 @@ export const chatBubbleVariants = tv({
         bubble: "rounded-tr-sm rounded-br-sm rounded-bl-sm bg-bg-3",
         message: "text-black",
       },
+    },
+    // 프로필(아바타+닉네임)이 생략된 연속 메시지도 아바타 폭(48px)+gap(8px)만큼 들여써서 정렬을 맞춤
+    continuation: {
+      true: { wrapper: "pl-14" },
     },
   },
   defaultVariants: {

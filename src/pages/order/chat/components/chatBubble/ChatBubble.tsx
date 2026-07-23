@@ -24,7 +24,8 @@ export function ChatBubble({
   className,
   ...props
 }: ChatBubbleProps) {
-  const styles = chatBubbleVariants({ isMine });
+  const isContinuation = !isMine && !nickname;
+  const styles = chatBubbleVariants({ isMine, continuation: isContinuation });
 
   const bubble = (
     <div className={styles.bubble()}>

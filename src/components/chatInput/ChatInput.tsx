@@ -1,4 +1,4 @@
-import type { ChangeEvent, ComponentPropsWithRef } from "react";
+import type { ChangeEvent, ComponentPropsWithRef, KeyboardEvent } from "react";
 
 import ArrowUpIcon from "@/assets/icons/ArrowUpIcon.svg?react";
 import ImageUpIcon from "@/assets/icons/ImageUpIcon.svg?react";
@@ -36,6 +36,11 @@ export function ChatInput({
     onSend?.(value);
   };
 
+  const handleKeyDown = (event: KeyboardEvent<HTMLInputElement>) => {
+    if (event.key !== "Enter" || event.nativeEvent.isComposing) return;
+    handleSend();
+  };
+
   return (
     <div className={wrapper({ className: wrapperClassName })}>
       <IconButton
@@ -48,6 +53,7 @@ export function ChatInput({
         className={className}
         value={value}
         onChange={onChange}
+        onKeyDown={handleKeyDown}
         {...props}
       />
       <IconButton
