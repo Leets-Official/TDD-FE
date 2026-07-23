@@ -11,7 +11,7 @@ export const buttonVariants = tv({
       text: "text-text-1 hover:bg-hover active:bg-pressed disabled:bg-white disabled:text-disabled",
     },
     size: {
-      medium: "h-16 rounded-md px-padding-l py-m text-label",
+      medium: "h-16 rounded-md px-padding-l py-l text-label",
       small: "h-11 rounded-sm px-padding-m py-s text-body-2",
     },
   },
