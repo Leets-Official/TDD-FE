@@ -10,6 +10,7 @@ interface MenuRowProps {
 export function MenuRow({ title, onClick, className }: MenuRowProps) {
   return (
     <button
+      type="button"
       className={cn(
         "flex w-full cursor-pointer items-center justify-between p-4 text-black",
         className

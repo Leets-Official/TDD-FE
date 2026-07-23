@@ -43,7 +43,9 @@ export function DormitoryVerificationCard({
           </div>
           <p className={description()}>{descriptionText}</p>
         </div>
-        <ChevronRightIcon className={chevron()} onClick={onClick} />
+        <button type="button">
+          <ChevronRightIcon className={chevron()} onClick={onClick} />
+        </button>
       </div>
     </div>
   );
