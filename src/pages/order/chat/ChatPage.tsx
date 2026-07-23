@@ -115,6 +115,7 @@ export default function ChatPage() {
                   primaryText={ACCOUNT_TEXT}
                   secondaryText={ACCOUNT_HOLDER}
                   buttonLabel={IS_HOST ? undefined : "복사"}
+                  buttonDisabled={isTransferCompleted}
                   onButtonClick={
                     IS_HOST
                       ? undefined

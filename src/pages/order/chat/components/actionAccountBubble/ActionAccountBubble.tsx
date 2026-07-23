@@ -12,6 +12,7 @@ export interface ActionAccountBubbleProps extends Omit<
   primaryText: string;
   secondaryText: string;
   buttonLabel?: string;
+  buttonDisabled?: boolean;
   onButtonClick?: () => void;
 }
 
@@ -20,6 +21,7 @@ export function ActionAccountBubble({
   primaryText,
   secondaryText,
   buttonLabel,
+  buttonDisabled,
   onButtonClick,
   className,
   ...props
@@ -36,7 +38,12 @@ export function ActionAccountBubble({
         </div>
       </div>
       {buttonLabel && (
-        <Button size="small" className="w-full" onClick={onButtonClick}>
+        <Button
+          size="small"
+          className="w-full"
+          disabled={buttonDisabled}
+          onClick={onButtonClick}
+        >
           {buttonLabel}
         </Button>
       )}
