@@ -1,9 +1,15 @@
 @import "tailwindcss";
 @import "pretendard/dist/web/static/pretendard.css";
 @import "./tokens.css";
+@import "./customTokens.css";
 
 :root {
   color-scheme: light;
+}
+
+html,
+body {
+  overscroll-behavior: none;
 }
 
 body {
