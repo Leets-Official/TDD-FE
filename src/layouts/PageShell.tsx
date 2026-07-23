@@ -27,7 +27,7 @@ export function PageShell({
 
       <main
         className={cn(
-          "min-h-0 flex-1 [scrollbar-width:none] overflow-y-auto [&::-webkit-scrollbar]:hidden",
+          "min-h-0 flex-1 [scrollbar-width:none] overflow-y-auto overscroll-none [&::-webkit-scrollbar]:hidden",
           contentClassName
         )}
       >
