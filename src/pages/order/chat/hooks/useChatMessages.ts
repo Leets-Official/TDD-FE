@@ -135,10 +135,16 @@ export function useChatMessages() {
     });
   };
 
-  // 계좌번호 복사 버튼 클릭 시 토스트
+  // 계좌번호 복사 버튼 클릭 시 토스트 - 복사 성공 여부에 따라 문구 분기
   const handleCopyAccountClick = (accountText: string) => {
-    navigator.clipboard.writeText(accountText);
-    openToast({ message: "계좌번호가 복사되었습니다" });
+    navigator.clipboard
+      .writeText(accountText)
+      .then(() => {
+        openToast({ message: "계좌번호가 복사되었습니다" });
+      })
+      .catch(() => {
+        openToast({ message: "계좌번호 복사에 실패했습니다" });
+      });
   };
 
   // 리뷰 남기기 버튼 클릭 시 리뷰 작성 페이지로 이동
