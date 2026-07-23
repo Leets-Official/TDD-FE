@@ -1,5 +1,5 @@
 export type DormVerificationStatus =
-  "PENDING" | "APPROVED" | "REJECTED" | "EXPIRED";
+  "NONE" | "PENDING" | "APPROVED" | "REJECTED" | "EXPIRED";
 
 export interface DormVerification {
   status: DormVerificationStatus;
