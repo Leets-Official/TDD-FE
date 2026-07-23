@@ -9,9 +9,10 @@ const meta = {
     layout: "centered",
   },
   args: {
-    requesterName: "방장",
+    title: "방장님이 정산을 요청하였습니다!",
     primaryText: "우리 1002-323-1324",
     secondaryText: "김*수",
+    buttonLabel: "복사",
   },
 } satisfies Meta<typeof ActionBubble>;
 
@@ -19,3 +20,10 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {};
+
+export const WithoutButton: Story = {
+  args: {
+    title: "정산을 요청하였습니다!",
+    buttonLabel: undefined,
+  },
+};
