@@ -6,5 +6,6 @@ export const PATH = {
   PASSWORD_RESET: "/password-reset",
   MYPAGE_DORMITORY: "/mypage/dormitory",
   ORDER_CHAT: "/orders/:orderId/chat",
+  ORDER_DETAIL: "/orders/:orderId",
   ORDER_REVIEW: "/orders/:orderId/review",
 } as const;
