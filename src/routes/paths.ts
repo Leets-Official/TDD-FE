@@ -16,4 +16,5 @@ export const PATH = {
   MYPAGE_WITHDRAW: "/mypage/withdraw",
   ORDER_DETAIL: "/orders/:orderId",
   ORDER_REVIEW: "/orders/:orderId/review",
+  ORDER_CREATE: "/orders/create",
 } as const;
