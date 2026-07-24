@@ -6,6 +6,8 @@ export const buttonVariants = tv({
     variant: {
       default:
         "bg-primary text-white hover:bg-primary-hover active:bg-primary-pressed disabled:bg-disabled",
+      destructive:
+        "bg-error text-white hover:bg-error/90 active:bg-error/80 disabled:bg-disabled",
       outline:
         "border-[1.5px] border-divider-2 text-text-1 hover:bg-hover active:bg-pressed disabled:border-divider-1 disabled:bg-white disabled:text-disabled",
       text: "text-text-1 hover:bg-hover active:bg-pressed disabled:bg-white disabled:text-disabled",

@@ -9,6 +9,8 @@ export const avatarVariants = tv({
   },
   variants: {
     size: {
+      110: { root: "size-[110px]", empty: "size-[110px]" },
+      60: { root: "size-15", empty: "size-15" },
       56: { root: "size-14", empty: "size-14" },
       48: { root: "size-12", empty: "size-12" },
       40: { root: "size-10", empty: "size-10" },

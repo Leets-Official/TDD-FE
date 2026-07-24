@@ -35,10 +35,18 @@ export function TextField({
 }: TextFieldProps) {
   const generatedId = useId();
   const inputId = id ?? generatedId;
+  const feedbackId = `${inputId}-feedback`;
   const [showPassword, setShowPassword] = useState(false);
 
   const isPassword = type === "password";
   const resolvedType = isPassword ? (showPassword ? "text" : "password") : type;
+
+  // 호출자가 넘긴 aria-describedby가 있으면 feedback id와 함께 참조되도록 병합합니다.
+  const describedBy =
+    [props["aria-describedby"], feedback ? feedbackId : undefined]
+      .filter(Boolean)
+      .join(" ") || undefined;
+  const isInvalid = state === "error" || props["aria-invalid"];
 
   const {
     wrapper,
@@ -77,10 +85,20 @@ export function TextField({
           type={resolvedType}
           className={input({ className })}
           {...props}
+          aria-invalid={isInvalid || undefined}
+          aria-describedby={describedBy}
         />
         {resolvedRightElement}
       </div>
-      {feedback && <p className={feedbackClass()}>{feedback}</p>}
+      {feedback && (
+        <p
+          id={feedbackId}
+          role={state === "error" ? "alert" : undefined}
+          className={feedbackClass()}
+        >
+          {feedback}
+        </p>
+      )}
     </div>
   );
 }

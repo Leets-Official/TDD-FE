@@ -2,7 +2,7 @@ import { useRef, useState } from "react";
 import { useNavigate } from "react-router";
 
 import { Button } from "@/components/button/Button";
-import { PageHeader } from "@/components/header/PageHeader";
+import { BackHeader } from "@/layouts/BackHeader";
 import { useSubmitDormVerification } from "@/hooks/useSubmitDormVerification";
 import { PageShell } from "@/layouts/PageShell";
 import { PATH } from "@/routes/paths";
@@ -31,7 +31,7 @@ export default function DormitoryVerificationPage() {
 
   return (
     <PageShell
-      header={<PageHeader title="기숙사 인증" onBack={() => navigate(-1)} />}
+      header={<BackHeader title="기숙사 인증" />}
       bottom={
         <Button
           className="w-full"

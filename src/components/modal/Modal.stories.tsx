@@ -65,6 +65,20 @@ export const WithoutDescription: Story = {
   },
 };
 
+export const Destructive: Story = {
+  ...Default,
+  args: {
+    ...meta.args,
+    title: "정말 탈퇴하시겠어요?",
+    description:
+      "탈퇴 시 계정 정보와 배달팟 이용 기록이 모두 삭제되며, 복구할 수 없어요.",
+    caption: undefined,
+    outlineLabel: "취소",
+    primaryLabel: "탈퇴하기",
+    isDestructive: true,
+  },
+};
+
 export const PrimaryOnly: Story = {
   ...Default,
   args: {

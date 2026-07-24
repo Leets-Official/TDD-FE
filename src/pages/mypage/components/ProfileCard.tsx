@@ -1,5 +1,7 @@
-import ProfileImg from "@/assets/icons/ProfileIcon.svg?react";
+import { Avatar } from "@/components/avatar/Avatar";
 import { Button } from "@/components/button/Button";
+import { PATH } from "@/routes/paths";
+import { useNavigate } from "react-router";
 
 export interface ProfileCardProps {
   nickname: string;
@@ -14,25 +16,27 @@ export function ProfileCard({
   mannerTemperature,
   dormitory,
 }: ProfileCardProps) {
+  const navigate = useNavigate();
   return (
     <div className="flex w-full flex-col gap-4.5 rounded-lg px-5 py-6 shadow-card">
       <div className="flex items-start justify-between">
         <div className="flex gap-2.5">
-          {profileImageUrl ? (
-            <img
-              src={profileImageUrl}
-              alt={nickname}
-              className="size-15 rounded-full object-cover"
-            />
-          ) : (
-            <ProfileImg className="size-15" />
-          )}
+          <Avatar
+            size={60}
+            src={profileImageUrl}
+            alt={`${nickname} 프로필 사진`}
+          />
           <div className="flex flex-col">
             <p className="text-label text-black">{nickname}</p>
             <span className="text-caption-1 text-text-4">{dormitory}</span>
           </div>
         </div>
-        <Button variant="outline" type="button" size="small">
+        <Button
+          variant="outline"
+          type="button"
+          size="small"
+          onClick={() => navigate(PATH.MYPAGE_PROFILE_EDIT)}
+        >
           프로필 수정
         </Button>
       </div>

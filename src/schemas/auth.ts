@@ -45,6 +45,25 @@ export const passwordFormSchema = z.object({
 
 export type PasswordFormValues = z.infer<typeof passwordFormSchema>;
 
+export const passwordChangeSchema = z
+  .object({
+    currentPassword: z.string().min(1, "현재 비밀번호를 입력해주세요"),
+    newPassword: passwordSchema,
+  })
+  .refine((values) => values.currentPassword !== values.newPassword, {
+    message: "현재 비밀번호와 다른 비밀번호를 입력해주세요",
+    path: ["newPassword"],
+  });
+
+export type PasswordChangeFormValues = z.infer<typeof passwordChangeSchema>;
+
+// 본인 확인용. 기존 비밀번호가 현재 규칙을 만족하지 않을 수 있어 형식은 검사하지 않음
+export const passwordConfirmSchema = z.object({
+  password: z.string().min(1, "비밀번호를 입력해주세요"),
+});
+
+export type PasswordConfirmFormValues = z.infer<typeof passwordConfirmSchema>;
+
 export const NICKNAME_MIN_LENGTH = 2;
 export const NICKNAME_MAX_LENGTH = 10;
 
