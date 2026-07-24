@@ -42,7 +42,7 @@ export function ProfileCard({
       </div>
       <div className="flex w-full flex-col gap-1">
         <p className="text-m font-bold text-primary">
-          {mannerTemperature}℃
+          {mannerTemperature}
           <span className="px-1 text-xs leading-s text-text-3">트뜨 지수</span>
         </p>
         <div className="h-3 w-full overflow-hidden rounded-[4px] bg-bg-temperature">

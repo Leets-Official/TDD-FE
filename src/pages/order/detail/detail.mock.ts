@@ -13,12 +13,20 @@ export interface PodDetail {
   maxCount: number;
   host: ProfilesItem;
   participants: ProfilesItem[];
+  isCancelled?: boolean;
 }
 
 const HOST: ProfilesItem = {
   id: "host-1",
   nickname: "피자조아",
   temperature: 38.6,
+};
+
+// OrderDetailPage의 ME.id와 동일 — 이 값과 host.id가 같으면 방장(호스트) 뷰로 렌더링됩니다.
+export const ME_HOST: ProfilesItem = {
+  id: "me",
+  nickname: "나",
+  temperature: 36.5,
 };
 
 const PARTICIPANTS: ProfilesItem[] = [
@@ -66,3 +74,22 @@ export const podDetails: Record<string, PodDetail> = {
     participants: PARTICIPANTS,
   },
 };
+
+export function createPodDetail(
+  input: Omit<PodDetail, "id" | "host" | "participants" | "deadline"> & {
+    orderTimeMinutes: number;
+  }
+): PodDetail {
+  const { orderTimeMinutes, ...rest } = input;
+  const now = Date.now();
+  const detail: PodDetail = {
+    ...rest,
+    id: `pod-${now}`,
+    deadline: now + orderTimeMinutes * 60 * 1000,
+    host: ME_HOST,
+    // 생성자를 방장이자 첫 번째 참여자로 등록합니다.
+    participants: [ME_HOST],
+  };
+  podDetails[detail.id] = detail;
+  return detail;
+}

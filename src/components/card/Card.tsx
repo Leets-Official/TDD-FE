@@ -70,14 +70,12 @@ export function Card({
       )}
 
       <div className="flex gap-5.5">
-        <div className="flex size-15.25 shrink-0 items-center justify-center overflow-hidden rounded-md">
-          <span
-            role="img"
-            aria-label={category}
-            className="text-[46px] leading-none"
-          >
-            {CATEGORY_ICONS[category]}
-          </span>
+        <div className="flex size-15 shrink-0 items-center justify-center overflow-hidden rounded-md">
+          <img
+            src={CATEGORY_ICONS[category]}
+            alt={category}
+            className="size-full object-cover"
+          />
         </div>
 
         <div className="flex flex-col justify-center gap-xl">

@@ -22,6 +22,7 @@ import { AccountManagementPage } from "@/pages/mypage/account/AccountManagementP
 import { NotificationPage } from "@/pages/mypage/notifications/NotificationPage";
 import { PasswordChangePage } from "@/pages/mypage/password/PasswordChangePage";
 import { WithdrawPage } from "@/pages/mypage/withdraw/WithdrawPage";
+import OrderCreatePage from "@/pages/order/create/OrderCreatePage";
 
 export const router = createBrowserRouter([
   {
@@ -44,6 +45,7 @@ export const router = createBrowserRouter([
       { path: PATH.MYPAGE_WITHDRAW, element: <WithdrawPage /> },
       { path: PATH.ORDER_DETAIL, element: <OrderDetailPage /> },
       { path: PATH.ORDER_REVIEW, element: <ReviewPage /> },
+      { path: PATH.ORDER_CREATE, element: <OrderCreatePage /> },
       { path: PATH.BOARD, element: <BoardPage /> },
       { path: PATH.BOARD_DETAIL, element: <BoardDetailPage /> },
       { path: PATH.BOARD_CREATE, element: <BoardCreatePage /> },

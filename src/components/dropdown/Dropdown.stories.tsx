@@ -33,6 +33,13 @@ type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
   args: {},
+  decorators: [
+    (Story) => (
+      <div className="w-[349px]">
+        <Story />
+      </div>
+    ),
+  ],
 };
 
 export const Multiple: Story = {
@@ -40,6 +47,13 @@ export const Multiple: Story = {
     multiple: true,
     defaultValue: ["apple", "banana"],
   },
+  decorators: [
+    (Story) => (
+      <div className="w-[349px]">
+        <Story />
+      </div>
+    ),
+  ],
 };
 
 export const Filter: Story = {
@@ -53,9 +67,10 @@ export const Disabled: Story = {
   args: { disabled: true },
   render: (args) => (
     <div className="flex items-start gap-l">
-      {(["select", "filter"] as const).map((variant) => (
-        <Dropdown key={variant} {...args} variant={variant} />
-      ))}
+      <div className="w-[349px]">
+        <Dropdown {...args} variant="select" />
+      </div>
+      <Dropdown {...args} variant="filter" />
     </div>
   ),
 };

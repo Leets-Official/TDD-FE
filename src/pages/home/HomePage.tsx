@@ -3,6 +3,11 @@ import { useNavigate } from "react-router";
 
 import { HomeHeader } from "@/components/header/HomeHeader";
 import { TabBar } from "@/components/tabBar/TabBar";
+import {
+  ACCOUNT_UNREGISTERED_MODAL_PROPS,
+  DORM_VERIFICATION_MODAL_PROPS,
+  NOSHOW_RESTRICTION_MODAL_PROPS,
+} from "@/constants/order/guardModals";
 import { useModal } from "@/hooks/useModal";
 import { useToast } from "@/hooks/useToast";
 import { PageShell } from "@/layouts/PageShell";
@@ -24,6 +29,10 @@ const TABS = [
 
 // TODO: 로그인 사용자의 실제 기숙사 인증 여부로 교체
 const IS_DORM_VERIFIED = true;
+// TODO: 로그인 사용자의 실제 노쇼 정지 상태로 교체
+const IS_NOSHOW_RESTRICTED = false;
+// TODO: 로그인 사용자의 실제 계좌 등록 여부로 교체
+const IS_ACCOUNT_REGISTERED = true;
 
 export default function HomePage() {
   const [tab, setTab] = useState(TABS[0].value);
@@ -44,18 +53,35 @@ export default function HomePage() {
     });
   }, [openToast]);
 
-  function handleCreateClick() {}
+  function handleCreateClick() {
+    if (!IS_DORM_VERIFIED) {
+      openModal({
+        props: DORM_VERIFICATION_MODAL_PROPS,
+        onConfirm: () => navigate(PATH.MYPAGE_DORMITORY),
+      });
+      return;
+    }
+
+    if (IS_NOSHOW_RESTRICTED) {
+      openModal({ props: NOSHOW_RESTRICTION_MODAL_PROPS });
+      return;
+    }
+
+    if (!IS_ACCOUNT_REGISTERED) {
+      openModal({
+        props: ACCOUNT_UNREGISTERED_MODAL_PROPS,
+        onConfirm: () => navigate(PATH.MYPAGE_ACCOUNT),
+      });
+      return;
+    }
+
+    navigate(PATH.ORDER_CREATE);
+  }
 
   function handleCardClick(pod: PodItem) {
     if (!IS_DORM_VERIFIED) {
       openModal({
-        props: {
-          title: "배달팟을 만들거나 참여하려면 \n 기숙사 인증이 필요해요",
-          description:
-            "같은 기숙사생들과 안전하게 \n 배달팟을 이용할 수 있어요",
-          outlineLabel: "다음에 할게요",
-          primaryLabel: "인증하러 가기",
-        },
+        props: DORM_VERIFICATION_MODAL_PROPS,
         onConfirm: () => navigate(PATH.MYPAGE_DORMITORY),
       });
       return;

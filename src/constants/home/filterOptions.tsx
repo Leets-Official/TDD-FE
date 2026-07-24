@@ -2,7 +2,7 @@ import type { DropdownOption } from "@/components/dropdown/Dropdown";
 import { DORMITORY_OPTIONS } from "@/constants/dormitory";
 import {
   CATEGORY_ICONS,
-  type FoodCategory,
+  FOOD_CATEGORIES,
 } from "@/components/card/categoryIcons";
 
 export const DORM_OPTIONS: DropdownOption[] = [
@@ -10,25 +10,18 @@ export const DORM_OPTIONS: DropdownOption[] = [
   ...DORMITORY_OPTIONS,
 ];
 
-const FOOD_CATEGORIES: FoodCategory[] = [
-  "한식",
-  "중식",
-  "패스트푸드",
-  "카페(디저트)",
-  "치킨",
-  "분식",
-  "일식(회,돈까스)",
-  "피자",
-  "양식",
-  "족발,보쌈",
-  "기타",
-];
-
 export const MENU_OPTIONS: DropdownOption[] = [
   { label: "전체", value: "" },
   ...FOOD_CATEGORIES.map((category) => ({
-    label: `${CATEGORY_ICONS[category]} ${category}`,
+    label: category,
     value: category,
+    icon: (
+      <img
+        src={CATEGORY_ICONS[category]}
+        alt=""
+        className="size-6 rounded-xs"
+      />
+    ),
   })),
 ];
 

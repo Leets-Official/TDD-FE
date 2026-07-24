@@ -6,6 +6,7 @@ import {
   useState,
   type ComponentPropsWithRef,
   type KeyboardEvent as ReactKeyboardEvent,
+  type ReactNode,
 } from "react";
 import { createPortal } from "react-dom";
 
@@ -20,14 +21,13 @@ export interface DropdownOption {
   label: string;
   value: string;
   disabled?: boolean;
+  icon?: ReactNode;
 }
 
 type DropdownVariant = NonNullable<
   VariantProps<typeof dropdownVariants>["variant"]
 >;
 
-// 옵션 한 줄의 실제 렌더링 높이(px). Dropdown.variants.ts의 option 슬롯 패딩 + text-body-1
-// line-height로부터 나오는 값이라, 그쪽 스타일이 바뀌면 여기도 같이 맞춰야 합니다.
 const OPTION_ROW_HEIGHT: Record<DropdownVariant, number> = {
   select: 56, // py-l(16px*2) + line-height-l(24px)
   filter: 48, // py-s(12px*2) + line-height-l(24px)
@@ -95,10 +95,6 @@ export function Dropdown({
   const optionRefs = useRef<(HTMLLIElement | null)[]>([]);
   const pendingFocusIndexRef = useRef<number | null>(null);
 
-  // 옵션 패널은 document.body에 포탈로 렌더링합니다. 가로 스크롤 필터 목록처럼
-  // overflow가 걸린 조상 안에 트리거가 있으면, 패널이 absolute로 그 조상에 갇혀
-  // 잘려버리기 때문입니다 (CSS 스펙상 overflow-x가 visible이 아니면 overflow-y도
-  // 강제로 clip되어, 조상에 overflow-y-visible을 줘도 소용이 없습니다).
   const [panelPosition, setPanelPosition] = useState<{
     top: number;
     left: number;
@@ -240,23 +236,27 @@ export function Dropdown({
       ? [currentValue]
       : [];
 
-  const triggerLabel = (() => {
-    if (variant === "filter") return label ?? "필터";
+  const triggerContent: { icon?: ReactNode; text: string } = (() => {
+    if (variant === "filter") return { text: label ?? "필터" };
 
     if (multiple) {
-      if (selectedValues.length === 0) return placeholder;
-      const firstLabel =
-        options.find((option) => option.value === selectedValues[0])?.label ??
-        placeholder;
+      if (selectedValues.length === 0) return { text: placeholder };
+      const firstOption = options.find(
+        (option) => option.value === selectedValues[0]
+      );
+      const firstLabel = firstOption?.label ?? placeholder;
       return selectedValues.length > 1
-        ? `${firstLabel} 외 ${selectedValues.length - 1}개`
-        : firstLabel;
+        ? { text: `${firstLabel} 외 ${selectedValues.length - 1}개` }
+        : { icon: firstOption?.icon, text: firstLabel };
     }
 
-    return (
-      options.find((option) => option.value === currentValue)?.label ??
-      placeholder
+    const selectedOption = options.find(
+      (option) => option.value === currentValue
     );
+    return {
+      icon: selectedOption?.icon,
+      text: selectedOption?.label ?? placeholder,
+    };
   })();
 
   const styles = dropdownVariants({
@@ -284,7 +284,14 @@ export function Dropdown({
         onClick={() => setOpen((prev) => !prev)}
         onKeyDown={handleTriggerKeyDown}
       >
-        <span className={styles.triggerText()}>{triggerLabel}</span>
+        <span className={styles.triggerText()}>
+          {triggerContent.icon && (
+            <span className="mr-xxs inline-flex shrink-0 items-center align-middle">
+              {triggerContent.icon}
+            </span>
+          )}
+          {triggerContent.text}
+        </span>
         <ChevronDownIcon />
       </button>
       {open &&
@@ -324,6 +331,11 @@ export function Dropdown({
                     handleOptionKeyDown(event, option, index)
                   }
                 >
+                  {option.icon && (
+                    <span className="inline-flex shrink-0 items-center">
+                      {option.icon}
+                    </span>
+                  )}
                   {option.label}
                 </li>
               );
