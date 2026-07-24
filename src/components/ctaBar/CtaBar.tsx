@@ -28,6 +28,11 @@ interface AppliedCtaBarProps extends TimedCtaBarProps {
   onCancel: () => void;
 }
 
+interface HostRecruitingCtaBarProps extends TimedCtaBarProps {
+  status: "hostRecruiting";
+  onCancelRecruit: () => void;
+}
+
 interface CompletedCtaBarProps extends CtaBarSharedProps {
   status: "completed";
   onEnterChat: () => void;
@@ -40,6 +45,7 @@ interface FullCtaBarProps {
 export type CtaBarProps =
   | RecruitingCtaBarProps
   | AppliedCtaBarProps
+  | HostRecruitingCtaBarProps
   | CompletedCtaBarProps
   | FullCtaBarProps;
 
@@ -91,8 +97,10 @@ export function CtaBar(props: CtaBarProps) {
   return <TimedCtaBar {...props} />;
 }
 
-/** recruiting/applied 상태 전용 — useCountdown 훅이 있어 completed와 분리 */
-function TimedCtaBar(props: RecruitingCtaBarProps | AppliedCtaBarProps) {
+/** recruiting/applied/hostRecruiting 상태 전용 — useCountdown 훅이 있어 completed와 분리 */
+function TimedCtaBar(
+  props: RecruitingCtaBarProps | AppliedCtaBarProps | HostRecruitingCtaBarProps
+) {
   const { avatars, maxCount, deadline, urgentThresholdMs } = props;
   const { timeLabel, isUrgent, isExpired } = useCountdown(deadline, {
     urgentThresholdMs,
@@ -126,6 +134,15 @@ function TimedCtaBar(props: RecruitingCtaBarProps | AppliedCtaBarProps) {
           className="w-32.5"
         >
           참여 신청
+        </Button>
+      ) : props.status === "hostRecruiting" ? (
+        <Button
+          variant="outline"
+          onClick={props.onCancelRecruit}
+          size="medium"
+          className="w-32.5 whitespace-nowrap"
+        >
+          모집 취소
         </Button>
       ) : (
         <Button
