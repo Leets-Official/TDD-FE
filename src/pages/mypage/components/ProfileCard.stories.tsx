@@ -1,9 +1,11 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 
+import { MemoryRouter } from "react-router";
+
 import { ProfileCard } from "./ProfileCard";
 
 const meta = {
-  title: "Pages/Mypage/ProfileCard",
+  title: "Pages/MyPage/ProfileCard",
   component: ProfileCard,
   parameters: {
     layout: "centered",
@@ -15,9 +17,11 @@ const meta = {
   },
   decorators: [
     (Story) => (
-      <div style={{ width: 360 }}>
-        <Story />
-      </div>
+      <MemoryRouter>
+        <div style={{ width: 360 }}>
+          <Story />
+        </div>
+      </MemoryRouter>
     ),
   ],
 } satisfies Meta<typeof ProfileCard>;
