@@ -27,8 +27,15 @@ const FOOD_CATEGORIES: FoodCategory[] = [
 export const MENU_OPTIONS: DropdownOption[] = [
   { label: "전체", value: "" },
   ...FOOD_CATEGORIES.map((category) => ({
-    label: `${CATEGORY_ICONS[category]} ${category}`,
+    label: category,
     value: category,
+    icon: (
+      <img
+        src={CATEGORY_ICONS[category]}
+        alt=""
+        className="size-5 rounded-xs"
+      />
+    ),
   })),
 ];
 

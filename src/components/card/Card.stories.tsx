@@ -40,6 +40,7 @@ export const Default: Story = {
   args: {
     deadline: Date.now() + 7 * 60 * 1000 + 32 * 1000,
     avatars,
+    category: "한식",
   },
 };
 
