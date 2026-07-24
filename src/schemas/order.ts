@@ -1,10 +1,12 @@
 import { z } from "zod";
 
+import { FOOD_CATEGORIES } from "@/components/card/categoryIcons";
+
 export const TARGET_COUNT_MIN = 2;
 export const TARGET_COUNT_MAX = 4;
 
 export const orderCreateSchema = z.object({
-  category: z.string().min(1, "카테고리를 선택해주세요"),
+  category: z.enum(FOOD_CATEGORIES, "카테고리를 선택해주세요"),
   title: z.string().trim().min(1, "제목을 입력해주세요"),
   targetRange: z.tuple([
     z.number().min(TARGET_COUNT_MIN),

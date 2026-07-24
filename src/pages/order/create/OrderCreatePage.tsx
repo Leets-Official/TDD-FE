@@ -47,7 +47,7 @@ export default function OrderCreatePage() {
   } = useForm<OrderCreateFormValues>({
     resolver: zodResolver(orderCreateSchema),
     defaultValues: {
-      category: "",
+      category: "" as FoodCategory,
       title: "",
       targetRange: [TARGET_COUNT_MIN, TARGET_COUNT_MAX],
       orderTimeMinutes: "",
@@ -61,12 +61,16 @@ export default function OrderCreatePage() {
     name: ["category", "title", "orderTimeMinutes", "dormitory", "description"],
   });
   const hasEmptyField =
-    !category || !title || !orderTimeMinutes || !dormitory || !description;
+    !category ||
+    !title.trim() ||
+    !orderTimeMinutes ||
+    !dormitory ||
+    !description.trim();
 
   const onSubmit = (values: OrderCreateFormValues) => {
     const [minCount, maxCount] = values.targetRange;
     const pod = createPodDetail({
-      category: values.category as FoodCategory,
+      category: values.category,
       title: values.title,
       description: values.description,
       location: values.dormitory,

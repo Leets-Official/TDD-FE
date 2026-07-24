@@ -10,18 +10,21 @@ import western from "@/assets/foodCategories/western.png";
 import jokbal from "@/assets/foodCategories/jokbal.png";
 import etc from "@/assets/foodCategories/etc.png";
 
-export type FoodCategory =
-  | "한식"
-  | "중식"
-  | "패스트푸드"
-  | "카페(디저트)"
-  | "치킨"
-  | "분식"
-  | "일식(회,돈까스)"
-  | "피자"
-  | "양식"
-  | "족발,보쌈"
-  | "기타";
+export const FOOD_CATEGORIES = [
+  "한식",
+  "중식",
+  "패스트푸드",
+  "카페(디저트)",
+  "치킨",
+  "분식",
+  "일식(회,돈까스)",
+  "피자",
+  "양식",
+  "족발,보쌈",
+  "기타",
+] as const;
+
+export type FoodCategory = (typeof FOOD_CATEGORIES)[number];
 
 export const CATEGORY_ICONS: Record<FoodCategory, string> = {
   한식: hansik,
