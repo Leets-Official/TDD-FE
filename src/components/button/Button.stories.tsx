@@ -14,7 +14,7 @@ const meta = {
   argTypes: {
     variant: {
       control: "select",
-      options: ["default", "outline", "text"],
+      options: ["default", "destructive", "outline", "text"],
     },
     size: {
       control: "select",
@@ -27,6 +27,16 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
+  render: (args) => (
+    <div className="flex items-center gap-l">
+      <Button {...args} size="medium" />
+      <Button {...args} size="small" />
+    </div>
+  ),
+};
+
+export const Destructive: Story = {
+  args: { variant: "destructive", children: "탈퇴하기" },
   render: (args) => (
     <div className="flex items-center gap-l">
       <Button {...args} size="medium" />
@@ -59,12 +69,14 @@ export const Disabled: Story = {
   args: { disabled: true },
   render: (args) => (
     <div className="flex flex-col gap-l">
-      {(["default", "outline", "text"] as const).map((variant) => (
-        <div key={variant} className="flex items-center gap-l">
-          <Button {...args} variant={variant} size="medium" />
-          <Button {...args} variant={variant} size="small" />
-        </div>
-      ))}
+      {(["default", "destructive", "outline", "text"] as const).map(
+        (variant) => (
+          <div key={variant} className="flex items-center gap-l">
+            <Button {...args} variant={variant} size="medium" />
+            <Button {...args} variant={variant} size="small" />
+          </div>
+        )
+      )}
     </div>
   ),
 };

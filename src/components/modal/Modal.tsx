@@ -14,6 +14,7 @@ export interface ModalProps {
   onOutlineClick?: () => void;
   primaryLabel?: string;
   onPrimaryClick?: () => void;
+  isDestructive?: boolean;
 }
 
 export function Modal({
@@ -26,6 +27,7 @@ export function Modal({
   onOutlineClick,
   primaryLabel,
   onPrimaryClick,
+  isDestructive = false,
 }: ModalProps) {
   const dialogRef = useRef<HTMLDialogElement>(null);
   const titleId = useId();
@@ -87,7 +89,7 @@ export function Modal({
             )}
             {primaryLabel && (
               <Button
-                variant="default"
+                variant={isDestructive ? "destructive" : "default"}
                 size="medium"
                 className={styles.primaryButton()}
                 onClick={onPrimaryClick}
