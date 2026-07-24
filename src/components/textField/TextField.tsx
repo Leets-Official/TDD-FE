@@ -35,6 +35,7 @@ export function TextField({
 }: TextFieldProps) {
   const generatedId = useId();
   const inputId = id ?? generatedId;
+  const feedbackId = `${inputId}-feedback`;
   const [showPassword, setShowPassword] = useState(false);
 
   const isPassword = type === "password";
@@ -75,12 +76,22 @@ export function TextField({
         <input
           id={inputId}
           type={resolvedType}
+          aria-invalid={state === "error" || undefined}
+          aria-describedby={feedback ? feedbackId : undefined}
           className={input({ className })}
           {...props}
         />
         {resolvedRightElement}
       </div>
-      {feedback && <p className={feedbackClass()}>{feedback}</p>}
+      {feedback && (
+        <p
+          id={feedbackId}
+          role={state === "error" ? "alert" : undefined}
+          className={feedbackClass()}
+        >
+          {feedback}
+        </p>
+      )}
     </div>
   );
 }
