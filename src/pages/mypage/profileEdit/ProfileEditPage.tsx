@@ -3,7 +3,7 @@ import { Avatar } from "@/components/avatar/Avatar";
 import { Button } from "@/components/button/Button";
 import { BackHeader } from "@/layouts/BackHeader";
 import { PageShell } from "@/layouts/PageShell";
-import { ProfileForm } from "@/pages/signup/components/ProfileForm";
+import { ProfileForm } from "@/components/auth/ProfileForm";
 import { mockMyPageSuspended } from "@/pages/mypage/MyPage.mock";
 import type { ProfileFormValues } from "@/schemas/auth";
 import { useNavigate } from "react-router";
