@@ -3,7 +3,7 @@ import type { Meta, StoryObj } from "@storybook/react-vite";
 import { RestrictionCard } from "./RestrictionCard";
 
 const meta = {
-  title: "Pages/Mypage/RestrictionCard",
+  title: "Pages/MyPage/RestrictionCard",
   component: RestrictionCard,
   parameters: {
     layout: "centered",

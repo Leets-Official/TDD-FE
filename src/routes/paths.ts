@@ -8,6 +8,11 @@ export const PATH = {
   MYPAGE_DORMITORY: "/mypage/dormitory",
   MYPAGE_SETTINGS: "/mypage/settings",
   MYPAGE_INQUIRY: "/mypage/inquiry",
+  MYPAGE_PROFILE_EDIT: "/mypage/profile-edit",
+  MYPAGE_ACCOUNT: "/mypage/account",
+  MYPAGE_NOTIFICATIONS: "/mypage/notifications",
+  MYPAGE_PASSWORD: "/mypage/password",
+  MYPAGE_WITHDRAW: "/mypage/withdraw",
   ORDER_DETAIL: "/orders/:orderId",
   ORDER_REVIEW: "/orders/:orderId/review",
 } as const;
