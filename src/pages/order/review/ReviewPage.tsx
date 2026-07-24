@@ -1,8 +1,7 @@
 import { useState } from "react";
-import { useNavigate } from "react-router";
 
 import { Button } from "@/components/button/Button";
-import { PageHeader } from "@/components/header/PageHeader";
+import { BackHeader } from "@/layouts/BackHeader";
 import { PageShell } from "@/layouts/PageShell";
 
 import type { MannerReaction } from "./components/MannerReactionButtons";
@@ -16,7 +15,6 @@ const DUMMY_MEMBERS = [
 ];
 
 export default function ReviewPage() {
-  const navigate = useNavigate();
   const [reactions, setReactions] = useState<Record<string, MannerReaction>>(
     {}
   );
@@ -24,16 +22,7 @@ export default function ReviewPage() {
   const isAllReviewed = DUMMY_MEMBERS.every((member) => reactions[member.id]);
 
   return (
-    <PageShell
-      header={
-        <PageHeader
-          title="매너 평가"
-          onBack={() => {
-            navigate(-1);
-          }}
-        />
-      }
-    >
+    <PageShell header={<BackHeader title="매너 평가" />}>
       <div className="flex flex-col gap-xxl px-5 pt-6 pb-6">
         <div className="flex flex-col gap-4">
           <h2 className="text-title-1 text-black">배달팟 멤버 후기</h2>

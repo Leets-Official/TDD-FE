@@ -3,7 +3,7 @@ import type { Meta, StoryObj } from "@storybook/react-vite";
 import { DormitoryVerificationCard } from "./DormitoryVerificationCard";
 
 const meta = {
-  title: "Pages/Mypage/DormitoryVerificationCard",
+  title: "Pages/MyPage/DormitoryVerificationCard",
   component: DormitoryVerificationCard,
   parameters: {
     layout: "centered",

@@ -11,7 +11,7 @@ const meta: Meta<AvatarProps> = {
   argTypes: {
     size: {
       control: "select",
-      options: [56, 48, 40, 36, 24, 20, 15],
+      options: [110, 60, 56, 48, 40, 36, 24, 20, 15],
     },
   },
 };
@@ -29,7 +29,7 @@ export const Default: Story = {
 export const Sizes: Story = {
   render: () => (
     <div className="flex items-center gap-l">
-      {([56, 48, 40, 36, 24, 20, 15] as const).map((size) => (
+      {([110, 60, 56, 48, 40, 36, 24, 20, 15] as const).map((size) => (
         <Avatar
           key={size}
           src="https://i.pravatar.cc/96?img=1"

@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useNavigate, useParams } from "react-router";
 
 import { CtaBar } from "@/components/ctaBar/CtaBar";
-import { PageHeader } from "@/components/header/PageHeader";
+import { BackHeader } from "@/layouts/BackHeader";
 import { Profiles, type ProfilesItem } from "@/components/profiles/Profiles";
 import { useModal } from "@/hooks/useModal";
 import { useToast } from "@/hooks/useToast";
@@ -36,7 +36,7 @@ export default function OrderDetailPage() {
 
   if (!pod) {
     return (
-      <PageShell header={<PageHeader title="" onBack={() => navigate(-1)} />}>
+      <PageShell header={<BackHeader title="" />}>
         <p className="px-5 py-6 text-body-1 text-text-4">
           존재하지 않는 배달팟이에요.
         </p>
@@ -146,7 +146,7 @@ export default function OrderDetailPage() {
 
   return (
     <PageShell
-      header={<PageHeader title="" onBack={() => navigate(-1)} />}
+      header={<BackHeader title="" />}
       bottom={
         <div className="-mx-5 -mt-3 -mb-[calc(16px+env(safe-area-inset-bottom))]">
           <CtaBar {...ctaBarProps} />

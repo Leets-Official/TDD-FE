@@ -3,7 +3,7 @@ import { PageHeader } from "@/components/header/PageHeader";
 import { Button } from "@/components/button/Button";
 import { EmailVerifyForm } from "@/components/auth/EmailVerifyForm";
 import { PasswordForm } from "@/components/auth/PasswordForm";
-import { ProfileForm } from "@/pages/signup/components/ProfileForm";
+import { ProfileForm } from "@/components/auth/ProfileForm";
 import { PageShell } from "@/layouts/PageShell";
 import { useToast } from "@/hooks/useToast";
 import { useVerifiedEmail } from "@/hooks/useVerifiedEmail";

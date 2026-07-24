@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router";
 
-import { PageHeader } from "@/components/header/PageHeader";
+import { BackHeader } from "@/layouts/BackHeader";
 import { PageShell } from "@/layouts/PageShell";
 import { PATH } from "@/routes/paths";
 
@@ -8,23 +8,14 @@ import { DormitoryVerificationCard } from "./components/DormitoryVerificationCar
 import { MenuRow } from "./components/MenuRow";
 import { ProfileCard } from "./components/ProfileCard";
 import { RestrictionCard } from "./components/RestrictionCard";
-import { mockMypageSuspended } from "./mypage.mock";
+import { mockMyPageSuspended } from "./MyPage.mock";
 
-export function Mypage() {
+export function MyPage() {
   const navigate = useNavigate();
-  const profile = mockMypageSuspended;
+  const profile = mockMyPageSuspended;
 
   return (
-    <PageShell
-      header={
-        <PageHeader
-          title="마이 페이지"
-          onBack={() => {
-            navigate(-1);
-          }}
-        />
-      }
-    >
+    <PageShell header={<BackHeader title="마이 페이지" />}>
       <div className="mt-4.5 flex flex-col gap-6 px-5">
         <ProfileCard
           nickname={profile.nickname}
@@ -46,8 +37,14 @@ export function Mypage() {
           }}
         />
         <div className="flex flex-col">
-          <MenuRow title="정산 계좌 등록/관리" />
-          <MenuRow title="알림" />
+          <MenuRow
+            title="정산 계좌 등록/관리"
+            onClick={() => navigate(PATH.MYPAGE_ACCOUNT)}
+          />
+          <MenuRow
+            title="알림"
+            onClick={() => navigate(PATH.MYPAGE_NOTIFICATIONS)}
+          />
           <MenuRow
             title="계정 관리"
             onClick={() => navigate(PATH.MYPAGE_SETTINGS)}

@@ -1,7 +1,7 @@
 import { useNavigate } from "react-router";
 
-import { PageHeader } from "@/components/header/PageHeader";
 import { useModal } from "@/hooks/useModal";
+import { BackHeader } from "@/layouts/BackHeader";
 import { PageShell } from "@/layouts/PageShell";
 import { PATH } from "@/routes/paths";
 
@@ -26,22 +26,20 @@ export function SettingsPage() {
   };
 
   return (
-    <PageShell
-      header={
-        <PageHeader
-          title="계정관리"
-          onBack={() => {
-            navigate(-1);
-          }}
-        />
-      }
-    >
+    <PageShell header={<BackHeader title="계정관리" />}>
       <div className="flex w-full flex-col gap-4 px-5">
         <h1 className="text-title-2 text-black">로그아웃/회원관리</h1>
         <div className="flex flex-col">
-          <MenuRow title="비밀번호 재설정" />
+          <MenuRow
+            title="비밀번호 재설정"
+            onClick={() => navigate(PATH.MYPAGE_PASSWORD)}
+          />
           <MenuRow title="로그아웃" onClick={handleLogout} />
-          <MenuRow title="계정 탈퇴" className="text-error" />
+          <MenuRow
+            title="계정 탈퇴"
+            className="text-error"
+            onClick={() => navigate(PATH.MYPAGE_WITHDRAW)}
+          />
         </div>
       </div>
     </PageShell>
