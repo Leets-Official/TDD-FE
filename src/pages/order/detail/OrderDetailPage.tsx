@@ -37,7 +37,7 @@ export default function OrderDetailPage() {
     pod?.participants ?? []
   );
   const [status, setStatus] = useState<ParticipationStatus>("none");
-  const [isCancelled, setIsCancelled] = useState(pod?.isCancelled ?? false);
+  const [, forceUpdate] = useState(0);
   const isHost = pod?.host.id === ME.id;
 
   if (!pod) {
@@ -83,7 +83,7 @@ export default function OrderDetailPage() {
       },
       onConfirm: () => {
         pod!.isCancelled = true;
-        setIsCancelled(true);
+        forceUpdate((n) => n + 1);
       },
     });
   }
@@ -112,7 +112,7 @@ export default function OrderDetailPage() {
     alt: p.nickname,
   }));
 
-  const ctaBarProps = isCancelled
+  const ctaBarProps = pod.isCancelled
     ? ({ status: "cancelled" } as const)
     : status === "matched"
       ? ({
