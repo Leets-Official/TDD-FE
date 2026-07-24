@@ -15,7 +15,6 @@ const meta = {
     variant: {
       control: "select",
       options: ["default", "destructive", "outline", "text", "secondary"],
-
     },
     size: {
       control: "select",
@@ -80,15 +79,14 @@ export const Disabled: Story = {
   args: { disabled: true },
   render: (args) => (
     <div className="flex flex-col gap-l">
-      {(["default", "destructive", "outline", "text", "secondary"] as const).map(
-        (variant) => (
-          <div key={variant} className="flex items-center gap-l">
-            <Button {...args} variant={variant} size="medium" />
-            <Button {...args} variant={variant} size="small" />
-          </div>
-        )
-      )}
-
+      {(
+        ["default", "destructive", "outline", "text", "secondary"] as const
+      ).map((variant) => (
+        <div key={variant} className="flex items-center gap-l">
+          <Button {...args} variant={variant} size="medium" />
+          <Button {...args} variant={variant} size="small" />
+        </div>
+      ))}
     </div>
   ),
 };
