@@ -68,7 +68,8 @@ export default function OrderCreatePage() {
       maxCount,
     });
 
-    navigate(PATH.ORDER_DETAIL.replace(":orderId", pod.id));
+    // 생성 폼을 히스토리에 남기지 않아, 상세 페이지에서 뒤로가기 누르면 홈으로 바로 이동합니다.
+    navigate(PATH.ORDER_DETAIL.replace(":orderId", pod.id), { replace: true });
     openToast({ message: "배달팟이 성공적으로 만들어졌어요!" });
   };
 
