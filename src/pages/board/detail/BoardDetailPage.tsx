@@ -4,8 +4,9 @@ import { useNavigate, useParams } from "react-router";
 import { ChatInput } from "@/components/chatInput/ChatInput";
 import { PageHeader } from "@/components/header/PageHeader";
 import { PageShell } from "@/layouts/PageShell";
+import { formatRelativeTime } from "@/utils/board/formatRelativeTime";
 
-import { boardPosts } from "../board.mock";
+import { boardPostDetails } from "./boardDetail.mock";
 import { BoardCommentItem } from "./components/BoardCommentItem";
 import { BoardPostSection } from "./components/BoardPostSection";
 import { useBoardComments } from "./hooks/useBoardComments";
@@ -16,12 +17,18 @@ export default function BoardDetailPage() {
   const inputRef = useRef<HTMLInputElement>(null);
   const [messageValue, setMessageValue] = useState("");
 
-  const post = boardPosts.find((item) => item.id === postId)!;
-  const { comments, replyTargetId, handleReplyClick, handleSend } =
-    useBoardComments(postId);
+  const post = boardPostDetails[postId ?? ""]!;
+  const {
+    comments,
+    topLevelComments,
+    getReplies,
+    replyTargetId,
+    handleReplyClick,
+    handleSend,
+  } = useBoardComments(postId);
 
-  // 답글 달기 버튼 클릭 시 실행 함수 - 답글 대상으로 새로 선택될 때만 입력창 포커스
-  function handleReply(commentId: string) {
+  // 답글 달기 버튼 클릭 시 실행 함수
+  function handleReply(commentId: number) {
     const willFocus = replyTargetId !== commentId;
     handleReplyClick(commentId);
     if (willFocus) {
@@ -29,6 +36,7 @@ export default function BoardDetailPage() {
     }
   }
 
+  // 메시지 전송 시 실행 함수
   function handleSendMessage(value: string) {
     handleSend(value);
     setMessageValue("");
@@ -43,18 +51,23 @@ export default function BoardDetailPage() {
           title={post.title}
           content={post.content}
           commentCount={comments.length}
-          nickname={post.nickname}
-          timeLabel={post.timeLabel}
+          nickname={post.authorNickname}
+          timeLabel={formatRelativeTime(post.createdAt)}
         />
 
         <div className="flex w-full flex-col">
-          {comments.map((comment) => (
+          {topLevelComments.map((comment) => (
             <BoardCommentItem
               key={comment.commentId}
-              nickname={comment.nickname}
+              nickname={comment.authorNickname}
               content={comment.content}
-              timeLabel={comment.timeLabel}
-              replies={comment.replies}
+              timeLabel={formatRelativeTime(comment.createdAt)}
+              replies={getReplies(comment.commentId).map((reply) => ({
+                commentId: reply.commentId,
+                nickname: reply.authorNickname,
+                content: reply.content,
+                timeLabel: formatRelativeTime(reply.createdAt),
+              }))}
               isHighlighted={replyTargetId === comment.commentId}
               onReplyClick={() => handleReply(comment.commentId)}
             />

@@ -34,7 +34,7 @@ export const WithReply: Story = {
   args: {
     replies: [
       {
-        commentId: "comment-1-reply-1",
+        commentId: 2,
         nickname: "치즈조아",
         content:
           "본문 본문 본문 본문 본문 본문 본문 본문 본문 본문 본문 본문 본문 본문",

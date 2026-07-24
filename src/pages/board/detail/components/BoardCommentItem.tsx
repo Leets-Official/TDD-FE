@@ -3,14 +3,20 @@ import { cn } from "@/utils/cn";
 
 import CornerDownRightIcon from "@/assets/icons/CornerDownRightIcon.svg?react";
 
-import type { BoardCommentReply } from "../boardDetail.mock";
 import { BoardAuthorRow } from "./BoardAuthorRow";
+
+export interface BoardCommentReplyView {
+  commentId: number;
+  nickname: string;
+  content: string;
+  timeLabel: string;
+}
 
 export interface BoardCommentItemProps {
   nickname: string;
   content: string;
   timeLabel: string;
-  replies: BoardCommentReply[];
+  replies: BoardCommentReplyView[];
   isHighlighted?: boolean;
   onReplyClick: () => void;
 }

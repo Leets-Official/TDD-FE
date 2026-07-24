@@ -1,48 +1,63 @@
-export interface BoardCommentReply {
-  commentId: string;
-  nickname: string;
-  content: string;
-  timeLabel: string;
+import type {
+  BoardCommentListItem,
+  BoardPostDetail,
+} from "@/types/board/board";
+
+import { boardPosts } from "../board.mock";
+
+const MINUTE = 60 * 1000;
+
+function minutesAgo(minutes: number) {
+  return new Date(Date.now() - minutes * MINUTE).toISOString();
 }
 
-export interface BoardComment {
-  commentId: string;
-  nickname: string;
-  content: string;
-  timeLabel: string;
-  replies: BoardCommentReply[];
-}
+const POST_MINUTES_AGO = [5, 32, 60, 120, 300];
 
-export const boardComments: Record<string, BoardComment[]> = {
+// 목록 mock(boardPosts)에 있는거 재사용
+export const boardPostDetails: Record<string, BoardPostDetail> =
+  Object.fromEntries(
+    boardPosts.map((post, index) => [
+      post.id,
+      {
+        postId: index + 1,
+        title: post.title,
+        content: post.content,
+        authorNickname: post.nickname,
+        createdAt: minutesAgo(POST_MINUTES_AGO[index] ?? 0),
+      } satisfies BoardPostDetail,
+    ])
+  );
+
+// 댓글 목록 조회 API 응답- parentCommentId로 대댓글 구분
+export const boardComments: Record<string, BoardCommentListItem[]> = {
   "post-1": [
     {
-      commentId: "comment-1",
-      nickname: "피자조아",
+      commentId: 1,
+      parentCommentId: null,
       content: "저요! 혹시 몇 동 사세요?",
-      timeLabel: "56분 전",
-      replies: [
-        {
-          commentId: "comment-1-reply-1",
-          nickname: "치즈조아",
-          content:
-            "3동이요! 감사합니다 :) 경비실 앞에서 뵐게요 3동이요! 감사합니다 :) 경비실 앞에서 뵐게요",
-          timeLabel: "50분 전",
-        },
-      ],
+      authorNickname: "피자조아",
+      createdAt: minutesAgo(4),
     },
     {
-      commentId: "comment-2",
-      nickname: "새내기곰",
+      commentId: 2,
+      parentCommentId: 1,
+      content: "3동이요! 감사합니다 :) 경비실 앞에서 뵐게요",
+      authorNickname: "치즈조아",
+      createdAt: minutesAgo(3),
+    },
+    {
+      commentId: 3,
+      parentCommentId: null,
       content: "저도 택배 기다리고 있었는데 같이 받을게요!",
-      timeLabel: "40분 전",
-      replies: [],
+      authorNickname: "새내기곰",
+      createdAt: minutesAgo(2),
     },
     {
-      commentId: "comment-3",
-      nickname: "빨래요정",
+      commentId: 4,
+      parentCommentId: null,
       content: "부럽네요 저도 다음에 같이 받고 싶어요 ㅎㅎ",
-      timeLabel: "30분 전",
-      replies: [],
+      authorNickname: "빨래요정",
+      createdAt: minutesAgo(1),
     },
   ],
 };

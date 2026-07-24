@@ -1,18 +1,26 @@
 import { useState } from "react";
 
-import {
-  boardComments as initialBoardComments,
-  type BoardComment,
-} from "../boardDetail.mock";
+import type { BoardCommentListItem } from "@/types/board/board";
+
+import { boardComments as initialBoardComments } from "../boardDetail.mock";
 
 export function useBoardComments(postId: string | undefined) {
-  const [comments, setComments] = useState<BoardComment[]>(
+  const [comments, setComments] = useState<BoardCommentListItem[]>(
     (postId && initialBoardComments[postId]) || []
   );
-  const [replyTargetId, setReplyTargetId] = useState<string | null>(null);
+  const [replyTargetId, setReplyTargetId] = useState<number | null>(null);
 
-  // 답글 달기 버튼 클릭 시 실행 함수 - 같은 댓글을 다시 누르면 답글 대상 해제
-  function handleReplyClick(commentId: string) {
+  const topLevelComments = comments.filter(
+    (comment) => comment.parentCommentId === null
+  );
+
+  function getReplies(parentCommentId: number) {
+    return comments.filter(
+      (comment) => comment.parentCommentId === parentCommentId
+    );
+  }
+
+  function handleReplyClick(commentId: number) {
     setReplyTargetId((prev) => (prev === commentId ? null : commentId));
   }
 
@@ -20,39 +28,24 @@ export function useBoardComments(postId: string | undefined) {
     const trimmed = value.trim();
     if (!trimmed) return;
 
-    if (replyTargetId) {
-      setComments((prev) =>
-        prev.map((comment) =>
-          comment.commentId === replyTargetId
-            ? {
-                ...comment,
-                replies: [
-                  ...comment.replies,
-                  {
-                    commentId: `${comment.commentId}-reply-${Date.now()}`,
-                    nickname: "나",
-                    content: trimmed,
-                    timeLabel: "방금 전",
-                  },
-                ],
-              }
-            : comment
-        )
-      );
-      setReplyTargetId(null);
-    } else {
-      setComments((prev) => [
-        ...prev,
-        {
-          commentId: `comment-${Date.now()}`,
-          nickname: "나",
-          content: trimmed,
-          timeLabel: "방금 전",
-          replies: [],
-        },
-      ]);
-    }
+    const newComment: BoardCommentListItem = {
+      commentId: Date.now(),
+      parentCommentId: replyTargetId,
+      content: trimmed,
+      authorNickname: "나",
+      createdAt: new Date().toISOString(),
+    };
+
+    setComments((prev) => [...prev, newComment]);
+    setReplyTargetId(null);
   }
 
-  return { comments, replyTargetId, handleReplyClick, handleSend };
+  return {
+    comments,
+    topLevelComments,
+    getReplies,
+    replyTargetId,
+    handleReplyClick,
+    handleSend,
+  };
 }
