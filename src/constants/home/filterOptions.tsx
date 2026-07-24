@@ -33,7 +33,7 @@ export const MENU_OPTIONS: DropdownOption[] = [
       <img
         src={CATEGORY_ICONS[category]}
         alt=""
-        className="size-5 rounded-xs"
+        className="size-6 rounded-xs"
       />
     ),
   })),

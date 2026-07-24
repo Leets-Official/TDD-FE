@@ -3,13 +3,17 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useNavigate } from "react-router";
 
 import { Button } from "@/components/button/Button";
+import type { FoodCategory } from "@/components/card/categoryIcons";
 import { Dropdown } from "@/components/dropdown/Dropdown";
 import { Slider } from "@/components/slider/Slider";
 import { TextField } from "@/components/textField/TextField";
 import { Textarea } from "@/components/textarea/Textarea";
 import { cn } from "@/utils/cn";
 import { DORMITORY_OPTIONS } from "@/constants/dormitory";
-import { ORDER_TIME_OPTIONS } from "@/constants/home/filterOptions";
+import {
+  MENU_OPTIONS,
+  ORDER_TIME_OPTIONS,
+} from "@/constants/home/filterOptions";
 import { useToast } from "@/hooks/useToast";
 import { BackHeader } from "@/layouts/BackHeader";
 import { PageShell } from "@/layouts/PageShell";
@@ -24,6 +28,9 @@ import {
 import { createPodDetail } from "../detail/detail.mock";
 
 const ORDER_CREATE_FORM_ID = "order-create-form";
+const MENU_SELECT_OPTIONS = MENU_OPTIONS.filter(
+  (option) => option.value !== ""
+);
 const ORDER_TIME_SELECT_OPTIONS = ORDER_TIME_OPTIONS.filter(
   (option) => option.value !== ""
 );
@@ -40,6 +47,7 @@ export default function OrderCreatePage() {
   } = useForm<OrderCreateFormValues>({
     resolver: zodResolver(orderCreateSchema),
     defaultValues: {
+      category: "",
       title: "",
       targetRange: [TARGET_COUNT_MIN, TARGET_COUNT_MAX],
       orderTimeMinutes: "",
@@ -48,18 +56,17 @@ export default function OrderCreatePage() {
     },
   });
 
-  const [title, orderTimeMinutes, dormitory, description] = useWatch({
+  const [category, title, orderTimeMinutes, dormitory, description] = useWatch({
     control,
-    name: ["title", "orderTimeMinutes", "dormitory", "description"],
+    name: ["category", "title", "orderTimeMinutes", "dormitory", "description"],
   });
   const hasEmptyField =
-    !title || !orderTimeMinutes || !dormitory || !description;
+    !category || !title || !orderTimeMinutes || !dormitory || !description;
 
   const onSubmit = (values: OrderCreateFormValues) => {
     const [minCount, maxCount] = values.targetRange;
     const pod = createPodDetail({
-      // TODO: 카테고리 입력 방식(직접 선택 vs 제목 기반 자동 분류) 결정되면 교체
-      category: "기타",
+      category: values.category as FoodCategory,
       title: values.title,
       description: values.description,
       location: values.dormitory,
@@ -98,6 +105,27 @@ export default function OrderCreatePage() {
       >
         <h1 className="text-title-1 text-text-1">배달팟 만들기</h1>
 
+        <div>
+          <Controller
+            control={control}
+            name="category"
+            render={({ field }) => (
+              <Dropdown
+                label="메뉴 카테고리"
+                placeholder="메뉴(한식, 치킨)를 선택하세요"
+                options={MENU_SELECT_OPTIONS}
+                value={field.value}
+                onChange={field.onChange}
+              />
+            )}
+          />
+          {errors.category && (
+            <p className="mt-1 px-padding-s text-caption-1 text-error">
+              {errors.category.message}
+            </p>
+          )}
+        </div>
+
         <TextField
           label="제목"
           placeholder="제목 입력(ex. OO피자 먹을 사람~)"
@@ -107,7 +135,9 @@ export default function OrderCreatePage() {
         />
 
         <div className="flex flex-col gap-xxs">
-          <span className="text-body-1 text-text-1">목표인원(본인포함)</span>
+          <span className="text-body-1 text-text-1">
+            목표인원<span className="text-text-5">(본인포함)</span>
+          </span>
           <Controller
             control={control}
             name="targetRange"
