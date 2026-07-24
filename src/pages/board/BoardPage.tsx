@@ -1,7 +1,7 @@
 import { useNavigate } from "react-router";
 
 import { Fab } from "@/components/fab/Fab";
-import { PageHeader } from "@/components/header/PageHeader";
+import { BackHeader } from "@/layouts/BackHeader";
 import { PageShell } from "@/layouts/PageShell";
 import { PATH } from "@/routes/paths";
 
@@ -13,9 +13,7 @@ export default function BoardPage() {
   const navigate = useNavigate();
 
   return (
-    <PageShell
-      header={<PageHeader title="게시판" onBack={() => navigate(-1)} />}
-    >
+    <PageShell header={<BackHeader title="게시판" />}>
       {boardPosts.length === 0 ? (
         <BoardEmptyState onCreateClick={() => navigate(PATH.BOARD_CREATE)} />
       ) : (

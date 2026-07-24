@@ -2,9 +2,9 @@ import { useState } from "react";
 import { useNavigate } from "react-router";
 
 import { Button } from "@/components/button/Button";
-import { PageHeader } from "@/components/header/PageHeader";
 import { TextField } from "@/components/textField/TextField";
 import { Textarea } from "@/components/textarea/Textarea";
+import { BackHeader } from "@/layouts/BackHeader";
 import { PageShell } from "@/layouts/PageShell";
 import { PATH } from "@/routes/paths";
 
@@ -36,9 +36,8 @@ export default function BoardCreatePage() {
   return (
     <PageShell
       header={
-        <PageHeader
+        <BackHeader
           title="글쓰기"
-          onBack={() => navigate(-1)}
           rightElement={
             <Button size="small" disabled={!isValid} onClick={handleSubmit}>
               완료

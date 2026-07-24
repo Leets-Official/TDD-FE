@@ -1,8 +1,8 @@
 import { useRef, useState } from "react";
-import { useNavigate, useParams } from "react-router";
+import { useParams } from "react-router";
 
 import { ChatInput } from "@/components/chatInput/ChatInput";
-import { PageHeader } from "@/components/header/PageHeader";
+import { BackHeader } from "@/layouts/BackHeader";
 import { PageShell } from "@/layouts/PageShell";
 import { formatRelativeTime } from "@/utils/board/formatRelativeTime";
 
@@ -19,7 +19,6 @@ export default function BoardDetailPage() {
 }
 
 function BoardDetailPageContent({ postId }: { postId: string | undefined }) {
-  const navigate = useNavigate();
   const inputRef = useRef<HTMLInputElement>(null);
   const [messageValue, setMessageValue] = useState("");
 
@@ -50,9 +49,7 @@ function BoardDetailPageContent({ postId }: { postId: string | undefined }) {
 
   return (
     <>
-      <PageShell
-        header={<PageHeader title="게시판" onBack={() => navigate(-1)} />}
-      >
+      <PageShell header={<BackHeader title="게시판" />}>
         <BoardPostSection
           title={post.title}
           content={post.content}
