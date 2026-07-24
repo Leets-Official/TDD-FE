@@ -13,6 +13,7 @@ export interface PodDetail {
   maxCount: number;
   host: ProfilesItem;
   participants: ProfilesItem[];
+  isCancelled?: boolean;
 }
 
 const HOST: ProfilesItem = {

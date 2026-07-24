@@ -37,6 +37,7 @@ export default function OrderDetailPage() {
     pod?.participants ?? []
   );
   const [status, setStatus] = useState<ParticipationStatus>("none");
+  const [isCancelled, setIsCancelled] = useState(pod?.isCancelled ?? false);
   const isHost = pod?.host.id === ME.id;
 
   if (!pod) {
@@ -80,7 +81,10 @@ export default function OrderDetailPage() {
         outlineLabel: "아니요",
         primaryLabel: "네",
       },
-      onConfirm: () => navigate(PATH.HOME),
+      onConfirm: () => {
+        pod!.isCancelled = true;
+        setIsCancelled(true);
+      },
     });
   }
 
@@ -108,8 +112,9 @@ export default function OrderDetailPage() {
     alt: p.nickname,
   }));
 
-  const ctaBarProps =
-    status === "matched"
+  const ctaBarProps = isCancelled
+    ? ({ status: "cancelled" } as const)
+    : status === "matched"
       ? ({
           status: "completed",
           avatars,

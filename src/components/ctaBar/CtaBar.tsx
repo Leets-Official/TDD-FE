@@ -42,12 +42,17 @@ interface FullCtaBarProps {
   status: "full";
 }
 
+interface CancelledCtaBarProps {
+  status: "cancelled";
+}
+
 export type CtaBarProps =
   | RecruitingCtaBarProps
   | AppliedCtaBarProps
   | HostRecruitingCtaBarProps
   | CompletedCtaBarProps
-  | FullCtaBarProps;
+  | FullCtaBarProps
+  | CancelledCtaBarProps;
 
 const BAR_CLASS =
   "flex w-full items-start justify-between border-t border-divider-2 p-5";
@@ -59,6 +64,17 @@ export function CtaBar(props: CtaBarProps) {
         <span className="text-title-2 text-text-1">
           모집완료된 배달팟입니다
         </span>
+        <Button disabled size="medium" className="w-32.5">
+          참여 신청
+        </Button>
+      </div>
+    );
+  }
+
+  if (props.status === "cancelled") {
+    return (
+      <div className={cn(BAR_CLASS, "items-center")}>
+        <span className="text-title-2 text-text-1">취소된 배달팟입니다</span>
         <Button disabled size="medium" className="w-32.5">
           참여 신청
         </Button>
