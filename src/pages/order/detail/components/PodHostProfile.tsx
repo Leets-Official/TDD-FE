@@ -17,7 +17,7 @@ export function PodHostProfile({
       <div className="flex flex-col">
         <p className="text-body-2 text-text-1">{nickname}</p>
         <div className="flex items-center gap-1">
-          <span className="text-label text-primary">{temperature}℃</span>
+          <span className="text-label text-primary">{temperature}</span>
           <span className="text-caption-2 text-text-4">트뜨 지수</span>
         </div>
       </div>

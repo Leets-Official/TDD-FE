@@ -41,7 +41,7 @@ export function Profiles({ participants, maxCount, className }: ProfilesProps) {
               {participant.nickname}
             </span>
             <span className="text-caption-1 text-primary">
-              {participant.temperature}°C
+              {participant.temperature}
             </span>
           </div>
         ))}
