@@ -6,7 +6,7 @@ import { PageHeader } from "@/components/header/PageHeader";
 import { PageShell } from "@/layouts/PageShell";
 import { formatRelativeTime } from "@/utils/board/formatRelativeTime";
 
-import { boardPostDetails } from "./boardDetail.mock";
+import { getBoardPostDetail } from "./boardDetail.mock";
 import { BoardCommentItem } from "./components/BoardCommentItem";
 import { BoardPostSection } from "./components/BoardPostSection";
 import { useBoardComments } from "./hooks/useBoardComments";
@@ -17,7 +17,7 @@ export default function BoardDetailPage() {
   const inputRef = useRef<HTMLInputElement>(null);
   const [messageValue, setMessageValue] = useState("");
 
-  const post = boardPostDetails[postId ?? ""]!;
+  const post = getBoardPostDetail(postId ?? "")!;
   const {
     comments,
     topLevelComments,

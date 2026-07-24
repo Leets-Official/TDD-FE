@@ -8,6 +8,8 @@ import { Textarea } from "@/components/textarea/Textarea";
 import { PageShell } from "@/layouts/PageShell";
 import { PATH } from "@/routes/paths";
 
+import { boardPosts } from "../board.mock";
+
 export default function BoardCreatePage() {
   const navigate = useNavigate();
   const [title, setTitle] = useState("");
@@ -20,6 +22,14 @@ export default function BoardCreatePage() {
 
     // TODO: 게시글 작성 API 연동 때 응답값 postId를 사용
     const postId = `post-${Date.now()}`;
+    boardPosts.push({
+      id: postId,
+      title,
+      content,
+      commentCount: 0,
+      timeLabel: "방금 전",
+      nickname: "나",
+    });
     navigate(PATH.BOARD_DETAIL.replace(":postId", postId));
   }
 

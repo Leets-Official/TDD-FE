@@ -11,22 +11,29 @@ function minutesAgo(minutes: number) {
   return new Date(Date.now() - minutes * MINUTE).toISOString();
 }
 
-const POST_MINUTES_AGO = [5, 32, 60, 120, 300];
+const POST_MINUTES_AGO: Record<string, number> = {
+  "post-1": 5,
+  "post-2": 32,
+  "post-3": 60,
+  "post-4": 120,
+  "post-5": 300,
+};
 
 // 목록 mock(boardPosts)에 있는거 재사용
-export const boardPostDetails: Record<string, BoardPostDetail> =
-  Object.fromEntries(
-    boardPosts.map((post, index) => [
-      post.id,
-      {
-        postId: index + 1,
-        title: post.title,
-        content: post.content,
-        authorNickname: post.nickname,
-        createdAt: minutesAgo(POST_MINUTES_AGO[index] ?? 0),
-      } satisfies BoardPostDetail,
-    ])
-  );
+export function getBoardPostDetail(
+  postId: string
+): BoardPostDetail | undefined {
+  const post = boardPosts.find((item) => item.id === postId);
+  if (!post) return undefined;
+
+  return {
+    postId: boardPosts.indexOf(post) + 1,
+    title: post.title,
+    content: post.content,
+    authorNickname: post.nickname,
+    createdAt: minutesAgo(POST_MINUTES_AGO[postId] ?? 0),
+  };
+}
 
 // 댓글 목록 조회 API 응답- parentCommentId로 대댓글 구분
 export const boardComments: Record<string, BoardCommentListItem[]> = {
