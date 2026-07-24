@@ -6,6 +6,7 @@ export const PATH = {
   PASSWORD_RESET: "/password-reset",
   MYPAGE: "/mypage",
   MYPAGE_DORMITORY: "/mypage/dormitory",
+  ORDER_CHAT: "/orders/:orderId/chat",
   MYPAGE_SETTINGS: "/mypage/settings",
   MYPAGE_INQUIRY: "/mypage/inquiry",
   MYPAGE_PROFILE_EDIT: "/mypage/profile-edit",

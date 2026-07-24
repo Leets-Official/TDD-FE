@@ -3,7 +3,7 @@ import type { Meta, StoryObj } from "@storybook/react-vite";
 import { ChatBubble } from "./ChatBubble";
 
 const meta = {
-  title: "Components/ChatBubble",
+  title: "ChatComponents/ChatBubble",
   component: ChatBubble,
   parameters: {
     layout: "centered",

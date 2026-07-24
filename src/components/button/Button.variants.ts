@@ -9,8 +9,10 @@ export const buttonVariants = tv({
       destructive:
         "bg-error text-white hover:bg-error/90 active:bg-error/80 disabled:bg-disabled",
       outline:
-        "border-[1.5px] border-divider-2 text-text-1 hover:bg-hover active:bg-pressed disabled:bg-white disabled:text-disabled",
+        "border-[1.5px] border-divider-2 text-text-1 hover:bg-hover active:bg-pressed disabled:border-divider-1 disabled:bg-white disabled:text-disabled",
       text: "text-text-1 hover:bg-hover active:bg-pressed disabled:bg-white disabled:text-disabled",
+      secondary:
+        "bg-secondary text-text-1-color hover:bg-secondary-hover active:bg-secondary-pressed disabled:border-[1.5px] disabled:border-divider-1 disabled:bg-white disabled:text-disabled",
     },
     size: {
       medium: "h-16 rounded-md px-padding-l py-l text-label",
