@@ -10,6 +10,9 @@ import OrderDetailPage from "@/pages/order/detail/OrderDetailPage";
 import PasswordResetPage from "@/pages/passwordReset/PasswordResetPage";
 import ReviewPage from "@/pages/order/review/ReviewPage";
 import ChatPage from "@/pages/order/chat/ChatPage";
+import BoardPage from "@/pages/board/BoardPage";
+import BoardDetailPage from "@/pages/board/detail/BoardDetailPage";
+import BoardCreatePage from "@/pages/board/create/BoardCreatePage";
 import { PATH } from "@/routes/paths";
 import { NotFoundPage } from "@/pages/notFound/NotFoundPage";
 import { SettingsPage } from "@/pages/mypage/settings/SettingsPage";
@@ -43,6 +46,9 @@ export const router = createBrowserRouter([
       { path: PATH.ORDER_DETAIL, element: <OrderDetailPage /> },
       { path: PATH.ORDER_REVIEW, element: <ReviewPage /> },
       { path: PATH.ORDER_CREATE, element: <OrderCreatePage /> },
+      { path: PATH.BOARD, element: <BoardPage /> },
+      { path: PATH.BOARD_DETAIL, element: <BoardDetailPage /> },
+      { path: PATH.BOARD_CREATE, element: <BoardCreatePage /> },
       { path: "*", element: <NotFoundPage /> },
     ],
   },

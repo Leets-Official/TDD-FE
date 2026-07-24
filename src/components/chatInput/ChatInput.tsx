@@ -15,6 +15,7 @@ export interface ChatInputProps extends Omit<
   onChange: (event: ChangeEvent<HTMLInputElement>) => void;
   onSend?: (value: string) => void;
   onImageUpload?: () => void;
+  showImageUpload?: boolean;
   wrapperClassName?: string;
 }
 
@@ -23,6 +24,7 @@ export function ChatInput({
   onChange,
   onSend,
   onImageUpload,
+  showImageUpload = true,
   className,
   wrapperClassName,
   ...props
@@ -43,11 +45,13 @@ export function ChatInput({
 
   return (
     <div className={wrapper({ className: wrapperClassName })}>
-      <IconButton
-        icon={<ImageUpIcon />}
-        aria-label="이미지 업로드"
-        onClick={onImageUpload}
-      />
+      {showImageUpload && (
+        <IconButton
+          icon={<ImageUpIcon />}
+          aria-label="이미지 업로드"
+          onClick={onImageUpload}
+        />
+      )}
       <ChatTextField
         wrapperClassName={textField()}
         className={className}
