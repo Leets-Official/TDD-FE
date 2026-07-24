@@ -13,6 +13,12 @@ import { useBoardComments } from "./hooks/useBoardComments";
 
 export default function BoardDetailPage() {
   const { postId } = useParams();
+
+  // postId가 바뀌면 새 게시글로 완전히 리마운트되어 댓글/답글 대상 상태가 초기화되도록 key 사용
+  return <BoardDetailPageContent key={postId} postId={postId} />;
+}
+
+function BoardDetailPageContent({ postId }: { postId: string | undefined }) {
   const navigate = useNavigate();
   const inputRef = useRef<HTMLInputElement>(null);
   const [messageValue, setMessageValue] = useState("");
