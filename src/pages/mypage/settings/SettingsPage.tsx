@@ -1,5 +1,6 @@
 import { useNavigate } from "react-router";
 
+import { useLogout } from "@/api/auth/query";
 import { useModal } from "@/hooks/useModal";
 import { BackHeader } from "@/layouts/BackHeader";
 import { PageShell } from "@/layouts/PageShell";
@@ -10,6 +11,7 @@ import { MenuRow } from "../components/MenuRow";
 export function SettingsPage() {
   const navigate = useNavigate();
   const { openModal } = useModal();
+  const { mutate: logout } = useLogout();
 
   const handleLogout = () => {
     openModal({
@@ -18,10 +20,8 @@ export function SettingsPage() {
         outlineLabel: "아니요",
         primaryLabel: "네",
       },
-      onConfirm: () => {
-        // TODO: 로그아웃 로직 연결
-        navigate(PATH.LOGIN, { replace: true });
-      },
+      // 토큰이 비워지면 ProtectedRoute가 로그인 페이지로 보냄
+      onConfirm: () => logout(),
     });
   };
 

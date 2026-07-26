@@ -7,9 +7,12 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { loginSchema, type LoginFormValues } from "@/schemas/auth";
 import { PATH } from "@/routes/paths";
+import { useLogin } from "@/api/auth/query";
+import { isAxiosError } from "axios";
 
 export default function LoginPage() {
   const navigate = useNavigate();
+  const { mutate: login, isPending } = useLogin();
   const {
     register,
     handleSubmit,
@@ -18,8 +21,15 @@ export default function LoginPage() {
     resolver: zodResolver(loginSchema),
   });
 
-  const onSubmit = (_values: LoginFormValues) => {
-    // TODO: 로그인 API 연동
+  // TODO: 임시 alert — 폼 하단 에러 메시지 또는 error 변형 토스트로 교체
+  const onSubmit = (values: LoginFormValues) => {
+    login(values, {
+      onError: (error) => {
+        if (isAxiosError<{ message: string }>(error)) {
+          alert(error.response?.data.message);
+        }
+      },
+    });
   };
 
   return (
@@ -59,12 +69,12 @@ export default function LoginPage() {
           <Button
             variant="text"
             size="small"
-            onClick={() => navigate("/signup")}
+            onClick={() => navigate(PATH.SIGNUP)}
           >
             학교 이메일로 회원가입
           </Button>
         </div>
-        <Button type="submit" className="mt-[58px] w-full">
+        <Button type="submit" disabled={isPending} className="mt-[58px] w-full">
           로그인
         </Button>
       </form>
