@@ -1,12 +1,14 @@
 import { QueryClient } from "@tanstack/react-query";
 import { isAxiosError } from "axios";
 
-// 네트워크 오류·5xx만 재시도
+// 응답이 없는 네트워크 오류와 5xx만 재시도
 const shouldRetry = (failureCount: number, error: Error) => {
-  const status = isAxiosError(error) ? error.response?.status : undefined;
-  if (status && status >= 400 && status < 500) return false;
+  if (!isAxiosError(error)) return false;
 
-  return failureCount < 1;
+  const status = error.response?.status;
+  const isRetryable = status === undefined || status >= 500;
+
+  return isRetryable && failureCount < 1;
 };
 
 export const queryClient = new QueryClient({
