@@ -10,6 +10,8 @@ import { PATH } from "@/routes/paths";
 import { useLogin } from "@/api/auth/query";
 import { isAxiosError } from "axios";
 
+const LOGIN_FAILED_MESSAGE = "로그인에 실패했어요. 잠시 후 다시 시도해주세요";
+
 export default function LoginPage() {
   const navigate = useNavigate();
   const { mutate: login, isPending } = useLogin();
@@ -25,9 +27,11 @@ export default function LoginPage() {
   const onSubmit = (values: LoginFormValues) => {
     login(values, {
       onError: (error) => {
-        if (isAxiosError<{ message: string }>(error)) {
-          alert(error.response?.data.message);
-        }
+        const message = isAxiosError<{ message?: string }>(error)
+          ? error.response?.data?.message
+          : undefined;
+
+        alert(message ?? LOGIN_FAILED_MESSAGE);
       },
     });
   };
