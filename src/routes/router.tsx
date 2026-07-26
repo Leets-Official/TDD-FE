@@ -14,6 +14,8 @@ import BoardPage from "@/pages/board/BoardPage";
 import BoardDetailPage from "@/pages/board/detail/BoardDetailPage";
 import BoardCreatePage from "@/pages/board/create/BoardCreatePage";
 import { PATH } from "@/routes/paths";
+import { ProtectedRoute } from "@/routes/ProtectedRoute";
+import { PublicRoute } from "@/routes/PublicRoute";
 import { NotFoundPage } from "@/pages/notFound/NotFoundPage";
 import { SettingsPage } from "@/pages/mypage/settings/SettingsPage";
 import { InquiryPage } from "@/pages/mypage/inquiry/InquiryPage";
@@ -28,27 +30,40 @@ export const router = createBrowserRouter([
   {
     element: <RootLayout />,
     children: [
-      { path: PATH.HOME, element: <HomePage /> },
-      { path: PATH.ONBOARDING, element: <OnboardingPage /> },
-      { path: PATH.LOGIN, element: <LoginPage /> },
-      { path: PATH.SIGNUP, element: <SignupPage /> },
-      { path: PATH.PASSWORD_RESET, element: <PasswordResetPage /> },
-      { path: PATH.MYPAGE, element: <MyPage /> },
-      { path: PATH.MYPAGE_DORMITORY, element: <DormitoryVerificationPage /> },
-      { path: PATH.ORDER_CHAT, element: <ChatPage /> },
-      { path: PATH.MYPAGE_SETTINGS, element: <SettingsPage /> },
-      { path: PATH.MYPAGE_INQUIRY, element: <InquiryPage /> },
-      { path: PATH.MYPAGE_PROFILE_EDIT, element: <ProfileEditPage /> },
-      { path: PATH.MYPAGE_ACCOUNT, element: <AccountManagementPage /> },
-      { path: PATH.MYPAGE_NOTIFICATIONS, element: <NotificationPage /> },
-      { path: PATH.MYPAGE_PASSWORD, element: <PasswordChangePage /> },
-      { path: PATH.MYPAGE_WITHDRAW, element: <WithdrawPage /> },
-      { path: PATH.ORDER_DETAIL, element: <OrderDetailPage /> },
-      { path: PATH.ORDER_REVIEW, element: <ReviewPage /> },
-      { path: PATH.ORDER_CREATE, element: <OrderCreatePage /> },
-      { path: PATH.BOARD, element: <BoardPage /> },
-      { path: PATH.BOARD_DETAIL, element: <BoardDetailPage /> },
-      { path: PATH.BOARD_CREATE, element: <BoardCreatePage /> },
+      {
+        element: <PublicRoute />,
+        children: [
+          { path: PATH.ONBOARDING, element: <OnboardingPage /> },
+          { path: PATH.LOGIN, element: <LoginPage /> },
+          { path: PATH.SIGNUP, element: <SignupPage /> },
+          { path: PATH.PASSWORD_RESET, element: <PasswordResetPage /> },
+        ],
+      },
+      {
+        element: <ProtectedRoute />,
+        children: [
+          { path: PATH.HOME, element: <HomePage /> },
+          { path: PATH.MYPAGE, element: <MyPage /> },
+          {
+            path: PATH.MYPAGE_DORMITORY,
+            element: <DormitoryVerificationPage />,
+          },
+          { path: PATH.MYPAGE_SETTINGS, element: <SettingsPage /> },
+          { path: PATH.MYPAGE_INQUIRY, element: <InquiryPage /> },
+          { path: PATH.MYPAGE_PROFILE_EDIT, element: <ProfileEditPage /> },
+          { path: PATH.MYPAGE_ACCOUNT, element: <AccountManagementPage /> },
+          { path: PATH.MYPAGE_NOTIFICATIONS, element: <NotificationPage /> },
+          { path: PATH.MYPAGE_PASSWORD, element: <PasswordChangePage /> },
+          { path: PATH.MYPAGE_WITHDRAW, element: <WithdrawPage /> },
+          { path: PATH.ORDER_DETAIL, element: <OrderDetailPage /> },
+          { path: PATH.ORDER_CHAT, element: <ChatPage /> },
+          { path: PATH.ORDER_REVIEW, element: <ReviewPage /> },
+          { path: PATH.ORDER_CREATE, element: <OrderCreatePage /> },
+          { path: PATH.BOARD, element: <BoardPage /> },
+          { path: PATH.BOARD_DETAIL, element: <BoardDetailPage /> },
+          { path: PATH.BOARD_CREATE, element: <BoardCreatePage /> },
+        ],
+      },
       { path: "*", element: <NotFoundPage /> },
     ],
   },
