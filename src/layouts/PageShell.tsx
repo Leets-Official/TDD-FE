@@ -7,6 +7,7 @@ interface PageShellProps {
   children: ReactNode;
   className?: string;
   contentClassName?: string;
+  bottomClassName?: string;
 }
 
 export function PageShell({
@@ -15,11 +16,12 @@ export function PageShell({
   children,
   className,
   contentClassName,
+  bottomClassName,
 }: PageShellProps) {
   return (
     <div
       className={cn(
-        "flex min-h-0 w-full flex-1 flex-col overflow-hidden bg-white pt-[env(safe-area-inset-top)]",
+        "flex min-h-0 w-full flex-1 flex-col overflow-hidden bg-white pt-[env(safe-area-inset-top)] pb-[env(safe-area-inset-bottom)]",
         className
       )}
     >
@@ -35,7 +37,7 @@ export function PageShell({
       </main>
 
       {bottom && (
-        <div className="shrink-0 px-5 pt-3 pb-[calc(16px+env(safe-area-inset-bottom))]">
+        <div className={cn("shrink-0 px-5 pt-3 pb-4", bottomClassName)}>
           {bottom}
         </div>
       )}
