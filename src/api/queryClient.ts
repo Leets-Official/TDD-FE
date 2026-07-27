@@ -1,8 +1,9 @@
 import { QueryClient } from "@tanstack/react-query";
-import { isAxiosError } from "axios";
+import { isAxiosError, isCancel } from "axios";
 
 // 응답이 없는 네트워크 오류와 5xx만 재시도
 const shouldRetry = (failureCount: number, error: Error) => {
+  if (isCancel(error)) return false;
   if (!isAxiosError(error)) return false;
 
   const status = error.response?.status;
