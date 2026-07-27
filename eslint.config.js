@@ -1,3 +1,6 @@
+// For more info, see https://github.com/storybookjs/eslint-plugin-storybook#configuration-flat-config-format
+import storybook from "eslint-plugin-storybook";
+
 import js from "@eslint/js";
 import globals from "globals";
 import reactHooks from "eslint-plugin-react-hooks";
@@ -7,7 +10,7 @@ import eslintConfigPrettier from "eslint-config-prettier";
 import { defineConfig, globalIgnores } from "eslint/config";
 
 export default defineConfig([
-  globalIgnores(["dist"]),
+  globalIgnores(["dist", "storybook-static"]),
   {
     files: ["**/*.{ts,tsx}"],
     extends: [
@@ -20,5 +23,29 @@ export default defineConfig([
     languageOptions: {
       globals: globals.browser,
     },
+    rules: {
+      // 의도적으로 안 쓰는 변수만 _ 접두사로 허용 (예: const { empty: _empty, ...rest } = props)
+      "@typescript-eslint/no-unused-vars": [
+        "error",
+        { varsIgnorePattern: "^_", argsIgnorePattern: "^_" },
+      ],
+    },
   },
+  {
+    files: ["**/*.{ts,tsx}"],
+    ignores: ["src/utils/cn.ts"],
+    rules: {
+      "no-restricted-imports": [
+        "error",
+        {
+          paths: [
+            {
+              name: "tailwind-variants",
+            },
+          ],
+        },
+      ],
+    },
+  },
+  ...storybook.configs["flat/recommended"],
 ]);

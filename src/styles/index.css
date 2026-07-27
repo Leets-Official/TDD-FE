@@ -1,0 +1,24 @@
+@import "tailwindcss";
+@import "pretendard/dist/web/static/pretendard.css";
+@import "./tokens.css";
+@import "./customTokens.css";
+
+:root {
+  color-scheme: light;
+}
+
+html,
+body {
+  overscroll-behavior: none;
+}
+
+body {
+  margin: 0;
+  font-family: var(--font-sans);
+}
+
+@media (min-width: 394px) {
+  body {
+    background-color: #2a2624;
+  }
+}

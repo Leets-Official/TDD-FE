@@ -1,8 +1,16 @@
+import { RouterProvider } from "react-router/dom";
+
+import { GlobalModal } from "@/components/modal/GlobalModal";
+import { GlobalToast } from "@/components/toast/GlobalToast";
+import { router } from "@/routes/router";
+
 function App() {
   return (
-    <main>
-      <p className="text-2xl font-bold text-blue-600">Hello</p>
-    </main>
+    <>
+      <RouterProvider router={router} />
+      <GlobalModal />
+      <GlobalToast />
+    </>
   );
 }
 

@@ -1,0 +1,16 @@
+{
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "editor.formatOnSave": true,
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": "explicit"
+  },
+  "search.exclude": {
+    "**/dist": true,
+    "**/storybook-static": true
+  },
+  "tailwindCSS.classFunctions": ["tv", "cn"],
+  "typescript.preferences.autoImportSpecifierExcludeRegexes": [
+    "^tailwind-variants$",
+    "^tailwind-merge$"
+  ]
+}
