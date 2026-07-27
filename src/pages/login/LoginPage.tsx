@@ -7,19 +7,42 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { loginSchema, type LoginFormValues } from "@/schemas/auth";
 import { PATH } from "@/routes/paths";
+import { useLogin } from "@/api/auth/query";
+import { getApiErrorMessage, getApiFieldErrors } from "@/api/error";
+import { API_ERROR_MESSAGE } from "@/constants/errorMessage";
 
 export default function LoginPage() {
   const navigate = useNavigate();
+  const { mutate: login, isPending } = useLogin();
   const {
     register,
     handleSubmit,
+    setError,
     formState: { errors },
   } = useForm<LoginFormValues>({
     resolver: zodResolver(loginSchema),
   });
 
-  const onSubmit = (_values: LoginFormValues) => {
-    // TODO: 로그인 API 연동
+  // TODO: 임시 alert — error 변형 토스트로 교체
+  const onSubmit = (values: LoginFormValues) => {
+    login(values, {
+      onError: (error) => {
+        const fieldErrors = getApiFieldErrors(error);
+        const invalidFields = (
+          Object.keys(values) as (keyof LoginFormValues)[]
+        ).filter((field) => fieldErrors[field]);
+
+        if (invalidFields.length > 0) {
+          invalidFields.forEach((field) =>
+            setError(field, { message: fieldErrors[field] })
+          );
+
+          return;
+        }
+
+        alert(getApiErrorMessage(error, API_ERROR_MESSAGE.LOGIN));
+      },
+    });
   };
 
   return (
@@ -59,12 +82,12 @@ export default function LoginPage() {
           <Button
             variant="text"
             size="small"
-            onClick={() => navigate("/signup")}
+            onClick={() => navigate(PATH.SIGNUP)}
           >
             학교 이메일로 회원가입
           </Button>
         </div>
-        <Button type="submit" className="mt-[58px] w-full">
+        <Button type="submit" disabled={isPending} className="mt-[58px] w-full">
           로그인
         </Button>
       </form>
