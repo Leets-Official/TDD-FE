@@ -22,7 +22,7 @@ export function HomeHeader({ className, ...props }: HomeHeaderProps) {
       )}
       {...props}
     >
-      <Logo aria-label="로고" className="ml-4 shrink-0" />
+      <Logo aria-label="로고" className="ml-3 w-14 shrink-0" />
       <div className="flex gap-2">
         <IconButton
           aria-label="게시판"
