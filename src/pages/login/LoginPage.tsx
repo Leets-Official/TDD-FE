@@ -8,9 +8,8 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { loginSchema, type LoginFormValues } from "@/schemas/auth";
 import { PATH } from "@/routes/paths";
 import { useLogin } from "@/api/auth/query";
-import { isAxiosError } from "axios";
-
-const LOGIN_FAILED_MESSAGE = "로그인에 실패했어요. 잠시 후 다시 시도해주세요";
+import { getApiErrorMessage, getApiFieldErrors } from "@/api/error";
+import { API_ERROR_MESSAGE } from "@/constants/errorMessage";
 
 export default function LoginPage() {
   const navigate = useNavigate();
@@ -18,20 +17,30 @@ export default function LoginPage() {
   const {
     register,
     handleSubmit,
+    setError,
     formState: { errors },
   } = useForm<LoginFormValues>({
     resolver: zodResolver(loginSchema),
   });
 
-  // TODO: 임시 alert — 폼 하단 에러 메시지 또는 error 변형 토스트로 교체
+  // TODO: 임시 alert — error 변형 토스트로 교체
   const onSubmit = (values: LoginFormValues) => {
     login(values, {
       onError: (error) => {
-        const message = isAxiosError<{ message?: string }>(error)
-          ? error.response?.data?.message
-          : undefined;
+        const fieldErrors = getApiFieldErrors(error);
+        const invalidFields = (
+          Object.keys(values) as (keyof LoginFormValues)[]
+        ).filter((field) => fieldErrors[field]);
 
-        alert(message ?? LOGIN_FAILED_MESSAGE);
+        if (invalidFields.length > 0) {
+          invalidFields.forEach((field) =>
+            setError(field, { message: fieldErrors[field] })
+          );
+
+          return;
+        }
+
+        alert(getApiErrorMessage(error, API_ERROR_MESSAGE.LOGIN));
       },
     });
   };
