@@ -1,15 +1,15 @@
 import { Fab } from "@/components/fab/Fab";
 
-import EmptyPodsImage from "@/assets/EmptyPods.png";
+import EmptyOrdersImage from "@/assets/EmptyOrders.png";
 
-export interface PodEmptyStateProps {
+export interface OrderEmptyStateProps {
   onCreateClick: () => void;
 }
 
-export function PodEmptyState({ onCreateClick }: PodEmptyStateProps) {
+export function OrderEmptyState({ onCreateClick }: OrderEmptyStateProps) {
   return (
     <div className="flex flex-col items-center gap-8 px-xl pt-16">
-      <img src={EmptyPodsImage} alt="" className="size-37.5" />
+      <img src={EmptyOrdersImage} alt="" className="size-37.5" />
       <div className="flex flex-col items-center gap-l text-center">
         <p className="text-title-1 text-text-1">
           현재 활성화된 배달팟이 없어요

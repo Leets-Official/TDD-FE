@@ -36,7 +36,7 @@ export const ORDER_TIME_OPTIONS: DropdownOption[] = [
   { label: "50분 후", value: "50" },
 ];
 
-export const POD_STATE_OPTIONS: DropdownOption[] = [
+export const ORDER_STATE_OPTIONS: DropdownOption[] = [
   { label: "전체", value: "all" },
   { label: "진행중", value: "ongoing" },
   { label: "지난", value: "past" },
