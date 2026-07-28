@@ -1,8 +1,11 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router";
 
+import { usePartyList } from "@/api/order/query";
+import { getApiErrorMessage } from "@/api/error";
 import { HomeHeader } from "@/components/header/HomeHeader";
 import { TabBar } from "@/components/tabBar/TabBar";
+import { API_ERROR_MESSAGE } from "@/constants/errorMessage";
 import {
   ACCOUNT_UNREGISTERED_MODAL_PROPS,
   DORM_VERIFICATION_MODAL_PROPS,
@@ -12,15 +15,11 @@ import { useModal } from "@/hooks/useModal";
 import { useToast } from "@/hooks/useToast";
 import { PageShell } from "@/layouts/PageShell";
 import { PATH } from "@/routes/paths";
+import { toOrderItem } from "@/utils/order/toOrderItem";
 
-import { MyPodSection } from "./components/MyPodSection";
-import { PodListSection } from "./components/PodListSection";
-import {
-  inProgressPods,
-  pastPods,
-  recruitingPods,
-  type PodItem,
-} from "./pods.mock";
+import { MyOrderSection } from "./components/MyOrderSection";
+import { OrderListSection } from "./components/OrderListSection";
+import { inProgressOrders, pastOrders, type OrderItem } from "./orderItem.mock";
 
 const TABS = [
   { label: "배달팟 목록", value: "all" },
@@ -39,10 +38,21 @@ export default function HomePage() {
   const navigate = useNavigate();
   const { openModal } = useModal();
   const { openToast } = useToast();
+  const { data: partyList, isPending, isError, error } = usePartyList();
+  const recruitingOrders = (partyList ?? []).map(toOrderItem);
 
   useEffect(() => {
-    const matchedPod = inProgressPods.find((pod) => pod.status === "matched");
-    if (!matchedPod) return;
+    if (!isError) return;
+    openToast({
+      message: getApiErrorMessage(error, API_ERROR_MESSAGE.ORDER_LIST),
+    });
+  }, [isError, error, openToast]);
+
+  useEffect(() => {
+    const matchedOrder = inProgressOrders.find(
+      (order) => order.status === "matched"
+    );
+    if (!matchedOrder) return;
 
     openToast({
       message: "배달팟이 매칭되었습니다!",
@@ -78,7 +88,7 @@ export default function HomePage() {
     navigate(PATH.ORDER_CREATE);
   }
 
-  function handleCardClick(pod: PodItem) {
+  function handleCardClick(order: OrderItem) {
     if (!IS_DORM_VERIFIED) {
       openModal({
         props: DORM_VERIFICATION_MODAL_PROPS,
@@ -87,7 +97,7 @@ export default function HomePage() {
       return;
     }
 
-    navigate(PATH.ORDER_DETAIL.replace(":orderId", pod.id));
+    navigate(PATH.ORDER_DETAIL.replace(":orderId", order.id));
   }
 
   return (
@@ -95,15 +105,17 @@ export default function HomePage() {
       <TabBar tabs={TABS} value={tab} onChange={setTab} />
 
       {tab === "mine" ? (
-        <MyPodSection
-          inProgressPods={inProgressPods}
-          pastPods={pastPods}
+        <MyOrderSection
+          inProgressOrders={inProgressOrders}
+          pastOrders={pastOrders}
           onCreateClick={handleCreateClick}
           onCardClick={handleCardClick}
         />
+      ) : isPending ? (
+        <p className="px-5 py-6 text-body-1 text-text-4">불러오는 중...</p>
       ) : (
-        <PodListSection
-          pods={recruitingPods}
+        <OrderListSection
+          orders={recruitingOrders}
           onCreateClick={handleCreateClick}
           onCardClick={handleCardClick}
         />
