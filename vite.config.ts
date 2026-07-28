@@ -27,7 +27,11 @@ export default defineConfig({
         theme_color: "#ff610d",
         background_color: "#ffffff",
         icons: [
-          // TODO: 임시 아이콘 (favicon.svg 기반) — 정식 로고 나오면 재생성
+          {
+            src: "pwa-64x64.png",
+            sizes: "64x64",
+            type: "image/png",
+          },
           {
             src: "pwa-192x192.png",
             sizes: "192x192",

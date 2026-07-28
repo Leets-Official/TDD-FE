@@ -1,5 +1,6 @@
 import { useEffect, useId, useRef, type ReactNode } from "react";
 
+import Logo from "@/assets/Logo.svg?react";
 import { Button } from "@/components/button/Button";
 
 import { modalVariants } from "./Modal.variants";
@@ -7,6 +8,7 @@ import { modalVariants } from "./Modal.variants";
 export interface ModalProps {
   isOpen: boolean;
   onClose: () => void;
+  hasLogo?: boolean;
   title: string;
   description?: ReactNode;
   caption?: string;
@@ -20,6 +22,7 @@ export interface ModalProps {
 export function Modal({
   isOpen,
   onClose,
+  hasLogo = false,
   title,
   description,
   caption,
@@ -65,6 +68,7 @@ export function Modal({
     >
       <div className={styles.container()}>
         <div className={styles.contents()}>
+          {hasLogo && <Logo className={styles.logo()} />}
           <div className={styles.titleBody()}>
             <p id={titleId} className={styles.title()}>
               {title}
