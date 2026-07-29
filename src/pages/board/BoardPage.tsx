@@ -1,30 +1,40 @@
 import { useNavigate } from "react-router";
 
+import { useBoardPosts } from "@/api/board/query";
 import { Fab } from "@/components/fab/Fab";
 import { BackHeader } from "@/layouts/BackHeader";
 import { PageShell } from "@/layouts/PageShell";
 import { PATH } from "@/routes/paths";
+import { formatRelativeTime } from "@/utils/board/formatRelativeTime";
 
-import { boardPosts } from "./board.mock";
 import { BoardEmptyState } from "./components/BoardEmptyState";
 import { BoardListItem } from "./components/BoardListItem";
 
 export default function BoardPage() {
   const navigate = useNavigate();
+  const { data: posts } = useBoardPosts();
+
+  if (!posts) return null;
 
   return (
     <PageShell header={<BackHeader title="게시판" />}>
-      {boardPosts.length === 0 ? (
+      {posts.length === 0 ? (
         <BoardEmptyState onCreateClick={() => navigate(PATH.BOARD_CREATE)} />
       ) : (
         <>
           <ul className="flex flex-col">
-            {boardPosts.map((post) => (
-              <li key={post.id}>
+            {posts.map((post) => (
+              <li key={post.postId}>
                 <BoardListItem
-                  {...post}
+                  title={post.title}
+                  content={post.content}
+                  commentCount={post.commentCount}
+                  timeLabel={formatRelativeTime(post.createdAt)}
+                  nickname={post.authorNickname}
                   onClick={() =>
-                    navigate(PATH.BOARD_DETAIL.replace(":postId", post.id))
+                    navigate(
+                      PATH.BOARD_DETAIL.replace(":postId", String(post.postId))
+                    )
                   }
                 />
               </li>

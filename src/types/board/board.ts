@@ -2,28 +2,23 @@
 export interface BoardPostListItem {
   postId: number;
   title: string;
+  content: string;
   authorNickname: string;
-  // authorDong: string;
   commentCount: number;
   createdAt: string;
 }
 
-export interface BoardPostListResponse {
-  posts: BoardPostListItem[];
-  nextCursor: number | null;
-  hasNext: boolean;
+export interface GetBoardPostsParams {
+  size?: number;
 }
 
 // 게시물 작성 API
 export interface CreateBoardPostRequest {
   title: string;
   content: string;
-  // scope: "all" | "dong";
 }
 
-export interface CreateBoardPostResponse {
-  postId: number;
-}
+export type CreateBoardPostResponse = number;
 
 // 게시물 상세 조회 API
 export interface BoardPostDetail {
@@ -31,7 +26,7 @@ export interface BoardPostDetail {
   title: string;
   content: string;
   authorNickname: string;
-  // authorDong: string;
+  commentCount: number;
   createdAt: string;
 }
 
@@ -41,14 +36,7 @@ export interface BoardCommentListItem {
   parentCommentId: number | null;
   content: string;
   authorNickname: string;
-  // authorDong: string;
   createdAt: string;
-}
-
-export interface BoardCommentListResponse {
-  comments: BoardCommentListItem[];
-  nextCursor: number | null;
-  hasNext: boolean;
 }
 
 // 댓글 등록 API
@@ -57,6 +45,4 @@ export interface CreateBoardCommentRequest {
   parentCommentId?: number | null;
 }
 
-export interface CreateBoardCommentResponse {
-  commentId: number;
-}
+export type CreateBoardCommentResponse = number;
