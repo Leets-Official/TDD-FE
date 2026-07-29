@@ -16,12 +16,9 @@ export interface GetBoardPostsParams {
 export interface CreateBoardPostRequest {
   title: string;
   content: string;
-  // scope: "all" | "dong";
 }
 
-export interface CreateBoardPostResponse {
-  postId: number;
-}
+export type CreateBoardPostResponse = number;
 
 // 게시물 상세 조회 API
 export interface BoardPostDetail {
