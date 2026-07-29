@@ -1,17 +1,17 @@
+import { useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 
-import { useCreateBoardComment } from "@/api/board/query";
+import { useBoardCommentList, useCreateBoardComment } from "@/api/board/query";
 import { getApiErrorMessage } from "@/api/error";
 import { API_ERROR_MESSAGE } from "@/constants/errorMessage";
 import { useToast } from "@/hooks/useToast";
 import type { BoardCommentListItem } from "@/types/board/board";
 
-import { boardComments as initialBoardComments } from "../boardDetail.mock";
-
 export function useBoardComments(postId: string | undefined) {
-  const [comments, setComments] = useState<BoardCommentListItem[]>(
-    (postId && initialBoardComments[postId]) || []
-  );
+  const queryClient = useQueryClient();
+  const commentsKey = ["board", "posts", postId, "comments"];
+
+  const { data: comments = [] } = useBoardCommentList(postId);
   const [replyTargetId, setReplyTargetId] = useState<number | null>(null);
   const { mutate: createComment } = useCreateBoardComment(postId);
   const { openToast } = useToast();
@@ -35,12 +35,13 @@ export function useBoardComments(postId: string | undefined) {
     if (!trimmed || !postId) return;
 
     const parentCommentId = replyTargetId;
-    const tempCommentId = Date.now();
+    const previousComments =
+      queryClient.getQueryData<BoardCommentListItem[]>(commentsKey);
 
-    setComments((prev) => [
-      ...prev,
+    queryClient.setQueryData<BoardCommentListItem[]>(commentsKey, (prev) => [
+      ...(prev ?? []),
       {
-        commentId: tempCommentId,
+        commentId: Date.now(),
         parentCommentId,
         content: trimmed,
         authorNickname: "나",
@@ -52,19 +53,8 @@ export function useBoardComments(postId: string | undefined) {
     createComment(
       { content: trimmed, parentCommentId },
       {
-        onSuccess: (commentId) => {
-          setComments((prev) =>
-            prev.map((comment) =>
-              comment.commentId === tempCommentId
-                ? { ...comment, commentId }
-                : comment
-            )
-          );
-        },
         onError: (error) => {
-          setComments((prev) =>
-            prev.filter((comment) => comment.commentId !== tempCommentId)
-          );
+          queryClient.setQueryData(commentsKey, previousComments);
           openToast({
             message: getApiErrorMessage(
               error,
