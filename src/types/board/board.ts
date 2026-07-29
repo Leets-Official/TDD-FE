@@ -52,6 +52,4 @@ export interface CreateBoardCommentRequest {
   parentCommentId?: number | null;
 }
 
-export interface CreateBoardCommentResponse {
-  commentId: number;
-}
+export type CreateBoardCommentResponse = number;
