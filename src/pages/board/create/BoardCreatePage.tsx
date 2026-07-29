@@ -1,36 +1,43 @@
 import { useState } from "react";
 import { useNavigate } from "react-router";
 
+import { useCreateBoardPost } from "@/api/board/query";
+import { getApiErrorMessage } from "@/api/error";
 import { Button } from "@/components/button/Button";
 import { TextField } from "@/components/textField/TextField";
 import { Textarea } from "@/components/textarea/Textarea";
+import { API_ERROR_MESSAGE } from "@/constants/errorMessage";
+import { useToast } from "@/hooks/useToast";
 import { BackHeader } from "@/layouts/BackHeader";
 import { PageShell } from "@/layouts/PageShell";
 import { PATH } from "@/routes/paths";
-
-import { boardPosts } from "../board.mock";
 
 export default function BoardCreatePage() {
   const navigate = useNavigate();
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
+  const { mutate: createPost, isPending } = useCreateBoardPost();
+  const { openToast } = useToast();
 
   const isValid = title.trim().length > 0 && content.trim().length > 0;
 
   function handleSubmit() {
     if (!isValid) return;
 
-    // TODO: 게시글 작성 API 연동 때 응답값 postId를 사용
-    const postId = `post-${Date.now()}`;
-    boardPosts.push({
-      id: postId,
-      title,
-      content,
-      commentCount: 0,
-      timeLabel: "방금 전",
-      nickname: "나",
-    });
-    navigate(PATH.BOARD_DETAIL.replace(":postId", postId));
+    createPost(
+      { title, content },
+      {
+        // TODO: 상세 조회 API 연동 후 상세 페이지로 이동하도록 변경
+        onSuccess: () => {
+          navigate(PATH.BOARD);
+        },
+        onError: (error) => {
+          openToast({
+            message: getApiErrorMessage(error, API_ERROR_MESSAGE.BOARD_CREATE),
+          });
+        },
+      }
+    );
   }
 
   return (
@@ -39,7 +46,11 @@ export default function BoardCreatePage() {
         <BackHeader
           title="글쓰기"
           rightElement={
-            <Button size="small" disabled={!isValid} onClick={handleSubmit}>
+            <Button
+              size="small"
+              disabled={!isValid || isPending}
+              onClick={handleSubmit}
+            >
               완료
             </Button>
           }
