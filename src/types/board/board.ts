@@ -2,16 +2,14 @@
 export interface BoardPostListItem {
   postId: number;
   title: string;
+  content: string;
   authorNickname: string;
-  // authorDong: string;
   commentCount: number;
   createdAt: string;
 }
 
-export interface BoardPostListResponse {
-  posts: BoardPostListItem[];
-  nextCursor: number | null;
-  hasNext: boolean;
+export interface GetBoardPostsParams {
+  size?: number;
 }
 
 // 게시물 작성 API
