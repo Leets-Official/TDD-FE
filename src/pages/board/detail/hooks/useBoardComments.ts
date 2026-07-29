@@ -30,11 +30,17 @@ export function useBoardComments(postId: string | undefined) {
     setReplyTargetId((prev) => (prev === commentId ? null : commentId));
   }
 
-  function handleSend(value: string, options?: { onSuccess?: () => void }) {
+  async function handleSend(
+    value: string,
+    options?: { onSuccess?: () => void }
+  ) {
     const trimmed = value.trim();
     if (!trimmed || !postId) return;
 
     const parentCommentId = replyTargetId;
+
+    // 진행 중인 댓글 조회가 낙관적 캐시 갱신을 덮어쓰지 않도록 먼저 취소
+    await queryClient.cancelQueries({ queryKey: commentsKey, exact: true });
     const previousComments =
       queryClient.getQueryData<BoardCommentListItem[]>(commentsKey);
 
