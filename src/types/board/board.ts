@@ -36,14 +36,7 @@ export interface BoardCommentListItem {
   parentCommentId: number | null;
   content: string;
   authorNickname: string;
-  // authorDong: string;
   createdAt: string;
-}
-
-export interface BoardCommentListResponse {
-  comments: BoardCommentListItem[];
-  nextCursor: number | null;
-  hasNext: boolean;
 }
 
 // 댓글 등록 API

@@ -3,6 +3,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
   createBoardComment,
   createBoardPost,
+  getBoardComments,
   getBoardPostDetail,
   getBoardPosts,
 } from "@/api/board/api";
@@ -37,13 +38,21 @@ export const useCreateBoardPost = () => {
   });
 };
 
+export const useBoardCommentList = (postId: string | undefined) => {
+  return useQuery({
+    queryKey: ["board", "posts", postId, "comments"],
+    queryFn: () => getBoardComments(postId!),
+    enabled: !!postId,
+  });
+};
+
 export const useCreateBoardComment = (postId: string | undefined) => {
   const queryClient = useQueryClient();
 
   return useMutation({
     mutationFn: (body: CreateBoardCommentRequest) =>
       createBoardComment(postId!, body),
-    onSuccess: () => {
+    onSettled: () => {
       queryClient.invalidateQueries({ queryKey: ["board", "posts", postId] });
     },
   });

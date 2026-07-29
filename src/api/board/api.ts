@@ -1,6 +1,7 @@
 import { authInstance } from "@/api/instance";
 import type { ApiResponse } from "@/types/api";
 import type {
+  BoardCommentListItem,
   BoardPostDetail,
   BoardPostListItem,
   CreateBoardCommentRequest,
@@ -31,6 +32,14 @@ export const createBoardPost = async (body: CreateBoardPostRequest) => {
   const { data } = await authInstance.post<
     ApiResponse<CreateBoardPostResponse>
   >("/posts", body);
+
+  return data.data;
+};
+
+export const getBoardComments = async (postId: string | number) => {
+  const { data } = await authInstance.get<ApiResponse<BoardCommentListItem[]>>(
+    `/posts/${postId}/comments`
+  );
 
   return data.data;
 };
