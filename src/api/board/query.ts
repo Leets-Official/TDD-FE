@@ -58,7 +58,7 @@ export const useCreateBoardComment = (postId: string | undefined) => {
     mutationFn: (body: CreateBoardCommentRequest) =>
       createBoardComment(postId!, body),
     onSettled: () => {
-      queryClient.invalidateQueries({ queryKey: ["board", "posts", postId] });
+      queryClient.invalidateQueries({ queryKey: ["board", "posts"] });
     },
   });
 };
