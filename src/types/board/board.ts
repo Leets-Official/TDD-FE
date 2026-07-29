@@ -26,7 +26,7 @@ export interface BoardPostDetail {
   title: string;
   content: string;
   authorNickname: string;
-  // authorDong: string;
+  commentCount: number;
   createdAt: string;
 }
 

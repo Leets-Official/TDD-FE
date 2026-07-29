@@ -1,6 +1,7 @@
 import { authInstance } from "@/api/instance";
 import type { ApiResponse } from "@/types/api";
 import type {
+  BoardPostDetail,
   BoardPostListItem,
   CreateBoardPostRequest,
   CreateBoardPostResponse,
@@ -11,6 +12,14 @@ export const getBoardPosts = async (params?: GetBoardPostsParams) => {
   const { data } = await authInstance.get<ApiResponse<BoardPostListItem[]>>(
     "/posts",
     { params }
+  );
+
+  return data.data;
+};
+
+export const getBoardPostDetail = async (postId: string | number) => {
+  const { data } = await authInstance.get<ApiResponse<BoardPostDetail>>(
+    `/posts/${postId}`
   );
 
   return data.data;
