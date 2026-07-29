@@ -28,7 +28,9 @@ export default function BoardCreatePage() {
       { title, content },
       {
         onSuccess: (postId) => {
-          navigate(PATH.BOARD_DETAIL.replace(":postId", String(postId)));
+          navigate(PATH.BOARD_DETAIL.replace(":postId", String(postId)), {
+            replace: true,
+          });
         },
         onError: (error) => {
           openToast({
