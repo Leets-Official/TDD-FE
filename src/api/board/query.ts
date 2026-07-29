@@ -12,6 +12,7 @@ import type {
   GetBoardPostsParams,
 } from "@/types/board/board";
 
+// 게시물 목록 조회 API
 export const useBoardPosts = (params?: GetBoardPostsParams) => {
   return useQuery({
     queryKey: ["board", "posts", params],
@@ -19,6 +20,7 @@ export const useBoardPosts = (params?: GetBoardPostsParams) => {
   });
 };
 
+// 게시물 상세 조회 API
 export const useBoardPostDetail = (postId: string | undefined) => {
   return useQuery({
     queryKey: ["board", "posts", postId],
@@ -27,6 +29,7 @@ export const useBoardPostDetail = (postId: string | undefined) => {
   });
 };
 
+// 게시물 작성 API
 export const useCreateBoardPost = () => {
   const queryClient = useQueryClient();
 
@@ -38,6 +41,7 @@ export const useCreateBoardPost = () => {
   });
 };
 
+// 댓글 목록 조회 API
 export const useBoardCommentList = (postId: string | undefined) => {
   return useQuery({
     queryKey: ["board", "posts", postId, "comments"],
@@ -46,6 +50,7 @@ export const useBoardCommentList = (postId: string | undefined) => {
   });
 };
 
+// 댓글 등록 API
 export const useCreateBoardComment = (postId: string | undefined) => {
   const queryClient = useQueryClient();
 
