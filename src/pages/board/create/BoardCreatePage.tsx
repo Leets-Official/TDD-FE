@@ -27,9 +27,8 @@ export default function BoardCreatePage() {
     createPost(
       { title, content },
       {
-        // TODO: 상세 조회 API 연동 후 상세 페이지로 이동하도록 변경
-        onSuccess: () => {
-          navigate(PATH.BOARD);
+        onSuccess: (postId) => {
+          navigate(PATH.BOARD_DETAIL.replace(":postId", String(postId)));
         },
         onError: (error) => {
           openToast({
