@@ -13,7 +13,8 @@ export function useBoardComments(postId: string | undefined) {
 
   const { data: comments = [] } = useBoardCommentList(postId);
   const [replyTargetId, setReplyTargetId] = useState<number | null>(null);
-  const { mutate: createComment } = useCreateBoardComment(postId);
+  const { mutate: createComment, isPending: isSending } =
+    useCreateBoardComment(postId);
   const { openToast } = useToast();
 
   const topLevelComments = comments.filter(
@@ -35,7 +36,7 @@ export function useBoardComments(postId: string | undefined) {
     options?: { onSuccess?: () => void }
   ) {
     const trimmed = value.trim();
-    if (!trimmed || !postId) return;
+    if (!trimmed || !postId || isSending) return;
 
     const parentCommentId = replyTargetId;
 
