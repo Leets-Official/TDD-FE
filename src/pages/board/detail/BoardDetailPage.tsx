@@ -43,8 +43,7 @@ function BoardDetailPageContent({ postId }: { postId: string | undefined }) {
 
   // 메시지 전송 시 실행 함수
   function handleSendMessage(value: string) {
-    handleSend(value);
-    setMessageValue("");
+    handleSend(value, { onSuccess: () => setMessageValue("") });
   }
 
   if (!post) return null;

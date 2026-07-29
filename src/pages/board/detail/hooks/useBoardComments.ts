@@ -30,7 +30,7 @@ export function useBoardComments(postId: string | undefined) {
     setReplyTargetId((prev) => (prev === commentId ? null : commentId));
   }
 
-  function handleSend(value: string) {
+  function handleSend(value: string, options?: { onSuccess?: () => void }) {
     const trimmed = value.trim();
     if (!trimmed || !postId) return;
 
@@ -53,6 +53,9 @@ export function useBoardComments(postId: string | undefined) {
     createComment(
       { content: trimmed, parentCommentId },
       {
+        onSuccess: () => {
+          options?.onSuccess?.();
+        },
         onError: (error) => {
           queryClient.setQueryData(commentsKey, previousComments);
           openToast({
