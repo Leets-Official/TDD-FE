@@ -150,11 +150,8 @@ export default function OrderDetailPage() {
   return (
     <PageShell
       header={<BackHeader title="" />}
-      bottom={
-        <div className="-mx-5 -mt-3 -mb-[calc(16px+env(safe-area-inset-bottom))]">
-          <CtaBar {...ctaBarProps} />
-        </div>
-      }
+      bottom={<CtaBar {...ctaBarProps} />}
+      bottomClassName="p-0"
     >
       <div className="flex flex-col px-5 pb-8">
         <div className="flex flex-col gap-xxl">

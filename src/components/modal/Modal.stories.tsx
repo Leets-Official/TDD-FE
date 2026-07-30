@@ -94,3 +94,16 @@ export const OutlineOnly: Story = {
     primaryLabel: undefined,
   },
 };
+
+export const WithLogo: Story = {
+  ...Default,
+  args: {
+    ...meta.args,
+    hasLogo: true,
+    title: "홈 화면에 추가하고 더 편하게 써보세요",
+    description: "공유 버튼을 누르고\n'홈 화면에 추가'를 선택해주세요",
+    caption: undefined,
+    outlineLabel: "닫기",
+    primaryLabel: undefined,
+  },
+};

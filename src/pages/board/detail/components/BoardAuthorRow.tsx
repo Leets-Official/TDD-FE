@@ -4,7 +4,7 @@ import { boardAuthorRowVariants } from "./BoardAuthorRow.variants";
 
 export interface BoardAuthorRowProps {
   nickname: string;
-  timeLabel: string;
+  timeLabel?: string;
   variant?: "post" | "comment";
 }
 
@@ -27,7 +27,7 @@ export function BoardAuthorRow({
       <Avatar size={AVATAR_SIZE[variant]} alt={nickname} />
       <div className={texts()}>
         <p className={nicknameStyle()}>{nickname}</p>
-        <p className={time()}>{timeLabel}</p>
+        {timeLabel && <p className={time()}>{timeLabel}</p>}
       </div>
     </div>
   );

@@ -1,5 +1,4 @@
-import { PageShell } from "@/layouts/PageShell";
-import Logo from "@/assets/Logo.svg?react";
+import { AuthIntroShell } from "@/layouts/AuthIntroShell";
 import { TextField } from "@/components/textField/TextField";
 import { Button } from "@/components/button/Button";
 import { useNavigate } from "react-router";
@@ -10,6 +9,8 @@ import { PATH } from "@/routes/paths";
 import { useLogin } from "@/api/auth/query";
 import { getApiErrorMessage, getApiFieldErrors } from "@/api/error";
 import { API_ERROR_MESSAGE } from "@/constants/errorMessage";
+
+const LOGIN_FORM_ID = "login-form";
 
 export default function LoginPage() {
   const navigate = useNavigate();
@@ -46,14 +47,25 @@ export default function LoginPage() {
   };
 
   return (
-    <PageShell>
+    <AuthIntroShell
+      action={
+        <Button
+          type="submit"
+          form={LOGIN_FORM_ID}
+          disabled={isPending}
+          className="w-full"
+        >
+          로그인
+        </Button>
+      }
+    >
       <form
+        id={LOGIN_FORM_ID}
         onSubmit={handleSubmit(onSubmit)}
         noValidate
-        className="flex h-full w-full flex-col items-center justify-center px-5"
+        className="mt-[67px] flex w-full flex-col"
       >
-        <Logo className="h-10 w-[75px]" />
-        <div className="mt-[67px] flex w-full flex-col gap-6">
+        <div className="flex w-full flex-col gap-6">
           <TextField
             label="아이디"
             placeholder="학교 이메일 입력(.ac.kr)"
@@ -87,10 +99,7 @@ export default function LoginPage() {
             학교 이메일로 회원가입
           </Button>
         </div>
-        <Button type="submit" disabled={isPending} className="mt-[58px] w-full">
-          로그인
-        </Button>
       </form>
-    </PageShell>
+    </AuthIntroShell>
   );
 }
