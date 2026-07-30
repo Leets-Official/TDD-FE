@@ -24,3 +24,20 @@ export const WithAction: Story = {
     actionLabel: "채팅방 입장",
   },
 };
+
+export const Warning: Story = {
+  args: {
+    variant: "warning",
+    message:
+      "학교 이메일 인증에 실패하였습니다!\n다시 시도해주세요(5분내 3회 재시도 가능)",
+  },
+};
+
+// 전역 Error를 가리지 않도록 export 이름만 다르게 둡니다.
+export const ErrorVariant: Story = {
+  name: "Error",
+  args: {
+    variant: "error",
+    message: "학교 이메일 인증에 실패하였습니다!",
+  },
+};
