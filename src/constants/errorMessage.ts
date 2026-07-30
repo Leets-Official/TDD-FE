@@ -13,4 +13,4 @@ export const EMAIL_VERIFY_TOAST_MESSAGE = {
   SEND_FAILED:
     "학교 이메일 인증에 실패하였습니다!\n다시 시도해주세요(5분내 3회 재시도 가능)",
   VERIFY_FAILED: "학교 이메일 인증에 실패하였습니다!",
-  } as const;
+} as const;
