@@ -10,7 +10,6 @@ export const toastVariants = tv({
       "shrink-0 cursor-pointer rounded-sm px-padding-m py-padding-xxs text-label text-primary",
   },
   variants: {
-    // 아이콘 색만 달라집니다. success 아이콘은 색을 자체적으로 갖고 있습니다.
     variant: {
       success: {},
       warning: { icon: "text-warning" },

@@ -33,7 +33,6 @@ export const Warning: Story = {
   },
 };
 
-// 전역 Error를 가리지 않도록 export 이름만 다르게 둡니다.
 export const ErrorVariant: Story = {
   name: "Error",
   args: {
