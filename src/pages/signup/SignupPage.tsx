@@ -7,13 +7,10 @@ import { ProfileForm } from "@/components/auth/ProfileForm";
 import { PageShell } from "@/layouts/PageShell";
 import { useToast } from "@/hooks/useToast";
 import { useVerifiedEmail } from "@/hooks/useVerifiedEmail";
+import { useEmailVerification } from "@/hooks/useEmailVerification";
 import { useNavigate } from "react-router";
-import type {
-  EmailVerifyFormValues,
-  PasswordFormValues,
-  ProfileFormValues,
-} from "@/schemas/auth";
-import { PATH } from "@/routes/paths";
+import type { PasswordFormValues } from "@/schemas/auth";
+import { useSignupSubmit } from "@/pages/signup/hooks/useSignupSubmit";
 
 const EMAIL_VERIFY_FORM_ID = "signup-email-verify-form";
 const PASSWORD_FORM_ID = "signup-password-form";
@@ -26,7 +23,7 @@ type SignupStep = "email" | "password" | "profile";
 export default function SignupPage() {
   const navigate = useNavigate();
   const { openToast } = useToast();
-  const { isVerified, markVerified, clearVerified } =
+  const { email, isVerified, markVerified, clearVerified } =
     useVerifiedEmail(VERIFIED_EMAIL_KEY);
   const [step, setStep] = useState<SignupStep>(
     isVerified ? "password" : "email"
@@ -34,31 +31,25 @@ export default function SignupPage() {
   const [isStepValid, setIsStepValid] = useState(false);
   const [password, setPassword] = useState("");
 
-  const handleRequestCode = (_email: string) => {
-    // TODO: 인증코드 발송 API 연동
-  };
-
-  const handleEmailSubmit = (values: EmailVerifyFormValues) => {
-    // TODO: 인증코드 검증 API 연동
-    markVerified(values.email);
-    openToast({ message: "학교 이메일 인증이 완료되었습니다!" });
-    setStep("password");
-  };
+  const { requestCode, submitCode, isVerifying } = useEmailVerification({
+    purpose: "SIGNUP",
+    onVerified: (email) => {
+      markVerified(email);
+      openToast({ message: "학교 이메일 인증이 완료되었습니다!" });
+      setStep("password");
+    },
+  });
 
   const handlePasswordSubmit = (values: PasswordFormValues) => {
     setPassword(values.password);
     setStep("profile");
   };
 
-  // 건너뛰기로 제출하면 nickname이 null이라 폼 값 타입을 그대로 쓸 수 없습니다.
-  const submitSignup = (_profile: {
-    nickname: ProfileFormValues["nickname"] | null;
-    dormitory: ProfileFormValues["dormitory"];
-  }) => {
-    // TODO: 회원가입 API 연동
-    clearVerified();
-    navigate(PATH.LOGIN, { replace: true });
-  };
+  const { submitSignup, isPending } = useSignupSubmit({
+    email,
+    password,
+    onSuccess: clearVerified,
+  });
 
   const handleBack = () => {
     if (step === "profile") {
@@ -77,8 +68,8 @@ export default function SignupPage() {
       content: (
         <EmailVerifyForm
           formId={EMAIL_VERIFY_FORM_ID}
-          onRequestCode={handleRequestCode}
-          onSubmit={handleEmailSubmit}
+          onRequestCode={requestCode}
+          onSubmit={submitCode}
           onCodeValidityChange={setIsStepValid}
         />
       ),
@@ -122,6 +113,7 @@ export default function SignupPage() {
               <Button
                 variant="text"
                 size="small"
+                disabled={isPending}
                 onClick={() =>
                   submitSignup({ nickname: null, dormitory: null })
                 }
@@ -137,7 +129,7 @@ export default function SignupPage() {
           type="submit"
           form={currentStep.formId}
           className="w-full"
-          disabled={!isStepValid}
+          disabled={!isStepValid || isPending || isVerifying}
         >
           {currentStep.buttonLabel}
         </Button>
