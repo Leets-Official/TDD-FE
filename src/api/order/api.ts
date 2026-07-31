@@ -1,8 +1,11 @@
 import { authInstance } from "@/api/instance";
 import type { ApiResponse } from "@/types/api";
 import type {
+  CreatePartyRequest,
   PartyCancelResult,
+  PartyCreateResult,
   PartyDetail,
+  PartyJoinResult,
   PartyListItem,
   PartyListParams,
   PartyParticipants,
@@ -39,6 +42,25 @@ export const getPartyParticipants = async (partyId: number) => {
 export const cancelParty = async (partyId: number) => {
   const { data } = await authInstance.delete<ApiResponse<PartyCancelResult>>(
     `/delivery-parties/${partyId}`
+  );
+
+  return data.data;
+};
+
+// 배달팟 생성 API
+export const createParty = async (body: CreatePartyRequest) => {
+  const { data } = await authInstance.post<PartyCreateResult>(
+    "/delivery-parties",
+    body
+  );
+
+  return data;
+};
+
+// 배달팟 참여 API
+export const joinParty = async (partyId: number) => {
+  const { data } = await authInstance.post<ApiResponse<PartyJoinResult>>(
+    `/delivery-parties/${partyId}/join`
   );
 
   return data.data;

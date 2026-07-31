@@ -2,6 +2,8 @@ import { Controller, useForm, useWatch } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useNavigate } from "react-router";
 
+import { useCreateParty } from "@/api/order/query";
+import { getApiErrorMessage } from "@/api/error";
 import { Button } from "@/components/button/Button";
 import type { FoodCategory } from "@/components/card/categoryIcons";
 import { Dropdown } from "@/components/dropdown/Dropdown";
@@ -10,10 +12,12 @@ import { TextField } from "@/components/textField/TextField";
 import { Textarea } from "@/components/textarea/Textarea";
 import { cn } from "@/utils/cn";
 import { DORMITORY_OPTIONS } from "@/constants/dormitory";
+import { API_ERROR_MESSAGE } from "@/constants/errorMessage";
 import {
   MENU_OPTIONS,
   ORDER_TIME_OPTIONS,
 } from "@/constants/home/filterOptions";
+import { FOOD_CATEGORY_ID_MAP } from "@/constants/order/foodCategory";
 import { useToast } from "@/hooks/useToast";
 import { BackHeader } from "@/layouts/BackHeader";
 import { PageShell } from "@/layouts/PageShell";
@@ -24,8 +28,7 @@ import {
   TARGET_COUNT_MIN,
   type OrderCreateFormValues,
 } from "@/schemas/order";
-
-import { createPodDetail } from "../detail/detail.mock";
+import { toOrderExpectedAt } from "@/utils/order/toOrderExpectedAt";
 
 const ORDER_CREATE_FORM_ID = "order-create-form";
 const MENU_SELECT_OPTIONS = MENU_OPTIONS.filter(
@@ -38,6 +41,7 @@ const ORDER_TIME_SELECT_OPTIONS = ORDER_TIME_OPTIONS.filter(
 export default function OrderCreatePage() {
   const navigate = useNavigate();
   const { openToast } = useToast();
+  const { mutate: createParty, isPending: isCreating } = useCreateParty();
 
   const {
     register,
@@ -68,20 +72,34 @@ export default function OrderCreatePage() {
     !description.trim();
 
   const onSubmit = (values: OrderCreateFormValues) => {
-    const [minCount, maxCount] = values.targetRange;
-    const pod = createPodDetail({
-      category: values.category,
-      title: values.title,
-      description: values.description,
-      location: values.dormitory,
-      orderTimeMinutes: Number(values.orderTimeMinutes),
-      minCount,
-      maxCount,
-    });
+    const [minParticipants, maxParticipants] = values.targetRange;
+    const orderExpectedAt = toOrderExpectedAt(Number(values.orderTimeMinutes));
 
-    // 생성 폼을 히스토리에 남기지 않아, 상세 페이지에서 뒤로가기 누르면 홈으로 바로 이동합니다.
-    navigate(PATH.ORDER_DETAIL.replace(":orderId", pod.id), { replace: true });
-    openToast({ message: "배달팟이 성공적으로 만들어졌어요!" });
+    createParty(
+      {
+        foodCategoryId: FOOD_CATEGORY_ID_MAP[values.category],
+        title: values.title,
+        description: values.description,
+        minParticipants,
+        maxParticipants,
+        orderExpectedAt,
+        dormitory: values.dormitory,
+      },
+      {
+        onSuccess: (result) => {
+          // 생성 폼을 히스토리에 남기지 않아, 상세 페이지에서 뒤로가기 누르면 홈으로 바로 이동합니다.
+          navigate(PATH.ORDER_DETAIL.replace(":orderId", String(result.id)), {
+            replace: true,
+          });
+          openToast({ message: "배달팟이 성공적으로 만들어졌어요!" });
+        },
+        onError: (error) => {
+          openToast({
+            message: getApiErrorMessage(error, API_ERROR_MESSAGE.ORDER_CREATE),
+          });
+        },
+      }
+    );
   };
 
   return (
@@ -95,7 +113,7 @@ export default function OrderCreatePage() {
             "w-full",
             hasEmptyField && "bg-disabled hover:bg-disabled active:bg-disabled"
           )}
-          disabled={isSubmitting}
+          disabled={isSubmitting || isCreating}
         >
           완료
         </Button>

@@ -37,6 +37,31 @@ export interface PartyDetail {
   createdAt: string;
 }
 
+// 배달팟 생성 API 요청 바디
+export interface CreatePartyRequest {
+  foodCategoryId: number;
+  title: string;
+  description: string;
+  minParticipants: number;
+  maxParticipants: number;
+  orderExpectedAt: string;
+  dormitory: string;
+}
+
+// 배달팟 생성 API 응답
+export interface PartyCreateResult {
+  id: number;
+  foodCategoryId: number;
+  dormitory: string;
+  title: string;
+  description: string;
+  minParticipants: number;
+  maxParticipants: number;
+  orderExpectedAt: string;
+  status: string;
+  createdAt: string;
+}
+
 // 배달팟 참여자 목록 API
 export interface Participant {
   userId: number;
@@ -54,4 +79,11 @@ export interface PartyParticipants {
 // 배달팟 취소(모집 취소) API 응답
 export interface PartyCancelResult {
   partyId: number;
+}
+
+// 배달팟 참여 API 응답
+export interface PartyJoinResult {
+  partyId: number;
+  currentParticipants: number;
+  maxParticipants: number;
 }
