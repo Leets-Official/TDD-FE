@@ -13,3 +13,11 @@ export const FOOD_CATEGORY_MAP: Record<number, FoodCategory> = {
   10: "족발,보쌈",
   11: "기타",
 };
+
+export const FOOD_CATEGORY_ID_MAP: Record<FoodCategory, number> =
+  Object.fromEntries(
+    Object.entries(FOOD_CATEGORY_MAP).map(([id, category]) => [
+      category,
+      Number(id),
+    ])
+  ) as Record<FoodCategory, number>;
