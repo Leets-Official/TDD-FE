@@ -1,6 +1,7 @@
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 import {
+  cancelParty,
   getPartyDetail,
   getPartyList,
   getPartyParticipants,
@@ -29,3 +30,16 @@ export const usePartyParticipants = (partyId: number) =>
     queryFn: () => getPartyParticipants(partyId),
     enabled: Number.isFinite(partyId),
   });
+
+// 배달팟 취소(모집 취소) API
+export const useCancelParty = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: cancelParty,
+    onSuccess: (_, partyId) => {
+      queryClient.invalidateQueries({ queryKey: ["parties"] });
+      queryClient.invalidateQueries({ queryKey: ["parties", partyId] });
+    },
+  });
+};

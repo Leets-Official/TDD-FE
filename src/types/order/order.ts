@@ -50,3 +50,8 @@ export interface PartyParticipants {
   partyId: number;
   participants: Participant[];
 }
+
+// 배달팟 취소(모집 취소) API 응답
+export interface PartyCancelResult {
+  partyId: number;
+}

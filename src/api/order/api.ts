@@ -1,6 +1,7 @@
 import { authInstance } from "@/api/instance";
 import type { ApiResponse } from "@/types/api";
 import type {
+  PartyCancelResult,
   PartyDetail,
   PartyListItem,
   PartyListParams,
@@ -29,6 +30,15 @@ export const getPartyDetail = async (partyId: number) => {
 export const getPartyParticipants = async (partyId: number) => {
   const { data } = await authInstance.get<ApiResponse<PartyParticipants>>(
     `/delivery-parties/${partyId}/participants`
+  );
+
+  return data.data;
+};
+
+// 배달팟 취소(모집 취소) API
+export const cancelParty = async (partyId: number) => {
+  const { data } = await authInstance.delete<ApiResponse<PartyCancelResult>>(
+    `/delivery-parties/${partyId}`
   );
 
   return data.data;
