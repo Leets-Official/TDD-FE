@@ -4,6 +4,7 @@ import { useNavigate, useParams } from "react-router";
 import { getApiErrorMessage } from "@/api/error";
 import {
   useCancelParty,
+  useJoinParty,
   usePartyDetail,
   usePartyParticipants,
 } from "@/api/order/query";
@@ -52,6 +53,7 @@ export default function OrderDetailPage() {
     error: participantsError,
   } = usePartyParticipants(partyId);
   const { mutate: cancelParty } = useCancelParty();
+  const { mutate: joinParty } = useJoinParty();
   const order = partyDetail ? toOrderDetail(partyDetail) : undefined;
 
   useEffect(() => {
@@ -73,8 +75,6 @@ export default function OrderDetailPage() {
 
   const [status, setStatus] = useState<ParticipationStatus>("none");
   const [isCancelled, setIsCancelled] = useState(false);
-  // 실제 참여 신청 API가 아직 없어 서버 목록 위에 "나"를 로컬로만 얹어서 흉내냅니다.
-  const [hasJoinedLocally, setHasJoinedLocally] = useState(false);
   // 마감 시각 경과 여부를 실시간으로 반영하기 위한 tick
   const [now, setNow] = useState(() => Date.now());
   useEffect(() => {
@@ -84,12 +84,9 @@ export default function OrderDetailPage() {
   // TODO: 로그인한 내 userId를 알 수 있는 API가 없어 아직 실제로는 항상 false
   const isHost = order?.host.id === ME.id;
 
-  const serverParticipants = partyParticipants
+  const participants = partyParticipants
     ? toProfilesItems(partyParticipants.participants)
     : [];
-  const participants = hasJoinedLocally
-    ? [...serverParticipants, ME]
-    : serverParticipants;
 
   if (isPending) {
     return (
@@ -109,14 +106,6 @@ export default function OrderDetailPage() {
     );
   }
 
-  function applyOrder() {
-    setHasJoinedLocally(true);
-    setStatus(
-      serverParticipants.length + 1 >= order!.maxCount ? "matched" : "applied"
-    );
-    openToast({ message: "배달팟 참여 신청이 완료되었습니다!" });
-  }
-
   function handleApplyClick() {
     if (!IS_DORM_VERIFIED) {
       openModal({
@@ -131,7 +120,21 @@ export default function OrderDetailPage() {
       return;
     }
 
-    applyOrder();
+    joinParty(partyId, {
+      onSuccess: (result) => {
+        setStatus(
+          result.currentParticipants >= result.maxParticipants
+            ? "matched"
+            : "applied"
+        );
+        openToast({ message: "배달팟 참여 신청이 완료되었습니다!" });
+      },
+      onError: (error) => {
+        openToast({
+          message: getApiErrorMessage(error, API_ERROR_MESSAGE.ORDER_JOIN),
+        });
+      },
+    });
   }
 
   function handleCancelRecruitClick() {
@@ -167,7 +170,7 @@ export default function OrderDetailPage() {
         primaryLabel: "네",
       },
       onConfirm: () => {
-        setHasJoinedLocally(false);
+        // TODO: 참여 취소 API 연동 전까지는 화면 상태만 되돌립니다.
         setStatus("none");
       },
     });
