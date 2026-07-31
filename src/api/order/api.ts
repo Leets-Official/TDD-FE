@@ -1,8 +1,12 @@
 import { authInstance } from "@/api/instance";
-import type { PartyListItem } from "@/types/order/order";
+import type { ApiResponse } from "@/types/api";
+import type { PartyListItem, PartyListParams } from "@/types/order/order";
 
-export const getPartyList = async () => {
-  const { data } = await authInstance.get<PartyListItem[]>("/delivery-parties");
+// 배달팟 목록 조회 API
+export const getPartyList = async (params?: PartyListParams) => {
+  const { data } = await authInstance.get<
+    ApiResponse<{ parties: PartyListItem[] }>
+  >("/delivery-parties", { params });
 
-  return data;
+  return data.data.parties;
 };

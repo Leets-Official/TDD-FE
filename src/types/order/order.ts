@@ -1,13 +1,20 @@
+import type { FoodCategory } from "@/components/card/categoryIcons";
+
+// 배달팟 목록 조회 API
 export interface PartyListItem {
-  id: number;
-  foodCategoryId: number;
+  partyId: number;
   title: string;
-  description: string;
+  category: FoodCategory;
+  currentParticipants: number;
   minParticipants: number;
   maxParticipants: number;
-  currentParticipants: number;
-  dormitory: string;
-  orderExpectedAt: string;
   status: string;
-  createdAt: string;
+  orderExpectedAt: string;
+  dormitory: string;
+}
+
+// 배달팟 목록 조회 API 쿼리 파라미터
+export interface PartyListParams {
+  categoryId?: number;
+  dormitory?: string;
 }

@@ -16,17 +16,23 @@ import type { OrderItem } from "../orderItem.mock";
 
 export interface OrderListSectionProps {
   orders: OrderItem[];
+  dorm: string;
+  onDormChange: (value: string) => void;
+  menu: string;
+  onMenuChange: (value: string) => void;
   onCreateClick: () => void;
   onCardClick: (order: OrderItem) => void;
 }
 
 export function OrderListSection({
   orders,
+  dorm,
+  onDormChange,
+  menu,
+  onMenuChange,
   onCreateClick,
   onCardClick,
 }: OrderListSectionProps) {
-  const [dorm, setDorm] = useState("");
-  const [menu, setMenu] = useState("");
   const [orderTimeMinutes, setOrderTimeMinutes] = useState("");
   const [now, setNow] = useState(() => Date.now());
   useEffect(() => {
@@ -35,9 +41,10 @@ export function OrderListSection({
   }, []);
 
   const activeOrders = orders.filter((order) => order.deadline > now);
+  // dorm/menu는 usePartyList 호출 시 categoryId/dormitoryId로 이미 서버에서 필터링됨
   const filteredOrders = filterOrders(activeOrders, {
-    dorm,
-    menu,
+    dorm: "",
+    menu: "",
     orderTimeMinutes,
   });
 
@@ -49,7 +56,7 @@ export function OrderListSection({
           label="기숙사"
           options={DORM_OPTIONS}
           value={dorm}
-          onChange={setDorm}
+          onChange={onDormChange}
         />
         <Dropdown
           variant="filter"
@@ -57,7 +64,7 @@ export function OrderListSection({
           options={MENU_OPTIONS}
           visibleOptions={5}
           value={menu}
-          onChange={setMenu}
+          onChange={onMenuChange}
         />
         <Dropdown
           variant="filter"

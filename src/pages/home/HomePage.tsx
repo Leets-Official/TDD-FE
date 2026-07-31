@@ -3,6 +3,7 @@ import { useNavigate } from "react-router";
 
 import { usePartyList } from "@/api/order/query";
 import { getApiErrorMessage } from "@/api/error";
+import type { FoodCategory } from "@/components/card/categoryIcons";
 import { HomeHeader } from "@/components/header/HomeHeader";
 import { TabBar } from "@/components/tabBar/TabBar";
 import { API_ERROR_MESSAGE } from "@/constants/errorMessage";
@@ -11,6 +12,7 @@ import {
   DORM_VERIFICATION_MODAL_PROPS,
   NOSHOW_RESTRICTION_MODAL_PROPS,
 } from "@/constants/order/guardModals";
+import { FOOD_CATEGORY_ID_MAP } from "@/constants/order/foodCategory";
 import { useModal } from "@/hooks/useModal";
 import { useToast } from "@/hooks/useToast";
 import { PageShell } from "@/layouts/PageShell";
@@ -35,10 +37,20 @@ const IS_ACCOUNT_REGISTERED = true;
 
 export default function HomePage() {
   const [tab, setTab] = useState(TABS[0].value);
+  const [dorm, setDorm] = useState("");
+  const [menu, setMenu] = useState("");
   const navigate = useNavigate();
   const { openModal } = useModal();
   const { openToast } = useToast();
-  const { data: partyList, isPending, isError, error } = usePartyList();
+  const {
+    data: partyList,
+    isPending,
+    isError,
+    error,
+  } = usePartyList({
+    categoryId: menu ? FOOD_CATEGORY_ID_MAP[menu as FoodCategory] : undefined,
+    dormitory: dorm || undefined,
+  });
   const recruitingOrders = (partyList ?? []).map(toOrderItem);
 
   useEffect(() => {
@@ -116,6 +128,10 @@ export default function HomePage() {
       ) : (
         <OrderListSection
           orders={recruitingOrders}
+          dorm={dorm}
+          onDormChange={setDorm}
+          menu={menu}
+          onMenuChange={setMenu}
           onCreateClick={handleCreateClick}
           onCardClick={handleCardClick}
         />
