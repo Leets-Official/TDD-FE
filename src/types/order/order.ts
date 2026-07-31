@@ -18,3 +18,35 @@ export interface PartyListParams {
   categoryId?: number;
   dormitory?: string;
 }
+
+// 배달팟 상세 조회 API
+export interface PartyDetail {
+  id: number;
+  creatorId: number;
+  leaderNickname: string;
+  leaderProfileImage: string | null;
+  leaderMannerTemperature: number;
+  dormitory: string | null;
+  foodCategoryId: number;
+  title: string;
+  description: string;
+  minParticipants: number;
+  maxParticipants: number;
+  orderExpectedAt: string;
+  status: string;
+  createdAt: string;
+}
+
+// 배달팟 참여자 목록 API
+export interface Participant {
+  userId: number;
+  nickname: string;
+  profileImage: string | null;
+  role: string;
+  mannerTemperature: number;
+}
+
+export interface PartyParticipants {
+  partyId: number;
+  participants: Participant[];
+}
