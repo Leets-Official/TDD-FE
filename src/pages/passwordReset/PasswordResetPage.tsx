@@ -9,18 +9,19 @@ import { useVerifiedEmail } from "@/hooks/useVerifiedEmail";
 import { useEmailVerification } from "@/hooks/useEmailVerification";
 import { useNavigate } from "react-router";
 import { usePasswordResetSubmit } from "@/pages/passwordReset/hooks/usePasswordResetSubmit";
+import { VERIFIED_EMAIL_KEY } from "@/constants/storage";
 
 const EMAIL_VERIFY_FORM_ID = "password-reset-email-verify-form";
 const PASSWORD_FORM_ID = "password-reset-password-form";
-const VERIFIED_EMAIL_KEY = "password-reset-verified-email";
 
 type PasswordResetStep = "email" | "password";
 
 export default function PasswordResetPage() {
   const navigate = useNavigate();
   const { openToast } = useToast();
-  const { email, isVerified, markVerified, clearVerified } =
-    useVerifiedEmail(VERIFIED_EMAIL_KEY);
+  const { email, isVerified, markVerified, clearVerified } = useVerifiedEmail(
+    VERIFIED_EMAIL_KEY.PASSWORD_RESET
+  );
   const [step, setStep] = useState<PasswordResetStep>(
     isVerified ? "password" : "email"
   );

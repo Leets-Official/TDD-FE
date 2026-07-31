@@ -11,20 +11,20 @@ import { useEmailVerification } from "@/hooks/useEmailVerification";
 import { useNavigate } from "react-router";
 import type { PasswordFormValues } from "@/schemas/auth";
 import { useSignupSubmit } from "@/pages/signup/hooks/useSignupSubmit";
+import { VERIFIED_EMAIL_KEY } from "@/constants/storage";
 
 const EMAIL_VERIFY_FORM_ID = "signup-email-verify-form";
 const PASSWORD_FORM_ID = "signup-password-form";
 const PROFILE_FORM_ID = "signup-profile-form";
-
-const VERIFIED_EMAIL_KEY = "signup-verified-email";
 
 type SignupStep = "email" | "password" | "profile";
 
 export default function SignupPage() {
   const navigate = useNavigate();
   const { openToast } = useToast();
-  const { email, isVerified, markVerified, clearVerified } =
-    useVerifiedEmail(VERIFIED_EMAIL_KEY);
+  const { email, isVerified, markVerified, clearVerified } = useVerifiedEmail(
+    VERIFIED_EMAIL_KEY.SIGNUP
+  );
   const [step, setStep] = useState<SignupStep>(
     isVerified ? "password" : "email"
   );
