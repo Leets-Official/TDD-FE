@@ -31,18 +31,23 @@ export default function SignupPage() {
   const [isStepValid, setIsStepValid] = useState(false);
   const [password, setPassword] = useState("");
 
+  const goToStep = (next: SignupStep) => {
+    setIsStepValid(false);
+    setStep(next);
+  };
+
   const { requestCode, submitCode, isVerifying } = useEmailVerification({
     purpose: "SIGNUP",
     onVerified: (email) => {
       markVerified(email);
       openToast({ message: "학교 이메일 인증이 완료되었습니다!" });
-      setStep("password");
+      goToStep("password");
     },
   });
 
   const handlePasswordSubmit = (values: PasswordFormValues) => {
     setPassword(values.password);
-    setStep("profile");
+    goToStep("profile");
   };
 
   const { submitSignup, isPending } = useSignupSubmit({
@@ -53,7 +58,7 @@ export default function SignupPage() {
 
   const handleBack = () => {
     if (step === "profile") {
-      setStep("password");
+      goToStep("password");
       return;
     }
     // 인증을 마친 뒤에는 email 단계로 되돌리지 않고 페이지 나감

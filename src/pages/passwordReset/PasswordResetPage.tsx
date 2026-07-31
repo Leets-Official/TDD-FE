@@ -31,6 +31,7 @@ export default function PasswordResetPage() {
     onVerified: (email) => {
       markVerified(email);
       openToast({ message: "학교 이메일 인증이 완료되었습니다!" });
+      setIsStepValid(false);
       setStep("password");
     },
   });
@@ -41,7 +42,6 @@ export default function PasswordResetPage() {
   });
 
   const handleBack = () => {
-    // 인증을 마친 뒤에는 email 단계로 되돌리지 않고 페이지 나감
     clearVerified();
     navigate(-1);
   };
