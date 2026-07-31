@@ -7,6 +7,7 @@ import {
   getPartyList,
   getPartyParticipants,
   joinParty,
+  leaveParty,
 } from "@/api/order/api";
 import type { PartyListParams } from "@/types/order/order";
 
@@ -64,6 +65,19 @@ export const useJoinParty = () => {
 
   return useMutation({
     mutationFn: joinParty,
+    onSuccess: (_, partyId) => {
+      queryClient.invalidateQueries({ queryKey: ["parties"] });
+      queryClient.invalidateQueries({ queryKey: ["parties", partyId] });
+    },
+  });
+};
+
+// 배달팟 참여 취소 API
+export const useLeaveParty = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: leaveParty,
     onSuccess: (_, partyId) => {
       queryClient.invalidateQueries({ queryKey: ["parties"] });
       queryClient.invalidateQueries({ queryKey: ["parties", partyId] });

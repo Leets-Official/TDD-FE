@@ -5,6 +5,7 @@ import { getApiErrorMessage } from "@/api/error";
 import {
   useCancelParty,
   useJoinParty,
+  useLeaveParty,
   usePartyDetail,
   usePartyParticipants,
 } from "@/api/order/query";
@@ -54,6 +55,7 @@ export default function OrderDetailPage() {
   } = usePartyParticipants(partyId);
   const { mutate: cancelParty } = useCancelParty();
   const { mutate: joinParty } = useJoinParty();
+  const { mutate: leaveParty } = useLeaveParty();
   const order = partyDetail ? toOrderDetail(partyDetail) : undefined;
 
   useEffect(() => {
@@ -170,8 +172,16 @@ export default function OrderDetailPage() {
         primaryLabel: "네",
       },
       onConfirm: () => {
-        // TODO: 참여 취소 API 연동 전까지는 화면 상태만 되돌립니다.
-        setStatus("none");
+        leaveParty(partyId, {
+          onSuccess: () => {
+            setStatus("none");
+          },
+          onError: (error) => {
+            openToast({
+              message: getApiErrorMessage(error, API_ERROR_MESSAGE.ORDER_LEAVE),
+            });
+          },
+        });
       },
     });
   }

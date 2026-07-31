@@ -6,6 +6,7 @@ import type {
   PartyCreateResult,
   PartyDetail,
   PartyJoinResult,
+  PartyLeaveResult,
   PartyListItem,
   PartyListParams,
   PartyParticipants,
@@ -61,6 +62,15 @@ export const createParty = async (body: CreatePartyRequest) => {
 export const joinParty = async (partyId: number) => {
   const { data } = await authInstance.post<ApiResponse<PartyJoinResult>>(
     `/delivery-parties/${partyId}/join`
+  );
+
+  return data.data;
+};
+
+// 배달팟 참여 취소 API
+export const leaveParty = async (partyId: number) => {
+  const { data } = await authInstance.delete<ApiResponse<PartyLeaveResult>>(
+    `/delivery-parties/${partyId}/participants`
   );
 
   return data.data;

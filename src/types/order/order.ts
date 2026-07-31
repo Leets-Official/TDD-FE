@@ -87,3 +87,10 @@ export interface PartyJoinResult {
   currentParticipants: number;
   maxParticipants: number;
 }
+
+// 배달팟 참여 취소 API 응답
+export interface PartyLeaveResult {
+  partyId: number;
+  currentParticipants: number;
+  maxParticipants: number;
+}

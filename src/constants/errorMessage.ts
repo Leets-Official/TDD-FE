@@ -9,4 +9,5 @@ export const API_ERROR_MESSAGE = {
     "참여자 목록을 불러오지 못했어요. 잠시 후 다시 시도해주세요",
   ORDER_CANCEL: "배달팟 취소에 실패했어요. 잠시 후 다시 시도해주세요",
   ORDER_JOIN: "배달팟 참여에 실패했어요. 잠시 후 다시 시도해주세요",
+  ORDER_LEAVE: "배달팟 참여 취소에 실패했어요. 잠시 후 다시 시도해주세요",
 } as const;
