@@ -19,6 +19,15 @@ export interface PartyListParams {
   dormitory?: string;
 }
 
+// 내 배달팟 목록 조회 API 쿼리 파라미터
+export interface MyPartyListParams {
+  status?: "ALL" | "ONGOING" | "COMPLETED";
+  categoryId?: number;
+  dormitoryId?: number;
+  orderExpectedFrom?: string;
+  orderExpectedTo?: string;
+}
+
 // 배달팟 상세 조회 API
 export interface PartyDetail {
   id: number;
@@ -93,4 +102,10 @@ export interface PartyLeaveResult {
   partyId: number;
   currentParticipants: number;
   maxParticipants: number;
+}
+
+// 배달팟 모집 마감 API 응답
+export interface PartyCloseResult {
+  partyId: number;
+  status: string;
 }

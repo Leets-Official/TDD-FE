@@ -2,7 +2,9 @@ import { authInstance } from "@/api/instance";
 import type { ApiResponse } from "@/types/api";
 import type {
   CreatePartyRequest,
+  MyPartyListParams,
   PartyCancelResult,
+  PartyCloseResult,
   PartyCreateResult,
   PartyDetail,
   PartyJoinResult,
@@ -17,6 +19,15 @@ export const getPartyList = async (params?: PartyListParams) => {
   const { data } = await authInstance.get<
     ApiResponse<{ parties: PartyListItem[] }>
   >("/delivery-parties", { params });
+
+  return data.data.parties;
+};
+
+// 내 배달팟 목록 조회 API
+export const getMyPartyList = async (params?: MyPartyListParams) => {
+  const { data } = await authInstance.get<
+    ApiResponse<{ parties: PartyListItem[] }>
+  >("/delivery-parties/me", { params });
 
   return data.data.parties;
 };
@@ -71,6 +82,15 @@ export const joinParty = async (partyId: number) => {
 export const leaveParty = async (partyId: number) => {
   const { data } = await authInstance.delete<ApiResponse<PartyLeaveResult>>(
     `/delivery-parties/${partyId}/participants`
+  );
+
+  return data.data;
+};
+
+// 배달팟 모집 마감 API
+export const closeParty = async (partyId: number) => {
+  const { data } = await authInstance.patch<ApiResponse<PartyCloseResult>>(
+    `/delivery-parties/${partyId}/close`
   );
 
   return data.data;

@@ -1,4 +1,4 @@
-import type { OrderItem } from "@/pages/home/orderItem.mock";
+import type { OrderItem } from "@/pages/home/orderItem";
 
 export interface OrderFilters {
   dorm: string;

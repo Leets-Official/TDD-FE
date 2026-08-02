@@ -1,8 +1,9 @@
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router";
+import { generatePath, useNavigate } from "react-router";
 
-import { usePartyList } from "@/api/order/query";
+import { useMyPartyList, usePartyList } from "@/api/order/query";
 import { getApiErrorMessage } from "@/api/error";
+import type { PartyListItem } from "@/types/order/order";
 import type { FoodCategory } from "@/components/card/categoryIcons";
 import { HomeHeader } from "@/components/header/HomeHeader";
 import { TabBar } from "@/components/tabBar/TabBar";
@@ -17,16 +18,23 @@ import { useModal } from "@/hooks/useModal";
 import { useToast } from "@/hooks/useToast";
 import { PageShell } from "@/layouts/PageShell";
 import { PATH } from "@/routes/paths";
+import {
+  isPartyAutoCancelled,
+  toMyOrderItem,
+} from "@/utils/order/toMyOrderItem";
 import { toOrderItem } from "@/utils/order/toOrderItem";
 
 import { MyOrderSection } from "./components/MyOrderSection";
 import { OrderListSection } from "./components/OrderListSection";
-import { inProgressOrders, pastOrders, type OrderItem } from "./orderItem.mock";
+import type { OrderItem } from "./orderItem";
 
 const TABS = [
   { label: "배달팟 목록", value: "all" },
   { label: "내 배달팟", value: "mine" },
 ];
+
+// 진행중(ONGOING) 정책: RECRUITING·CLOSED·ORDERED / 그 외는 지난 배달팟(COMPLETED)
+const ONGOING_STATUSES = new Set(["RECRUITING", "CLOSED", "ORDERED"]);
 
 // TODO: 로그인 사용자의 실제 기숙사 인증 여부로 교체
 const IS_DORM_VERIFIED = true;
@@ -53,6 +61,26 @@ export default function HomePage() {
   });
   const recruitingOrders = (partyList ?? []).map(toOrderItem);
 
+  const {
+    data: myPartyList,
+    isPending: isMyPartyListPending,
+    isError: isMyPartyListError,
+    error: myPartyListError,
+  } = useMyPartyList();
+  const [now, setNow] = useState(() => Date.now());
+  useEffect(() => {
+    const intervalId = setInterval(() => setNow(Date.now()), 1000);
+    return () => clearInterval(intervalId);
+  }, []);
+  const isOngoingParty = (party: PartyListItem) =>
+    ONGOING_STATUSES.has(party.status) && !isPartyAutoCancelled(party, now);
+  const inProgressOrders = (myPartyList ?? [])
+    .filter(isOngoingParty)
+    .map((party) => toMyOrderItem(party, now));
+  const pastOrders = (myPartyList ?? [])
+    .filter((party) => !isOngoingParty(party))
+    .map((party) => toMyOrderItem(party, now));
+
   useEffect(() => {
     if (!isError) return;
     openToast({
@@ -61,19 +89,33 @@ export default function HomePage() {
   }, [isError, error, openToast]);
 
   useEffect(() => {
-    const matchedOrder = inProgressOrders.find(
-      (order) => order.status === "matched"
+    if (!isMyPartyListError) return;
+    openToast({
+      message: getApiErrorMessage(
+        myPartyListError,
+        API_ERROR_MESSAGE.MY_ORDER_LIST
+      ),
+    });
+  }, [isMyPartyListError, myPartyListError, openToast]);
+
+  useEffect(() => {
+    const matchedParty = myPartyList?.find(
+      (party) => party.status === "CLOSED"
     );
-    if (!matchedOrder) return;
+    if (!matchedParty) return;
 
     openToast({
       message: "배달팟이 매칭되었습니다!",
       actionLabel: "채팅방 입장",
       onActionClick: () => {
-        // TODO: 채팅방 페이지 구현 후 실제 이동으로 교체
+        navigate(
+          generatePath(PATH.ORDER_CHAT, {
+            orderId: String(matchedParty.partyId),
+          })
+        );
       },
     });
-  }, [openToast]);
+  }, [myPartyList, openToast, navigate]);
 
   function handleCreateClick() {
     if (!IS_DORM_VERIFIED) {
@@ -117,12 +159,16 @@ export default function HomePage() {
       <TabBar tabs={TABS} value={tab} onChange={setTab} />
 
       {tab === "mine" ? (
-        <MyOrderSection
-          inProgressOrders={inProgressOrders}
-          pastOrders={pastOrders}
-          onCreateClick={handleCreateClick}
-          onCardClick={handleCardClick}
-        />
+        isMyPartyListPending ? (
+          <p className="px-5 py-6 text-body-1 text-text-4">불러오는 중...</p>
+        ) : (
+          <MyOrderSection
+            inProgressOrders={inProgressOrders}
+            pastOrders={pastOrders}
+            onCreateClick={handleCreateClick}
+            onCardClick={handleCardClick}
+          />
+        )
       ) : isPending ? (
         <p className="px-5 py-6 text-body-1 text-text-4">불러오는 중...</p>
       ) : (

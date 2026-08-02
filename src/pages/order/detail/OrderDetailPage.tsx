@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router";
+import { generatePath, useNavigate, useParams } from "react-router";
 
 import { getApiErrorMessage } from "@/api/error";
 import {
@@ -187,7 +187,8 @@ export default function OrderDetailPage() {
   }
 
   function handleEnterChat() {
-    // TODO: 채팅방 페이지 구현 후 실제 이동으로 교체
+    if (!orderId) return;
+    navigate(generatePath(PATH.ORDER_CHAT, { orderId }));
   }
 
   const avatars = participants.map((p) => ({

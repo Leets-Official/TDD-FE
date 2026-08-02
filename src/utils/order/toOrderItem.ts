@@ -1,5 +1,5 @@
 import type { AvatarGroupItem } from "@/components/avatar/AvatarGroup";
-import type { OrderItem } from "@/pages/home/orderItem.mock";
+import type { OrderItem } from "@/pages/home/orderItem";
 import type { PartyListItem } from "@/types/order/order";
 
 export function toOrderItem(party: PartyListItem): OrderItem {
