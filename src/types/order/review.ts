@@ -28,3 +28,26 @@ export interface PostReviewResult {
   content: string;
   createdAt: string;
 }
+
+// 신고 등록 API
+export type ReportReason =
+  | "NO_SHOW"
+  | "ABUSIVE_LANGUAGE"
+  | "UNPLEASANT_CHAT"
+  | "PERSONAL_INFO_DEMAND"
+  | "ETC";
+
+export interface PostReportRequest {
+  reportedUserId: number;
+  reason: ReportReason;
+  content?: string;
+}
+
+export interface PostReportResult {
+  reportId: number;
+  partyId: number;
+  reportedUserId: number;
+  reason: ReportReason;
+  status: string;
+  createdAt: string;
+}

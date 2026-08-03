@@ -1,6 +1,10 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
-import { getPartyReviewTargets, postPartyReview } from "@/api/order/review/api";
+import {
+  getPartyReviewTargets,
+  postPartyReport,
+  postPartyReview,
+} from "@/api/order/review/api";
 
 // 매너 평가 대상 목록 조회 API
 export const usePartyReviewTargets = (partyId: number) =>
@@ -23,3 +27,9 @@ export const usePostPartyReview = () => {
     },
   });
 };
+
+// 신고 등록 API
+export const usePostPartyReport = () =>
+  useMutation({
+    mutationFn: postPartyReport,
+  });

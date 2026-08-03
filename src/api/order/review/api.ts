@@ -2,6 +2,8 @@ import { authInstance } from "@/api/instance";
 import type { ApiResponse } from "@/types/api";
 import type {
   PartyReviewTargets,
+  PostReportRequest,
+  PostReportResult,
   PostReviewRequest,
   PostReviewResult,
 } from "@/types/order/review";
@@ -25,6 +27,22 @@ export const postPartyReview = async ({
 }) => {
   const { data } = await authInstance.post<ApiResponse<PostReviewResult>>(
     `/parties/${partyId}/reviews`,
+    body
+  );
+
+  return data.data;
+};
+
+// 신고 등록 API
+export const postPartyReport = async ({
+  partyId,
+  body,
+}: {
+  partyId: number;
+  body: PostReportRequest;
+}) => {
+  const { data } = await authInstance.post<ApiResponse<PostReportResult>>(
+    `/parties/${partyId}/reports`,
     body
   );
 
