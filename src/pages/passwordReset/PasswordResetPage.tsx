@@ -6,46 +6,43 @@ import { PasswordForm } from "@/components/auth/PasswordForm";
 import { PageShell } from "@/layouts/PageShell";
 import { useToast } from "@/hooks/useToast";
 import { useVerifiedEmail } from "@/hooks/useVerifiedEmail";
+import { useEmailVerification } from "@/hooks/useEmailVerification";
 import { useNavigate } from "react-router";
-import type { EmailVerifyFormValues, PasswordFormValues } from "@/schemas/auth";
-import { PATH } from "@/routes/paths";
+import { usePasswordResetSubmit } from "@/pages/passwordReset/hooks/usePasswordResetSubmit";
+import { VERIFIED_EMAIL_KEY } from "@/constants/storage";
 
 const EMAIL_VERIFY_FORM_ID = "password-reset-email-verify-form";
 const PASSWORD_FORM_ID = "password-reset-password-form";
-
-const VERIFIED_EMAIL_KEY = "password-reset-verified-email";
 
 type PasswordResetStep = "email" | "password";
 
 export default function PasswordResetPage() {
   const navigate = useNavigate();
   const { openToast } = useToast();
-  const { isVerified, markVerified, clearVerified } =
-    useVerifiedEmail(VERIFIED_EMAIL_KEY);
+  const { email, isVerified, markVerified, clearVerified } = useVerifiedEmail(
+    VERIFIED_EMAIL_KEY.PASSWORD_RESET
+  );
   const [step, setStep] = useState<PasswordResetStep>(
     isVerified ? "password" : "email"
   );
   const [isStepValid, setIsStepValid] = useState(false);
 
-  const handleRequestCode = (_email: string) => {
-    // TODO: 인증코드 발송 API 연동
-  };
+  const { requestCode, submitCode, isVerifying } = useEmailVerification({
+    purpose: "RESET_PASSWORD",
+    onVerified: (email) => {
+      markVerified(email);
+      openToast({ message: "학교 이메일 인증이 완료되었습니다!" });
+      setIsStepValid(false);
+      setStep("password");
+    },
+  });
 
-  const handleEmailSubmit = (values: EmailVerifyFormValues) => {
-    // TODO: 인증코드 검증 API 연동
-    markVerified(values.email);
-    openToast({ message: "학교 이메일 인증이 완료되었습니다!" });
-    setStep("password");
-  };
-
-  const handlePasswordSubmit = (_values: PasswordFormValues) => {
-    // TODO: 비밀번호 재설정 API 연동
-    clearVerified();
-    navigate(PATH.LOGIN, { replace: true });
-  };
+  const { submitPassword, isPending } = usePasswordResetSubmit({
+    email,
+    onSuccess: clearVerified,
+  });
 
   const handleBack = () => {
-    // 인증을 마친 뒤에는 email 단계로 되돌리지 않고 페이지 나감
     clearVerified();
     navigate(-1);
   };
@@ -57,8 +54,8 @@ export default function PasswordResetPage() {
       content: (
         <EmailVerifyForm
           formId={EMAIL_VERIFY_FORM_ID}
-          onRequestCode={handleRequestCode}
-          onSubmit={handleEmailSubmit}
+          onRequestCode={requestCode}
+          onSubmit={submitCode}
           onCodeValidityChange={setIsStepValid}
         />
       ),
@@ -72,7 +69,7 @@ export default function PasswordResetPage() {
           title="비밀번호 재설정"
           label="새 비밀번호"
           placeholder="새 비밀번호 입력"
-          onSubmit={handlePasswordSubmit}
+          onSubmit={submitPassword}
           onValidityChange={setIsStepValid}
         />
       ),
@@ -89,7 +86,7 @@ export default function PasswordResetPage() {
           type="submit"
           form={currentStep.formId}
           className="w-full"
-          disabled={!isStepValid}
+          disabled={!isStepValid || isPending || isVerifying}
         >
           {currentStep.buttonLabel}
         </Button>

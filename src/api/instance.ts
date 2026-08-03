@@ -1,4 +1,4 @@
-import axios from "axios";
+import axios, { AxiosError, type AxiosResponse } from "axios";
 
 import { PATH } from "@/routes/paths";
 import { useAuthStore } from "@/stores/useAuthStore";
@@ -16,6 +16,26 @@ export const publicInstance = axios.create(BASE_CONFIG);
 
 // 토큰이 필요한 요청 — 헤더 자동 첨부, 401이면 재발급 후 재시도
 export const authInstance = axios.create(BASE_CONFIG);
+
+// 2xx여도 success가 false인 경우 에러로 반환
+const handleApiFailure = (response: AxiosResponse) => {
+  const body = response.data as ApiResponse<unknown> | undefined;
+  if (body?.success === false) {
+    return Promise.reject(
+      new AxiosError(
+        body.message,
+        AxiosError.ERR_BAD_RESPONSE,
+        response.config,
+        response.request,
+        response
+      )
+    );
+  }
+
+  return response;
+};
+
+publicInstance.interceptors.response.use(handleApiFailure);
 
 authInstance.interceptors.request.use((config) => {
   const { accessToken } = useAuthStore.getState();
@@ -47,30 +67,27 @@ const reissueAccessToken = async () => {
   return reissuePromise.catch(() => null);
 };
 
-authInstance.interceptors.response.use(
-  (response) => response,
-  async (error) => {
-    const status = error.response?.status;
-    const originRequest = error.config;
+authInstance.interceptors.response.use(handleApiFailure, async (error) => {
+  const status = error.response?.status;
+  const originRequest = error.config;
 
-    if (status === 401 && originRequest) {
-      if (!originRequest.isRetried) {
-        originRequest.isRetried = true;
+  if (status === 401 && originRequest) {
+    if (!originRequest.isRetried) {
+      originRequest.isRetried = true;
 
-        const accessToken = await reissueAccessToken();
-        if (accessToken) {
-          originRequest.headers.Authorization = `Bearer ${accessToken}`;
-          return authInstance(originRequest);
-        }
-      }
-
-      useAuthStore.getState().clearAuth();
-
-      if (window.location.pathname !== PATH.LOGIN) {
-        window.location.replace(PATH.LOGIN);
+      const accessToken = await reissueAccessToken();
+      if (accessToken) {
+        originRequest.headers.Authorization = `Bearer ${accessToken}`;
+        return authInstance(originRequest);
       }
     }
 
-    return Promise.reject(error);
+    useAuthStore.getState().clearAuth();
+
+    if (window.location.pathname !== PATH.LOGIN) {
+      window.location.replace(PATH.LOGIN);
+    }
   }
-);
+
+  return Promise.reject(error);
+});

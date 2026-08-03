@@ -1,12 +1,12 @@
 import { useRef, useState } from "react";
 import { useParams } from "react-router";
 
+import { useBoardPostDetail } from "@/api/board/query";
 import { ChatInput } from "@/components/chatInput/ChatInput";
 import { BackHeader } from "@/layouts/BackHeader";
 import { PageShell } from "@/layouts/PageShell";
 import { formatRelativeTime } from "@/utils/board/formatRelativeTime";
 
-import { getBoardPostDetail } from "./boardDetail.mock";
 import { BoardCommentItem } from "./components/BoardCommentItem";
 import { BoardPostSection } from "./components/BoardPostSection";
 import { useBoardComments } from "./hooks/useBoardComments";
@@ -22,7 +22,7 @@ function BoardDetailPageContent({ postId }: { postId: string | undefined }) {
   const inputRef = useRef<HTMLInputElement>(null);
   const [messageValue, setMessageValue] = useState("");
 
-  const post = getBoardPostDetail(postId ?? "")!;
+  const { data: post } = useBoardPostDetail(postId);
   const {
     comments,
     topLevelComments,
@@ -43,9 +43,10 @@ function BoardDetailPageContent({ postId }: { postId: string | undefined }) {
 
   // 메시지 전송 시 실행 함수
   function handleSendMessage(value: string) {
-    handleSend(value);
-    setMessageValue("");
+    handleSend(value, { onSuccess: () => setMessageValue("") });
   }
+
+  if (!post) return null;
 
   return (
     <>

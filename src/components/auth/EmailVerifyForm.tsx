@@ -5,14 +5,20 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Button } from "@/components/button/Button";
 import { TextField } from "@/components/textField/TextField";
 import { useCountdown } from "@/hooks/useCountdown";
-import { emailVerifySchema, type EmailVerifyFormValues } from "@/schemas/auth";
+import {
+  emailVerifySchema,
+  normalizeEmail,
+  type EmailVerifyFormValues,
+} from "@/schemas/auth";
 
-const CODE_EXPIRY_MS = 3 * 60 * 1000;
+const CODE_EXPIRY_MS = 5 * 60 * 1000;
+
+const SPAM_NOTICE = "메일이 안 보이면 스팸함을 확인해주세요";
 
 export interface EmailVerifyFormProps {
   formId: string;
   onRequestCode: (email: string) => Promise<void> | void;
-  onSubmit: (values: EmailVerifyFormValues) => void;
+  onSubmit: (values: EmailVerifyFormValues) => Promise<void> | void;
   onCodeValidityChange?: (isValid: boolean) => void;
 }
 
@@ -42,9 +48,13 @@ export function EmailVerifyForm({
 
   const emailValue = useWatch({ control, name: "email" });
   const codeValue = useWatch({ control, name: "code" });
-  const isCodeSent = sentEmail !== null && emailValue === sentEmail;
+  const isCodeSent =
+    sentEmail !== null && normalizeEmail(emailValue ?? "") === sentEmail;
   const isCodeComplete = (codeValue ?? "").length === 6;
   const isCodeExpired = isCodeSent && isExpired;
+
+  const emailFeedback =
+    errors.email?.message ?? (isCodeSent ? SPAM_NOTICE : undefined);
 
   useEffect(() => {
     onCodeValidityChange?.(isCodeSent && isCodeComplete && !isCodeExpired);
@@ -56,12 +66,11 @@ export function EmailVerifyForm({
     const isValid = await trigger("email");
     if (!isValid) return;
 
-    const email = getValues("email");
+    const email = normalizeEmail(getValues("email"));
     setIsRequesting(true);
     try {
       await onRequestCode(email);
     } catch {
-      // TODO: 발송 실패 문구 추후 api 연동 시 추가
       return;
     } finally {
       setIsRequesting(false);
@@ -87,7 +96,7 @@ export function EmailVerifyForm({
           placeholder="@.ac.kr"
           autoFocus
           state={errors.email ? "error" : "default"}
-          feedback={errors.email?.message}
+          feedback={emailFeedback}
           rightElement={
             isCodeSent ? (
               <Button
