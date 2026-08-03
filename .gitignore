@@ -28,3 +28,6 @@ dist-ssr
 storybook-static
 .vercel
 .env*
+
+# Local tooling config
+.claude/
