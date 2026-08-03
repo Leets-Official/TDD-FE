@@ -1,33 +1,24 @@
-import { useRef, useState } from "react";
-import { useNavigate } from "react-router";
+import { useRef } from "react";
 
 import { Button } from "@/components/button/Button";
+import { UPLOAD_IMAGE_ACCEPT } from "@/constants/imageUpload";
 import { BackHeader } from "@/layouts/BackHeader";
-import { useSubmitDormVerification } from "@/hooks/useSubmitDormVerification";
 import { PageShell } from "@/layouts/PageShell";
-import { PATH } from "@/routes/paths";
 
 import AddDocumentIcon from "@/assets/icons/AddDocumentIcon.svg?react";
 
 import { FilePreviewCard } from "./components/FilePreviewCard";
+import { useDormVerificationSubmit } from "./hooks/useDormVerificationSubmit";
 
 export default function DormitoryVerificationPage() {
-  const navigate = useNavigate();
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const [file, setFile] = useState<File | null>(null);
-  const { mutate: submit, isPending: isSubmitting } =
-    useSubmitDormVerification();
-
-  function handleFileChange(event: React.ChangeEvent<HTMLInputElement>) {
-    const selected = event.target.files?.[0];
-    if (selected) setFile(selected);
-    event.target.value = "";
-  }
-
-  function handleSubmit() {
-    if (!file) return;
-    submit(file, { onSuccess: () => navigate(PATH.HOME) });
-  }
+  const {
+    selectedFile,
+    selectFile,
+    clearFile,
+    submitVerification,
+    isPending: isSubmitting,
+  } = useDormVerificationSubmit();
 
   return (
     <PageShell
@@ -35,8 +26,8 @@ export default function DormitoryVerificationPage() {
       bottom={
         <Button
           className="w-full"
-          disabled={!file || isSubmitting}
-          onClick={handleSubmit}
+          disabled={!selectedFile || isSubmitting}
+          onClick={submitVerification}
         >
           {isSubmitting ? "제출 중..." : "완료"}
         </Button>
@@ -61,9 +52,9 @@ export default function DormitoryVerificationPage() {
         <input
           ref={fileInputRef}
           type="file"
-          accept="image/*,.pdf"
+          accept={UPLOAD_IMAGE_ACCEPT}
           className="hidden"
-          onChange={handleFileChange}
+          onChange={selectFile}
         />
         <Button
           variant="default"
@@ -74,7 +65,9 @@ export default function DormitoryVerificationPage() {
           파일 선택
         </Button>
 
-        {file && <FilePreviewCard file={file} onRemove={() => setFile(null)} />}
+        {selectedFile && (
+          <FilePreviewCard file={selectedFile.file} onRemove={clearFile} />
+        )}
       </div>
     </PageShell>
   );

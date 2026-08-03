@@ -1,43 +1,16 @@
-import { useForm, useWatch } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useNavigate } from "react-router";
-
 import { Button } from "@/components/button/Button";
 import { TextField } from "@/components/textField/TextField";
 import { BackHeader } from "@/layouts/BackHeader";
 import { PageShell } from "@/layouts/PageShell";
-import {
-  passwordChangeSchema,
-  PASSWORD_HINT,
-  type PasswordChangeFormValues,
-} from "@/schemas/auth";
+import { PASSWORD_HINT } from "@/schemas/auth";
+
+import { usePasswordChangeForm } from "./hooks/usePasswordChangeForm";
 
 const PASSWORD_CHANGE_FORM_ID = "password-change-form";
 
 export function PasswordChangePage() {
-  const navigate = useNavigate();
-
-  const {
-    register,
-    handleSubmit,
-    control,
-    formState: { errors, isSubmitting },
-  } = useForm<PasswordChangeFormValues>({
-    resolver: zodResolver(passwordChangeSchema),
-    mode: "onSubmit",
-    defaultValues: { currentPassword: "", newPassword: "" },
-  });
-
-  const [currentPassword, newPassword] = useWatch({
-    control,
-    name: ["currentPassword", "newPassword"],
-  });
-  const hasEmptyField = !currentPassword || !newPassword;
-
-  const onSubmit = (_values: PasswordChangeFormValues) => {
-    // TODO: 비밀번호 변경 API 연동
-    navigate(-1);
-  };
+  const { register, errors, hasEmptyField, isPending, submitPasswordChange } =
+    usePasswordChangeForm();
 
   return (
     <PageShell
@@ -47,7 +20,7 @@ export function PasswordChangePage() {
           type="submit"
           form={PASSWORD_CHANGE_FORM_ID}
           className="w-full"
-          disabled={hasEmptyField || isSubmitting}
+          disabled={hasEmptyField || isPending}
         >
           완료
         </Button>
@@ -57,7 +30,7 @@ export function PasswordChangePage() {
         <h1 className="text-title-1 text-black">비밀번호 재설정</h1>
         <form
           id={PASSWORD_CHANGE_FORM_ID}
-          onSubmit={handleSubmit(onSubmit)}
+          onSubmit={submitPasswordChange}
           noValidate
           className="flex w-full flex-col gap-4"
         >

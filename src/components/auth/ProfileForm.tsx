@@ -19,7 +19,6 @@ export interface ProfileFormProps {
   onValidityChange?: (isValid: boolean) => void;
   isEdit?: boolean;
   children?: ReactNode;
-  /** 수정 화면에서 기존 값을 채워둘 때 사용합니다. 첫 렌더에만 반영됩니다. */
   defaultValues?: Partial<ProfileFormValues>;
 }
 
@@ -42,14 +41,17 @@ export function ProfileForm({
   });
 
   const nicknameValue = useWatch({ control, name: "nickname" });
+  const dormitoryValue = useWatch({ control, name: "dormitory" });
   const nicknameLength = (nicknameValue ?? "").length;
   const isNicknameValid =
     nicknameLength >= NICKNAME_MIN_LENGTH &&
     nicknameLength <= NICKNAME_MAX_LENGTH;
 
+  const isValid = isNicknameValid && (!isEdit || dormitoryValue !== null);
+
   useEffect(() => {
-    onValidityChange?.(isNicknameValid);
-  }, [isNicknameValid, onValidityChange]);
+    onValidityChange?.(isValid);
+  }, [isValid, onValidityChange]);
 
   return (
     <form

@@ -19,6 +19,15 @@ export const API_ERROR_MESSAGE = {
   PASSWORD_RESET: "비밀번호 재설정에 실패했어요. 잠시 후 다시 시도해주세요",
   BOARD_CREATE: "게시글 작성에 실패했어요. 잠시 후 다시 시도해주세요",
   BOARD_COMMENT_CREATE: "댓글 등록에 실패했어요. 잠시 후 다시 시도해주세요",
+  PROFILE_UPDATE: "프로필 수정에 실패했어요. 잠시 후 다시 시도해주세요",
+  DORM_VERIFICATION: "기숙사 인증 제출에 실패했어요. 잠시 후 다시 시도해주세요",
+  ACCOUNT_SAVE: "계좌 저장에 실패했어요. 잠시 후 다시 시도해주세요",
+  PASSWORD_CHANGE: "비밀번호 변경에 실패했어요. 잠시 후 다시 시도해주세요",
+  WITHDRAW: "회원탈퇴에 실패했어요. 잠시 후 다시 시도해주세요",
+} as const;
+
+export const PROFILE_IMAGE_TOAST_MESSAGE = {
+  UNSUPPORTED_TYPE: "JPG, PNG, WEBP 형식의 이미지만 올릴 수 있어요",
 } as const;
 
 // 서버 메시지 대신 항상 이 문구로 노출하는 토스트

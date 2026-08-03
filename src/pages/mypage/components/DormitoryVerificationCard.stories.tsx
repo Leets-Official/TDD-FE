@@ -8,6 +8,9 @@ const meta = {
   parameters: {
     layout: "centered",
   },
+  args: {
+    onClick: () => {},
+  },
   decorators: [
     (Story) => (
       <div style={{ width: 360 }}>
@@ -22,7 +25,7 @@ type Story = StoryObj<typeof meta>;
 
 export const None: Story = {
   args: {
-    status: "NONE",
+    status: "NOT_SUBMITTED",
   },
 };
 

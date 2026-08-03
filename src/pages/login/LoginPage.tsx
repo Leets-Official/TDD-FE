@@ -9,12 +9,14 @@ import { PATH } from "@/routes/paths";
 import { useLogin } from "@/api/auth/query";
 import { getApiErrorMessage, getApiFieldErrors } from "@/api/error";
 import { API_ERROR_MESSAGE } from "@/constants/errorMessage";
+import { useToast } from "@/hooks/useToast";
 
 const LOGIN_FORM_ID = "login-form";
 
 export default function LoginPage() {
   const navigate = useNavigate();
   const { mutate: login, isPending } = useLogin();
+  const { openToast } = useToast();
   const {
     register,
     handleSubmit,
@@ -24,7 +26,6 @@ export default function LoginPage() {
     resolver: zodResolver(loginSchema),
   });
 
-  // TODO: 임시 alert — error 변형 토스트로 교체
   const onSubmit = (values: LoginFormValues) => {
     login(values, {
       onError: (error) => {
@@ -41,7 +42,10 @@ export default function LoginPage() {
           return;
         }
 
-        alert(getApiErrorMessage(error, API_ERROR_MESSAGE.LOGIN));
+        openToast({
+          variant: "error",
+          message: getApiErrorMessage(error, API_ERROR_MESSAGE.LOGIN),
+        });
       },
     });
   };
