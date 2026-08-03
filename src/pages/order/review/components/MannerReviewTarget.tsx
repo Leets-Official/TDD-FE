@@ -1,7 +1,8 @@
 import { useState } from "react";
 
 import { Avatar } from "@/components/avatar/Avatar";
-import { MANNER_TAGS, REPORT_TAGS } from "@/constants/order/reviewTags";
+import { MANNER_TAGS } from "@/constants/order/reviewTags";
+import type { ReportReason } from "@/types/order/review";
 
 import {
   MannerReactionButtons,
@@ -9,12 +10,27 @@ import {
 } from "./MannerReactionButtons";
 import { MannerTagChips } from "./MannerTagChips";
 import { ReportButton } from "./ReportButton";
+import { ReportReasonChips } from "./ReportReasonChips";
 
 export interface MannerReviewDraft {
   reaction: MannerReaction;
   tagIds: number[];
   content: string;
+  isReported: boolean;
+  report: { reason: ReportReason; content: string } | null;
 }
+
+interface DraftState extends Omit<MannerReviewDraft, "reaction"> {
+  reaction: MannerReaction | null;
+}
+
+const INITIAL_DRAFT: DraftState = {
+  reaction: null,
+  tagIds: [],
+  content: "",
+  isReported: false,
+  report: null,
+};
 
 interface MannerReviewTargetProps {
   nickname: string;
@@ -27,18 +43,40 @@ export function MannerReviewTarget({
   avatarSrc,
   onChange,
 }: MannerReviewTargetProps) {
-  const [reaction, setReaction] = useState<MannerReaction | null>(null);
-  const [isReported, setIsReported] = useState(false);
+  const [draft, setDraft] = useState<DraftState>(INITIAL_DRAFT);
 
-  function handleReactionChange(next: MannerReaction) {
-    setReaction(next);
-    if (next !== "dislike") setIsReported(false);
-    onChange?.({ reaction: next, tagIds: [], content: "" });
+  function update(patch: Partial<DraftState>) {
+    const next = { ...draft, ...patch };
+    setDraft(next);
+    if (next.reaction) onChange?.({ ...next, reaction: next.reaction });
   }
 
+  // 좋아요 or 싫어요 선택 시 draft 초기화
+  function handleReactionChange(reaction: MannerReaction) {
+    update({
+      reaction,
+      tagIds: [],
+      content: "",
+      isReported: false,
+      report: null,
+    });
+  }
+
+  // 매너 태그 선택 시 정보 업데이트
   function handleTagsChange(next: { tagIds: number[]; content: string }) {
-    if (!reaction) return;
-    onChange?.({ reaction, ...next });
+    update(next);
+  }
+
+  function handleReportToggle() {
+    update({ isReported: !draft.isReported, report: null });
+  }
+
+  // 신고하기 선택 시 정보 업데이트
+  function handleReportChange(report: {
+    reason: ReportReason;
+    content: string;
+  }) {
+    update({ report });
   }
 
   return (
@@ -50,27 +88,32 @@ export function MannerReviewTarget({
             <p className="text-label text-black">{nickname}</p>
           </div>
           <MannerReactionButtons
-            value={reaction}
+            value={draft.reaction}
             onChange={handleReactionChange}
           />
         </div>
-        {reaction && (
+        {draft.reaction && (
           <MannerTagChips
-            key={reaction}
-            tags={MANNER_TAGS[reaction]}
+            key={draft.reaction}
+            tags={MANNER_TAGS[draft.reaction]}
             onChange={handleTagsChange}
           />
         )}
       </div>
-      {reaction === "dislike" && (
+      {draft.reaction === "dislike" && (
         <>
           <div className="flex w-full justify-end">
             <ReportButton
-              reported={isReported}
-              onClick={() => setIsReported((prev) => !prev)}
+              reported={draft.isReported}
+              onClick={handleReportToggle}
             />
           </div>
-          {isReported && <MannerTagChips tags={REPORT_TAGS} />}
+          {draft.isReported && (
+            <ReportReasonChips
+              key={draft.reaction}
+              onChange={handleReportChange}
+            />
+          )}
         </>
       )}
     </div>
