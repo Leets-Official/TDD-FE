@@ -17,6 +17,7 @@ export interface SignupResponse extends AuthTokenResponse {
 export type UserStatus = "ACTIVE" | "SUSPENDED";
 
 export interface MyPageResponse {
+  userId: number;
   nickname: string;
   profileImageUrl?: string;
   mannerTemperature: number;
@@ -28,6 +29,7 @@ export interface MyPageResponse {
   dormVerifiedAt?: string;
   dormVerifiedUntil?: string;
   rejectReason?: string;
+  pushEnabled: boolean;
 }
 
 export interface ProfileUpdateRequest {
