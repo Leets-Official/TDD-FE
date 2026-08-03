@@ -90,6 +90,16 @@ export default function OrderDetailPage() {
     ? toProfilesItems(partyParticipants.participants)
     : [];
 
+  if (!Number.isFinite(partyId)) {
+    return (
+      <PageShell header={<BackHeader title="" />}>
+        <p className="px-5 py-6 text-body-1 text-text-4">
+          존재하지 않는 배달팟이에요.
+        </p>
+      </PageShell>
+    );
+  }
+
   if (isPending) {
     return (
       <PageShell header={<BackHeader title="" />}>
@@ -197,9 +207,11 @@ export default function OrderDetailPage() {
     alt: p.nickname,
   }));
 
-  // 마감 시각이 지났는데 최소 인원을 못 채웠으면 자동 취소로 간주
+  // 마감 시각이 지났는데 최소 인원을 못 채웠으면 자동 취소로 간주 (모집중 상태일 때만)
   const isAutoCancelled =
-    now > order.deadline && participants.length < order.minCount;
+    order.status === "RECRUITING" &&
+    now > order.deadline &&
+    participants.length < order.minCount;
   const cancelled = isCancelled || order.isCancelled || isAutoCancelled;
 
   const ctaBarProps = cancelled

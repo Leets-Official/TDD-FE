@@ -19,6 +19,7 @@ export function toOrderDetail(party: PartyDetail): OrderDetail {
       src: party.leaderProfileImage ?? undefined,
     },
     participants: [],
+    status: party.status,
     isCancelled: party.status === "CANCELED",
   };
 }
