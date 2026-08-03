@@ -22,7 +22,7 @@ type Story = StoryObj<typeof meta>;
 
 export const None: Story = {
   args: {
-    status: "NONE",
+    status: "NOT_SUBMITTED",
   },
 };
 

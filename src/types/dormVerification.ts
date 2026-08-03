@@ -1,8 +1,9 @@
 export type DormVerificationStatus =
-  "NONE" | "PENDING" | "APPROVED" | "REJECTED" | "EXPIRED";
+  "NOT_SUBMITTED" | "PENDING" | "APPROVED" | "REJECTED" | "EXPIRED";
 
-export interface DormVerification {
-  status: DormVerificationStatus;
-  expiresAt?: string;
-  rejectReason?: string;
+export interface DormVerificationUploadResponse {
+  dorm_status: DormVerificationStatus;
+  dorm_verified_at?: string;
+  dorm_verified_until?: string;
+  dorm_verified_image_url?: string;
 }

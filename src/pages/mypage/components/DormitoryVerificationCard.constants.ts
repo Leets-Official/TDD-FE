@@ -19,7 +19,7 @@ interface StatusMeta {
 }
 
 export const STATUS_META: Record<DormVerificationStatus, StatusMeta> = {
-  NONE: {
+  NOT_SUBMITTED: {
     tone: "unverified",
     Icon: ShieldQuestionIcon,
     label: "기숙사 미인증",
