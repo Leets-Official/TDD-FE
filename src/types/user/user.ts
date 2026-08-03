@@ -1,6 +1,6 @@
-import type { DormitoryValue } from "@/constants/dormitory";
+import type { DormitoryValue } from "@/constants/user/dormitory";
 import type { AuthTokenResponse } from "@/types/auth/auth";
-import type { DormVerificationStatus } from "@/types/dormVerification";
+import type { DormVerificationStatus } from "@/types/user/dormVerification";
 
 export interface SignupRequest {
   email: string;

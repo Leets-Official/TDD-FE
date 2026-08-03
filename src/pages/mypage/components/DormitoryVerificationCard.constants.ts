@@ -3,7 +3,7 @@ import type { ComponentType, SVGProps } from "react";
 import ShieldQuestionIcon from "@/assets/icons/ShieldQuestionIcon.svg?react";
 import ShieldUserIcon from "@/assets/icons/ShieldUserIcon.svg?react";
 import ShieldXIcon from "@/assets/icons/ShieldXIcon.svg?react";
-import type { DormVerificationStatus } from "@/types/dormVerification";
+import type { DormVerificationStatus } from "@/types/user/dormVerification";
 import { daysUntil } from "@/utils/date";
 
 export interface DormVerificationDescriptionContext {

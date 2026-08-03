@@ -2,7 +2,7 @@ import { authInstance, publicInstance } from "@/api/instance";
 import { uploadPresignedUrl } from "@/api/upload";
 import type { UploadImageContentType } from "@/constants/imageUpload";
 import type { ApiResponse } from "@/types/api";
-import type { DormVerificationUploadResponse } from "@/types/dormVerification";
+import type { DormVerificationUploadResponse } from "@/types/user/dormVerification";
 import type {
   BankAccount,
   MyPageResponse,

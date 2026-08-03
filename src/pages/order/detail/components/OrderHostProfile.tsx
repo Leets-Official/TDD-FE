@@ -1,16 +1,16 @@
 import { Avatar } from "@/components/avatar/Avatar";
 
-export interface PodHostProfileProps {
+export interface OrderHostProfileProps {
   nickname: string;
   temperature: number;
   src?: string;
 }
 
-export function PodHostProfile({
+export function OrderHostProfile({
   nickname,
   temperature,
   src,
-}: PodHostProfileProps) {
+}: OrderHostProfileProps) {
   return (
     <div className="flex h-16 items-center gap-2">
       <Avatar size={48} alt={nickname} src={src} />

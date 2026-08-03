@@ -1,5 +1,5 @@
 import ChevronRightIcon from "@/assets/icons/ChevronRightIcon.svg?react";
-import type { DormVerificationStatus } from "@/types/dormVerification";
+import type { DormVerificationStatus } from "@/types/user/dormVerification";
 
 import { STATUS_META } from "./DormitoryVerificationCard.constants";
 import { dormitoryVerificationCardVariants } from "./DormitoryVerificationCard.variants";
