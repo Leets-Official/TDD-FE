@@ -1,5 +1,10 @@
 import type { FoodCategory } from "@/components/card/categoryIcons";
 
+export type PartyStatus =
+  "RECRUITING" | "CLOSED" | "ORDERED" | "COMPLETED" | "CANCELED";
+
+export type ParticipantRole = "OWNER" | "MEMBER";
+
 // 배달팟 목록 조회 API
 export interface PartyListItem {
   partyId: number;
@@ -8,7 +13,7 @@ export interface PartyListItem {
   currentParticipants: number;
   minParticipants: number;
   maxParticipants: number;
-  status: string;
+  status: PartyStatus;
   orderExpectedAt: string;
   dormitory: string;
 }
@@ -42,7 +47,7 @@ export interface PartyDetail {
   minParticipants: number;
   maxParticipants: number;
   orderExpectedAt: string;
-  status: string;
+  status: PartyStatus;
   createdAt: string;
 }
 
@@ -67,7 +72,7 @@ export interface PartyCreateResult {
   minParticipants: number;
   maxParticipants: number;
   orderExpectedAt: string;
-  status: string;
+  status: PartyStatus;
   createdAt: string;
 }
 
@@ -76,7 +81,7 @@ export interface Participant {
   userId: number;
   nickname: string;
   profileImage: string | null;
-  role: string;
+  role: ParticipantRole;
   mannerTemperature: number;
 }
 
@@ -107,18 +112,18 @@ export interface PartyLeaveResult {
 // 배달팟 모집 마감 API 응답
 export interface PartyCloseResult {
   partyId: number;
-  status: string;
+  status: PartyStatus;
 }
 
 // 배달팟 주문 완료 API 응답
 export interface PartyOrderResult {
   partyId: number;
-  status: string;
+  status: PartyStatus;
   settlementStatus: string;
 }
 
 // 배달팟 배달 완료 API 응답
 export interface PartyCompleteResult {
   partyId: number;
-  status: string;
+  status: PartyStatus;
 }
