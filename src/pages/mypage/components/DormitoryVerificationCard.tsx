@@ -17,7 +17,13 @@ export function DormitoryVerificationCard({
   rejectReason,
   onClick,
 }: DormitoryVerificationCardProps) {
-  const { tone, Icon, label, description: desc } = STATUS_META[status];
+  const {
+    tone,
+    Icon,
+    label,
+    description: desc,
+    isSubmittable,
+  } = STATUS_META[status];
 
   const {
     root,
@@ -43,9 +49,11 @@ export function DormitoryVerificationCard({
           </div>
           <p className={description()}>{descriptionText}</p>
         </div>
-        <button type="button">
-          <ChevronRightIcon className={chevron()} onClick={onClick} />
-        </button>
+        {isSubmittable && (
+          <button type="button" aria-label="기숙사 인증하기" onClick={onClick}>
+            <ChevronRightIcon className={chevron()} />
+          </button>
+        )}
       </div>
     </div>
   );
