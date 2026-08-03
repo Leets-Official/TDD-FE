@@ -17,6 +17,8 @@ export interface ModalProps {
   primaryLabel?: string;
   onPrimaryClick?: () => void;
   isDestructive?: boolean;
+  // false면 ESC·배경 클릭으로 닫히지 않아 버튼으로만 빠져나갈 수 있습니다
+  isDismissible?: boolean;
 }
 
 export function Modal({
@@ -31,6 +33,7 @@ export function Modal({
   primaryLabel,
   onPrimaryClick,
   isDestructive = false,
+  isDismissible = true,
 }: ModalProps) {
   const dialogRef = useRef<HTMLDialogElement>(null);
   const titleId = useId();
@@ -62,7 +65,11 @@ export function Modal({
       className={styles.dialog()}
       aria-labelledby={titleId}
       onClose={onClose}
+      onCancel={(event) => {
+        if (!isDismissible) event.preventDefault();
+      }}
       onClick={(event) => {
+        if (!isDismissible) return;
         if (event.target === dialogRef.current) onClose();
       }}
     >
