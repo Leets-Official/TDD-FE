@@ -53,7 +53,7 @@ export function BoardCommentItem({
         )}
       >
         <div className="flex w-full flex-col gap-1">
-          <BoardAuthorRow nickname={nickname} timeLabel={timeLabel} />
+          <BoardAuthorRow nickname={nickname} />
           <CommentBody content={content} timeLabel={timeLabel} />
         </div>
 
@@ -68,10 +68,7 @@ export function BoardCommentItem({
               aria-hidden="true"
             />
             <div className="flex flex-1 flex-col gap-1">
-              <BoardAuthorRow
-                nickname={reply.nickname}
-                timeLabel={reply.timeLabel}
-              />
+              <BoardAuthorRow nickname={reply.nickname} />
               <CommentBody
                 content={reply.content}
                 timeLabel={reply.timeLabel}

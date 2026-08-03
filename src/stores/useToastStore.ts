@@ -4,7 +4,7 @@ import type { ToastProps } from "@/components/toast/Toast";
 
 type ToastContentProps = Pick<
   ToastProps,
-  "message" | "actionLabel" | "onActionClick"
+  "message" | "variant" | "actionLabel" | "onActionClick"
 >;
 
 interface ToastStore {

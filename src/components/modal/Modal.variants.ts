@@ -7,6 +7,7 @@ export const modalVariants = tv({
     container:
       "flex w-full flex-col items-start gap-9 px-padding-l pt-9 pb-padding-l",
     contents: "flex w-full flex-col items-start gap-8",
+    logo: "mx-1 mt-5 mb-1 h-6 w-14",
     titleBody: "flex w-full flex-col items-start gap-4 text-text-1",
     title: "w-full text-title-2 whitespace-pre-line",
     description: "w-full text-body-1 whitespace-pre-line",
