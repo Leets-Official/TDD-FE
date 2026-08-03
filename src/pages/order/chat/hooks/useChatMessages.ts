@@ -1,7 +1,10 @@
 import { useState } from "react";
 import { generatePath, useNavigate, useParams } from "react-router";
 
+import { getApiErrorMessage } from "@/api/error";
+import { useCompleteParty } from "@/api/order/query";
 import { CURRENT_USER_ID, HOST_USER_ID } from "@/constants/order/chat";
+import { API_ERROR_MESSAGE } from "@/constants/errorMessage";
 import { useModal } from "@/hooks/useModal";
 import { useToast } from "@/hooks/useToast";
 import { PATH } from "@/routes/paths";
@@ -12,8 +15,10 @@ import { DUMMY_CHAT } from "../chat.mock";
 export function useChatMessages() {
   const navigate = useNavigate();
   const { orderId } = useParams();
+  const partyId = Number(orderId);
   const { openModal } = useModal();
   const { openToast } = useToast();
+  const { mutate: completeParty } = useCompleteParty();
   const [isDeliveryArrived, setIsDeliveryArrived] = useState(false);
   const [isTransferCompleted, setIsTransferCompleted] = useState(false);
   const [chatMessages, setChatMessages] = useState<ChatMessage[]>(DUMMY_CHAT);
@@ -57,13 +62,25 @@ export function useChatMessages() {
         primaryLabel: "네",
       },
       onConfirm: () => {
-        setIsDeliveryArrived(true);
-        pushMessage({
-          messageType: "DELIVERY_ARRIVED",
-          senderId: HOST_USER_ID,
-          senderNickname: "방장",
-          content: null,
-          imageUrl: null,
+        completeParty(partyId, {
+          onSuccess: () => {
+            setIsDeliveryArrived(true);
+            pushMessage({
+              messageType: "DELIVERY_ARRIVED",
+              senderId: HOST_USER_ID,
+              senderNickname: "방장",
+              content: null,
+              imageUrl: null,
+            });
+          },
+          onError: (error) => {
+            openToast({
+              message: getApiErrorMessage(
+                error,
+                API_ERROR_MESSAGE.DELIVERY_COMPLETE
+              ),
+            });
+          },
         });
       },
     });
