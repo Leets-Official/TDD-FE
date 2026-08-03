@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { generatePath, useNavigate } from "react-router";
 
 import { useMyPartyList, usePartyList } from "@/api/order/query";
+import { useBankAccount, useMyPage } from "@/api/user/query";
 import { getApiErrorMessage } from "@/api/error";
 import type { PartyListItem } from "@/types/order/order";
 import type { FoodCategory } from "@/components/card/categoryIcons";
@@ -36,13 +37,6 @@ const TABS = [
 // 진행중(ONGOING) 정책: RECRUITING·CLOSED·ORDERED / 그 외는 지난 배달팟(COMPLETED)
 const ONGOING_STATUSES = new Set(["RECRUITING", "CLOSED", "ORDERED"]);
 
-// TODO: 로그인 사용자의 실제 기숙사 인증 여부로 교체
-const IS_DORM_VERIFIED = true;
-// TODO: 로그인 사용자의 실제 노쇼 정지 상태로 교체
-const IS_NOSHOW_RESTRICTED = false;
-// TODO: 로그인 사용자의 실제 계좌 등록 여부로 교체
-const IS_ACCOUNT_REGISTERED = true;
-
 export default function HomePage() {
   const [tab, setTab] = useState(TABS[0].value);
   const [dorm, setDorm] = useState("");
@@ -50,6 +44,11 @@ export default function HomePage() {
   const navigate = useNavigate();
   const { openModal } = useModal();
   const { openToast } = useToast();
+  const { data: myPage } = useMyPage();
+  const isDormVerified = myPage?.dormStatus === "APPROVED";
+  const isNoshowRestricted = myPage?.status === "SUSPENDED";
+  const { data: bankAccount } = useBankAccount();
+  const isAccountRegistered = !!bankAccount;
   const {
     data: partyList,
     isPending,
@@ -124,7 +123,7 @@ export default function HomePage() {
   }, [myPartyList, openToast, navigate]);
 
   function handleCreateClick() {
-    if (!IS_DORM_VERIFIED) {
+    if (!isDormVerified) {
       openModal({
         props: DORM_VERIFICATION_MODAL_PROPS,
         onConfirm: () => navigate(PATH.MYPAGE_DORMITORY),
@@ -132,12 +131,12 @@ export default function HomePage() {
       return;
     }
 
-    if (IS_NOSHOW_RESTRICTED) {
+    if (isNoshowRestricted) {
       openModal({ props: NOSHOW_RESTRICTION_MODAL_PROPS });
       return;
     }
 
-    if (!IS_ACCOUNT_REGISTERED) {
+    if (!isAccountRegistered) {
       openModal({
         props: ACCOUNT_UNREGISTERED_MODAL_PROPS,
         onConfirm: () => navigate(PATH.MYPAGE_ACCOUNT),
@@ -149,7 +148,7 @@ export default function HomePage() {
   }
 
   function handleCardClick(order: OrderItem) {
-    if (!IS_DORM_VERIFIED) {
+    if (!isDormVerified) {
       openModal({
         props: DORM_VERIFICATION_MODAL_PROPS,
         onConfirm: () => navigate(PATH.MYPAGE_DORMITORY),
