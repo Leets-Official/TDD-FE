@@ -16,7 +16,11 @@ export function filterOrders(
 
     if (filters.orderTimeMinutes) {
       const remainingMinutes = (order.deadline - Date.now()) / (60 * 1000);
-      if (remainingMinutes > Number(filters.orderTimeMinutes)) return false;
+      if (
+        remainingMinutes < 0 ||
+        remainingMinutes > Number(filters.orderTimeMinutes)
+      )
+        return false;
     }
 
     return true;

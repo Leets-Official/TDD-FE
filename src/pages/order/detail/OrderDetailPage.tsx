@@ -50,6 +50,7 @@ export default function OrderDetailPage() {
   } = usePartyDetail(partyId);
   const {
     data: partyParticipants,
+    isPending: isParticipantsPending,
     isError: isParticipantsError,
     error: participantsError,
   } = usePartyParticipants(partyId);
@@ -104,6 +105,16 @@ export default function OrderDetailPage() {
     return (
       <PageShell header={<BackHeader title="" />}>
         <p className="px-5 py-6 text-body-1 text-text-4">불러오는 중...</p>
+      </PageShell>
+    );
+  }
+
+  if (isError) {
+    return (
+      <PageShell header={<BackHeader title="" />}>
+        <p className="px-5 py-6 text-body-1 text-text-4">
+          배달팟 정보를 불러오지 못했어요.
+        </p>
       </PageShell>
     );
   }
@@ -207,8 +218,10 @@ export default function OrderDetailPage() {
     alt: p.nickname,
   }));
 
-  // 마감 시각이 지났는데 최소 인원을 못 채웠으면 자동 취소로 간주 (모집중 상태일 때만)
+  // 마감 시각이 지났는데 최소 인원을 못 채웠으면 자동 취소로 간주 (모집중 상태일 때만, 참여자 조회가 끝난 후에만)
   const isAutoCancelled =
+    !isParticipantsPending &&
+    !isParticipantsError &&
     order.status === "RECRUITING" &&
     now > order.deadline &&
     participants.length < order.minCount;
