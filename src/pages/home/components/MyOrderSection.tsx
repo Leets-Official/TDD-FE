@@ -79,7 +79,7 @@ export function MyOrderSection({
       ) : (
         <>
           <div className="flex flex-col gap-9 px-xl pb-24">
-            {orderState !== "past" && (
+            {orderState !== "past" && filteredInProgressOrders.length > 0 && (
               <section className="flex flex-col gap-l">
                 <h2 className="text-title-1 text-text-1">진행중인 배달팟</h2>
                 <ul className="flex flex-col gap-xxl">
@@ -98,7 +98,7 @@ export function MyOrderSection({
               </section>
             )}
 
-            {orderState !== "ongoing" && (
+            {orderState !== "ongoing" && filteredPastOrders.length > 0 && (
               <section className="flex flex-col gap-l">
                 <h2 className="text-title-1 text-text-1">지난 배달팟</h2>
                 <ul className="flex flex-col gap-xxl">

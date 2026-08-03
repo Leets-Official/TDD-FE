@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { generatePath, useNavigate } from "react-router";
 
 import { useMyPartyList, usePartyList } from "@/api/order/query";
@@ -59,7 +59,9 @@ export default function HomePage() {
     categoryId: menu ? FOOD_CATEGORY_ID_MAP[menu as FoodCategory] : undefined,
     dormitory: dorm || undefined,
   });
-  const recruitingOrders = (partyList ?? []).map(toOrderItem);
+  const recruitingOrders = (partyList ?? [])
+    .filter((party) => party.status === "RECRUITING")
+    .map(toOrderItem);
 
   const {
     data: myPartyList,
@@ -98,12 +100,16 @@ export default function HomePage() {
     });
   }, [isMyPartyListError, myPartyListError, openToast]);
 
+  const notifiedMatchedPartyIdsRef = useRef<Set<number>>(new Set());
   useEffect(() => {
     const matchedParty = myPartyList?.find(
-      (party) => party.status === "CLOSED"
+      (party) =>
+        party.status === "CLOSED" &&
+        !notifiedMatchedPartyIdsRef.current.has(party.partyId)
     );
     if (!matchedParty) return;
 
+    notifiedMatchedPartyIdsRef.current.add(matchedParty.partyId);
     openToast({
       message: "배달팟이 매칭되었습니다!",
       actionLabel: "채팅방 입장",
