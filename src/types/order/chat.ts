@@ -2,6 +2,7 @@
 export type ChatMessageType =
   | "USER"
   | "IMAGE"
+  | "ORDER_COMPLETE"
   | "DELIVERY_ARRIVED"
   | "SETTLEMENT_REQUEST"
   | "TRANSFER_REQUEST"

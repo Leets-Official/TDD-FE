@@ -2,6 +2,8 @@ import { Button } from "@/components/button/Button";
 
 export interface ChatMenuBarProps {
   isHost: boolean;
+  isOrderCompleted?: boolean;
+  onOrderComplete?: () => void;
   isDeliveryArrived?: boolean;
   onDeliveryArrived?: () => void;
   onSettlementRequest?: () => void;
@@ -12,6 +14,8 @@ export interface ChatMenuBarProps {
 
 export function ChatMenuBar({
   isHost,
+  isOrderCompleted = false,
+  onOrderComplete,
   isDeliveryArrived = false,
   onDeliveryArrived,
   onSettlementRequest,
@@ -27,6 +31,21 @@ export function ChatMenuBar({
           <Button
             variant="secondary"
             size="small"
+            onClick={onOrderComplete}
+            aria-pressed={isOrderCompleted}
+            className={
+              isOrderCompleted
+                ? // 여기 비활성화 스타일에서 선택이 되어야 함으로 따로 정의 -> 클릭 시 주문 완료 취소가 되어야함.
+                  "border-[1.5px] border-divider-1 bg-white text-disabled hover:bg-white active:bg-white"
+                : undefined
+            }
+          >
+            주문 완료
+          </Button>
+          <Button
+            variant="secondary"
+            size="small"
+            disabled={!isOrderCompleted}
             onClick={onDeliveryArrived}
             aria-pressed={isDeliveryArrived}
             className={
