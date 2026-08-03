@@ -8,6 +8,9 @@ const meta = {
   parameters: {
     layout: "centered",
   },
+  args: {
+    onClick: () => {},
+  },
   decorators: [
     (Story) => (
       <div style={{ width: 360 }}>

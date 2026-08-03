@@ -8,7 +8,7 @@ export interface DormitoryVerificationCardProps {
   status: DormVerificationStatus;
   verifiedUntil?: string | null;
   rejectReason?: string | null;
-  onClick?: () => void;
+  onClick: () => void;
 }
 
 export function DormitoryVerificationCard({
