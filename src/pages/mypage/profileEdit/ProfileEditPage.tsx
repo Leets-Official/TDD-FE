@@ -19,8 +19,6 @@ export function ProfileEditPage() {
   const { previewUrl, selectImage, submitProfile, isPending } =
     useProfileEditSubmit();
 
-  if (!profile) return null;
-
   return (
     <PageShell
       header={<BackHeader title="프로필 수정" />}
@@ -35,39 +33,41 @@ export function ProfileEditPage() {
         </Button>
       }
     >
-      <ProfileForm
-        formId={PROFILE_EDIT_FORM_ID}
-        isEdit
-        defaultValues={{
-          nickname: profile.nickname,
-          dormitory: profile.dormitory ?? null,
-        }}
-        onSubmit={submitProfile}
-        onValidityChange={setIsValid}
-      >
-        <h1 className="text-title-1">프로필 수정</h1>
-        <div className="mt-2 flex flex-col items-center gap-2">
-          <Avatar
-            size={110}
-            src={previewUrl ?? profile.profileImageUrl}
-            alt="프로필 사진 미리보기"
-          />
-          <input
-            ref={fileInputRef}
-            type="file"
-            accept={UPLOAD_IMAGE_ACCEPT}
-            className="hidden"
-            onChange={selectImage}
-          />
-          <Button
-            variant="outline"
-            size="small"
-            onClick={() => fileInputRef.current?.click()}
-          >
-            프로필 사진 업로드
-          </Button>
-        </div>
-      </ProfileForm>
+      {profile && (
+        <ProfileForm
+          formId={PROFILE_EDIT_FORM_ID}
+          isEdit
+          defaultValues={{
+            nickname: profile.nickname,
+            dormitory: profile.dormitory ?? null,
+          }}
+          onSubmit={submitProfile}
+          onValidityChange={setIsValid}
+        >
+          <h1 className="text-title-1">프로필 수정</h1>
+          <div className="mt-2 flex flex-col items-center gap-2">
+            <Avatar
+              size={110}
+              src={previewUrl ?? profile.profileImageUrl}
+              alt="프로필 사진 미리보기"
+            />
+            <input
+              ref={fileInputRef}
+              type="file"
+              accept={UPLOAD_IMAGE_ACCEPT}
+              className="hidden"
+              onChange={selectImage}
+            />
+            <Button
+              variant="outline"
+              size="small"
+              onClick={() => fileInputRef.current?.click()}
+            >
+              프로필 사진 업로드
+            </Button>
+          </div>
+        </ProfileForm>
+      )}
     </PageShell>
   );
 }
