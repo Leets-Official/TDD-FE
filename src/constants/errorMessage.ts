@@ -24,6 +24,18 @@ export const API_ERROR_MESSAGE = {
   ACCOUNT_SAVE: "계좌 저장에 실패했어요. 잠시 후 다시 시도해주세요",
   PASSWORD_CHANGE: "비밀번호 변경에 실패했어요. 잠시 후 다시 시도해주세요",
   WITHDRAW: "회원탈퇴에 실패했어요. 잠시 후 다시 시도해주세요",
+  PUSH_SETTING: "알림 설정 변경에 실패했어요. 잠시 후 다시 시도해주세요",
+} as const;
+
+// 서버 응답이 아니라 브라우저 상태 때문에 막히는 경우
+export const PUSH_TOAST_MESSAGE = {
+  UNSUPPORTED: "이 브라우저에서는 알림을 사용할 수 없어요",
+} as const;
+
+// 한 번 차단하면 코드로 다시 물을 수 없어 직접 켜도록 안내합니다
+export const PUSH_PERMISSION_GUIDE = {
+  TITLE: "알림이 차단되어 있어요",
+  DESCRIPTION: "설정에서 알림을 허용해주세요",
 } as const;
 
 export const PROFILE_IMAGE_TOAST_MESSAGE = {

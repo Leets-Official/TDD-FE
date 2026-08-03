@@ -28,6 +28,7 @@ export interface MyPageResponse {
   dormVerifiedAt?: string;
   dormVerifiedUntil?: string;
   rejectReason?: string;
+  pushEnabled?: boolean;
 }
 
 export interface ProfileUpdateRequest {
