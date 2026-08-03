@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-import { DORMITORY_VALUES } from "@/constants/dormitory";
+import { DORMITORY_VALUES } from "@/constants/user/dormitory";
 
 const SCHOOL_EMAIL_DOMAIN = "gachon.ac.kr";
 

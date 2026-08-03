@@ -8,25 +8,31 @@ import {
   MENU_OPTIONS,
   ORDER_TIME_OPTIONS,
 } from "@/constants/home/filterOptions";
-import { filterPods } from "@/utils/home/filterPods";
+import { filterOrders } from "@/utils/home/filterOrders";
 
-import { CreatePodFab } from "./CreatePodFab";
-import { PodEmptyState } from "./PodEmptyState";
-import type { PodItem } from "../pods.mock";
+import { CreateOrderFab } from "./CreateOrderFab";
+import { OrderEmptyState } from "./OrderEmptyState";
+import type { OrderItem } from "@/types/home/home";
 
-export interface PodListSectionProps {
-  pods: PodItem[];
+export interface OrderListSectionProps {
+  orders: OrderItem[];
+  dorm: string;
+  onDormChange: (value: string) => void;
+  menu: string;
+  onMenuChange: (value: string) => void;
   onCreateClick: () => void;
-  onCardClick: (pod: PodItem) => void;
+  onCardClick: (order: OrderItem) => void;
 }
 
-export function PodListSection({
-  pods,
+export function OrderListSection({
+  orders,
+  dorm,
+  onDormChange,
+  menu,
+  onMenuChange,
   onCreateClick,
   onCardClick,
-}: PodListSectionProps) {
-  const [dorm, setDorm] = useState("");
-  const [menu, setMenu] = useState("");
+}: OrderListSectionProps) {
   const [orderTimeMinutes, setOrderTimeMinutes] = useState("");
   const [now, setNow] = useState(() => Date.now());
   useEffect(() => {
@@ -34,8 +40,13 @@ export function PodListSection({
     return () => clearInterval(intervalId);
   }, []);
 
-  const activePods = pods.filter((pod) => pod.deadline > now);
-  const filteredPods = filterPods(activePods, { dorm, menu, orderTimeMinutes });
+  const activeOrders = orders.filter((order) => order.deadline > now);
+  // dorm/menu는 usePartyList 호출 시 categoryId/dormitoryId로 이미 서버에서 필터링됨
+  const filteredOrders = filterOrders(activeOrders, {
+    dorm: "",
+    menu: "",
+    orderTimeMinutes,
+  });
 
   return (
     <div className="relative flex flex-col">
@@ -45,7 +56,7 @@ export function PodListSection({
           label="기숙사"
           options={DORM_OPTIONS}
           value={dorm}
-          onChange={setDorm}
+          onChange={onDormChange}
         />
         <Dropdown
           variant="filter"
@@ -53,7 +64,7 @@ export function PodListSection({
           options={MENU_OPTIONS}
           visibleOptions={5}
           value={menu}
-          onChange={setMenu}
+          onChange={onMenuChange}
         />
         <Dropdown
           variant="filter"
@@ -64,24 +75,24 @@ export function PodListSection({
         />
       </div>
 
-      {filteredPods.length === 0 ? (
-        <PodEmptyState onCreateClick={onCreateClick} />
+      {filteredOrders.length === 0 ? (
+        <OrderEmptyState onCreateClick={onCreateClick} />
       ) : (
         <>
           <ul className="flex flex-col gap-xxl px-xl pb-24">
-            {filteredPods.map((pod) => (
-              <li key={pod.id}>
+            {filteredOrders.map((order) => (
+              <li key={order.id}>
                 <button
                   type="button"
                   className="w-full text-left"
-                  onClick={() => onCardClick(pod)}
+                  onClick={() => onCardClick(order)}
                 >
-                  <Card {...pod} hideStatusBadge />
+                  <Card {...order} hideStatusBadge />
                 </button>
               </li>
             ))}
           </ul>
-          <CreatePodFab onClick={onCreateClick} />
+          <CreateOrderFab onClick={onCreateClick} />
         </>
       )}
     </div>

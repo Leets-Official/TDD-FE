@@ -6,38 +6,38 @@ import { Dropdown } from "@/components/dropdown/Dropdown";
 import {
   DORM_OPTIONS,
   MENU_OPTIONS,
+  ORDER_STATE_OPTIONS,
   ORDER_TIME_OPTIONS,
-  POD_STATE_OPTIONS,
 } from "@/constants/home/filterOptions";
-import { filterPods } from "@/utils/home/filterPods";
+import { filterOrders } from "@/utils/home/filterOrders";
 
-import { CreatePodFab } from "./CreatePodFab";
-import { PodEmptyState } from "./PodEmptyState";
-import type { PodItem } from "../pods.mock";
+import { CreateOrderFab } from "./CreateOrderFab";
+import { OrderEmptyState } from "./OrderEmptyState";
+import type { OrderItem } from "@/types/home/home";
 
-export interface MyPodSectionProps {
-  inProgressPods: PodItem[];
-  pastPods: PodItem[];
+export interface MyOrderSectionProps {
+  inProgressOrders: OrderItem[];
+  pastOrders: OrderItem[];
   onCreateClick: () => void;
-  onCardClick: (pod: PodItem) => void;
+  onCardClick: (order: OrderItem) => void;
 }
 
-export function MyPodSection({
-  inProgressPods,
-  pastPods,
+export function MyOrderSection({
+  inProgressOrders,
+  pastOrders,
   onCreateClick,
   onCardClick,
-}: MyPodSectionProps) {
-  const [podState, setPodState] = useState("all");
+}: MyOrderSectionProps) {
+  const [orderState, setOrderState] = useState("all");
   const [dorm, setDorm] = useState("");
   const [menu, setMenu] = useState("");
   const [orderTimeMinutes, setOrderTimeMinutes] = useState("");
 
   const filters = { dorm, menu, orderTimeMinutes };
-  const filteredInProgressPods =
-    podState === "past" ? [] : filterPods(inProgressPods, filters);
-  const filteredPastPods =
-    podState === "ongoing" ? [] : filterPods(pastPods, filters);
+  const filteredInProgressOrders =
+    orderState === "past" ? [] : filterOrders(inProgressOrders, filters);
+  const filteredPastOrders =
+    orderState === "ongoing" ? [] : filterOrders(pastOrders, filters);
 
   return (
     <div className="relative flex flex-col">
@@ -45,9 +45,9 @@ export function MyPodSection({
         <Dropdown
           variant="filter"
           label="진행중/지난"
-          options={POD_STATE_OPTIONS}
-          value={podState}
-          onChange={setPodState}
+          options={ORDER_STATE_OPTIONS}
+          value={orderState}
+          onChange={setOrderState}
         />
         <Dropdown
           variant="filter"
@@ -73,23 +73,24 @@ export function MyPodSection({
         />
       </div>
 
-      {filteredInProgressPods.length === 0 && filteredPastPods.length === 0 ? (
-        <PodEmptyState onCreateClick={onCreateClick} />
+      {filteredInProgressOrders.length === 0 &&
+      filteredPastOrders.length === 0 ? (
+        <OrderEmptyState onCreateClick={onCreateClick} />
       ) : (
         <>
           <div className="flex flex-col gap-9 px-xl pb-24">
-            {podState !== "past" && (
+            {orderState !== "past" && filteredInProgressOrders.length > 0 && (
               <section className="flex flex-col gap-l">
                 <h2 className="text-title-1 text-text-1">진행중인 배달팟</h2>
                 <ul className="flex flex-col gap-xxl">
-                  {filteredInProgressPods.map((pod) => (
-                    <li key={pod.id}>
+                  {filteredInProgressOrders.map((order) => (
+                    <li key={order.id}>
                       <button
                         type="button"
                         className="w-full text-left"
-                        onClick={() => onCardClick(pod)}
+                        onClick={() => onCardClick(order)}
                       >
-                        <Card {...pod} />
+                        <Card {...order} />
                       </button>
                     </li>
                   ))}
@@ -97,18 +98,18 @@ export function MyPodSection({
               </section>
             )}
 
-            {podState !== "ongoing" && (
+            {orderState !== "ongoing" && filteredPastOrders.length > 0 && (
               <section className="flex flex-col gap-l">
                 <h2 className="text-title-1 text-text-1">지난 배달팟</h2>
                 <ul className="flex flex-col gap-xxl">
-                  {filteredPastPods.map((pod) => (
-                    <li key={pod.id}>
+                  {filteredPastOrders.map((order) => (
+                    <li key={order.id}>
                       <button
                         type="button"
                         className="w-full text-left"
-                        onClick={() => onCardClick(pod)}
+                        onClick={() => onCardClick(order)}
                       >
-                        <Card {...pod} />
+                        <Card {...order} />
                       </button>
                     </li>
                   ))}
@@ -117,7 +118,7 @@ export function MyPodSection({
             )}
           </div>
 
-          <CreatePodFab onClick={onCreateClick} />
+          <CreateOrderFab onClick={onCreateClick} />
         </>
       )}
     </div>

@@ -2,6 +2,19 @@
 export const API_ERROR_MESSAGE = {
   DEFAULT: "요청에 실패했어요. 잠시 후 다시 시도해주세요",
   LOGIN: "로그인에 실패했어요. 잠시 후 다시 시도해주세요",
+  ORDER_LIST: "배달팟 목록을 불러오지 못했어요. 잠시 후 다시 시도해주세요",
+  MY_ORDER_LIST:
+    "내 배달팟 목록을 불러오지 못했어요. 잠시 후 다시 시도해주세요",
+  ORDER_CREATE: "배달팟 생성에 실패했어요. 잠시 후 다시 시도해주세요",
+  ORDER_DETAIL: "배달팟 정보를 불러오지 못했어요. 잠시 후 다시 시도해주세요",
+  ORDER_PARTICIPANTS:
+    "참여자 목록을 불러오지 못했어요. 잠시 후 다시 시도해주세요",
+  ORDER_CANCEL: "배달팟 취소에 실패했어요. 잠시 후 다시 시도해주세요",
+  ORDER_JOIN: "배달팟 참여에 실패했어요. 잠시 후 다시 시도해주세요",
+  ORDER_LEAVE: "배달팟 참여 취소에 실패했어요. 잠시 후 다시 시도해주세요",
+  ORDER_CLOSE: "배달팟 모집 마감에 실패했어요. 잠시 후 다시 시도해주세요",
+  ORDER_COMPLETE: "주문 완료 처리에 실패했어요. 잠시 후 다시 시도해주세요",
+  DELIVERY_COMPLETE: "배달 완료 처리에 실패했어요. 잠시 후 다시 시도해주세요",
   SIGNUP: "회원가입에 실패했어요. 잠시 후 다시 시도해주세요",
   PASSWORD_RESET: "비밀번호 재설정에 실패했어요. 잠시 후 다시 시도해주세요",
   BOARD_CREATE: "게시글 작성에 실패했어요. 잠시 후 다시 시도해주세요",
@@ -11,6 +24,6 @@ export const API_ERROR_MESSAGE = {
 // 서버 메시지 대신 항상 이 문구로 노출하는 토스트
 export const EMAIL_VERIFY_TOAST_MESSAGE = {
   SEND_FAILED:
-    "학교 이메일 인증에 실패하였습니다!\n다시 시도해주세요(5분내 3회 재시도 가능)",
+    "학교 이메일 인증에 실패하였습니다!\n다시 시도해주세요(5분 내 3회 재시도 가능)",
   VERIFY_FAILED: "학교 이메일 인증에 실패하였습니다!",
 } as const;

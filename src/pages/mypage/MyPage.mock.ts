@@ -1,5 +1,5 @@
-import type { DormitoryValue } from "@/constants/dormitory";
-import type { DormVerificationStatus } from "@/types/dormVerification";
+import type { DormitoryValue } from "@/constants/user/dormitory";
+import type { DormVerificationStatus } from "@/types/user/dormVerification";
 
 export type AccountStatus = "ACTIVE" | "SUSPENDED";
 

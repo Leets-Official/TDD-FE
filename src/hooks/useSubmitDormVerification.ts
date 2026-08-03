@@ -1,7 +1,7 @@
 import { useState } from "react";
 
 import { submitDormVerification } from "@/api/dormitory/dormVerification";
-import type { DormVerification } from "@/types/dormVerification";
+import type { DormVerification } from "@/types/user/dormVerification";
 
 interface SubmitDormVerificationOptions {
   onSuccess?: (data: DormVerification) => void;
