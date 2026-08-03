@@ -3,7 +3,7 @@ import { Controller, useForm, useWatch } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 
 import { Dropdown } from "@/components/dropdown/Dropdown";
-import { DORMITORY_OPTIONS } from "@/constants/dormitory";
+import { DORMITORY_OPTIONS } from "@/constants/user/dormitory";
 import { TextField } from "@/components/textField/TextField";
 import { cn } from "@/utils/cn";
 import {

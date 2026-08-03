@@ -26,7 +26,7 @@ import { toOrderItem } from "@/utils/order/toOrderItem";
 
 import { MyOrderSection } from "./components/MyOrderSection";
 import { OrderListSection } from "./components/OrderListSection";
-import type { OrderItem } from "./orderItem";
+import type { OrderItem } from "@/types/home/home";
 
 const TABS = [
   { label: "배달팟 목록", value: "all" },

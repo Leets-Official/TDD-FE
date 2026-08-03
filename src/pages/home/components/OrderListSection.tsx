@@ -12,7 +12,7 @@ import { filterOrders } from "@/utils/home/filterOrders";
 
 import { CreateOrderFab } from "./CreateOrderFab";
 import { OrderEmptyState } from "./OrderEmptyState";
-import type { OrderItem } from "../orderItem";
+import type { OrderItem } from "@/types/home/home";
 
 export interface OrderListSectionProps {
   orders: OrderItem[];

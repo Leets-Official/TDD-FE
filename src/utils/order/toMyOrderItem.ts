@@ -1,5 +1,5 @@
 import type { StatusBadgeProps } from "@/components/badge/StatusBadge";
-import type { OrderItem } from "@/pages/home/orderItem";
+import type { OrderItem } from "@/types/home/home";
 import type { PartyListItem } from "@/types/order/order";
 
 import { toPartyAvatars } from "./toPartyAvatars";

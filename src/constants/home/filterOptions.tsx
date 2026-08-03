@@ -1,5 +1,5 @@
 import type { DropdownOption } from "@/components/dropdown/Dropdown";
-import { DORMITORY_OPTIONS } from "@/constants/dormitory";
+import { DORMITORY_OPTIONS } from "@/constants/user/dormitory";
 import {
   CATEGORY_ICONS,
   FOOD_CATEGORIES,

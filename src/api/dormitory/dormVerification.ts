@@ -2,7 +2,7 @@ import {
   mockFetchDormVerification,
   mockSubmitDormVerification,
 } from "@/pages/mypage/dormitory/dormVerification.mock";
-import type { DormVerification } from "@/types/dormVerification";
+import type { DormVerification } from "@/types/user/dormVerification";
 
 export function getDormVerification(): Promise<DormVerification | null> {
   return mockFetchDormVerification();

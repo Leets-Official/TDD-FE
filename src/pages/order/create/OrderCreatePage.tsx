@@ -11,7 +11,7 @@ import { Slider } from "@/components/slider/Slider";
 import { TextField } from "@/components/textField/TextField";
 import { Textarea } from "@/components/textarea/Textarea";
 import { cn } from "@/utils/cn";
-import { DORMITORY_OPTIONS } from "@/constants/dormitory";
+import { DORMITORY_OPTIONS } from "@/constants/user/dormitory";
 import { API_ERROR_MESSAGE } from "@/constants/errorMessage";
 import {
   MENU_OPTIONS,

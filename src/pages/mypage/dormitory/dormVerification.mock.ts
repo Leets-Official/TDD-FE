@@ -1,4 +1,4 @@
-import type { DormVerification } from "@/types/dormVerification";
+import type { DormVerification } from "@/types/user/dormVerification";
 
 const MOCK_DELAY_MS = 500;
 

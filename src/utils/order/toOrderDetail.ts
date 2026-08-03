@@ -2,7 +2,7 @@ import {
   DEFAULT_FOOD_CATEGORY,
   FOOD_CATEGORY_MAP,
 } from "@/constants/order/foodCategory";
-import type { OrderDetail } from "@/pages/order/detail/orderDetail";
+import type { OrderDetail } from "@/types/order/orderDetail";
 import type { PartyDetail } from "@/types/order/order";
 
 export function toOrderDetail(party: PartyDetail): OrderDetail {

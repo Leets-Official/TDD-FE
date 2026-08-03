@@ -1,4 +1,4 @@
-import type { DormitoryValue } from "@/constants/dormitory";
+import type { DormitoryValue } from "@/constants/user/dormitory";
 import type { AuthTokenResponse } from "@/types/auth/auth";
 
 export interface SignupRequest {

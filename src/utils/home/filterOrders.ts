@@ -1,4 +1,4 @@
-import type { OrderItem } from "@/pages/home/orderItem";
+import type { OrderItem } from "@/types/home/home";
 
 export interface OrderFilters {
   dorm: string;
