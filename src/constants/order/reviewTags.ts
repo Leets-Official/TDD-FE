@@ -1,19 +1,24 @@
-export const MANNER_TAGS: Record<"like" | "dislike", string[]> = {
+export interface ReviewTagOption {
+  id: number;
+  label: string;
+}
+
+export const MANNER_TAGS: Record<"like" | "dislike", ReviewTagOption[]> = {
   like: [
-    "시간 약속을 잘 지켜요",
-    "주문이 순조로워요",
-    "소통이 빨라요",
-    "친절해요",
+    { id: 1, label: "시간 약속을 잘 지켜요" },
+    { id: 2, label: "주문이 순조로워요" },
+    { id: 3, label: "소통이 빨라요" },
+    { id: 4, label: "친절해요" },
   ],
   dislike: [
-    "답장이 너무 늦어요",
-    "불쾌한 말을 했어요",
-    "주문이 자주 바뀌었어요",
-    "약속이 안 지켜졌어요",
+    { id: 11, label: "답장이 느려요" },
+    { id: 12, label: "불쾌한 말을 했어요" },
+    { id: 13, label: "주문이 자주 바뀌었어요" },
+    { id: 14, label: "정산이 제때 안되었어요" },
   ],
 };
 
-export const REPORT_TAGS = [
+export const REPORT_TAGS: string[] = [
   "노쇼",
   "과도한 개인정보 요구",
   "원하지 않는 만남 요구",

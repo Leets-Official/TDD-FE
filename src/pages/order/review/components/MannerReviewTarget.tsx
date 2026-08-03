@@ -10,16 +10,22 @@ import {
 import { MannerTagChips } from "./MannerTagChips";
 import { ReportButton } from "./ReportButton";
 
+export interface MannerReviewDraft {
+  reaction: MannerReaction;
+  tagIds: number[];
+  content: string;
+}
+
 interface MannerReviewTargetProps {
   nickname: string;
   avatarSrc?: string;
-  onReactionChange?: (reaction: MannerReaction) => void;
+  onChange?: (draft: MannerReviewDraft) => void;
 }
 
 export function MannerReviewTarget({
   nickname,
   avatarSrc,
-  onReactionChange,
+  onChange,
 }: MannerReviewTargetProps) {
   const [reaction, setReaction] = useState<MannerReaction | null>(null);
   const [isReported, setIsReported] = useState(false);
@@ -27,7 +33,12 @@ export function MannerReviewTarget({
   function handleReactionChange(next: MannerReaction) {
     setReaction(next);
     if (next !== "dislike") setIsReported(false);
-    onReactionChange?.(next);
+    onChange?.({ reaction: next, tagIds: [], content: "" });
+  }
+
+  function handleTagsChange(next: { tagIds: number[]; content: string }) {
+    if (!reaction) return;
+    onChange?.({ reaction, ...next });
   }
 
   return (
@@ -43,7 +54,13 @@ export function MannerReviewTarget({
             onChange={handleReactionChange}
           />
         </div>
-        {reaction && <MannerTagChips tags={MANNER_TAGS[reaction]} />}
+        {reaction && (
+          <MannerTagChips
+            key={reaction}
+            tags={MANNER_TAGS[reaction]}
+            onChange={handleTagsChange}
+          />
+        )}
       </div>
       {reaction === "dislike" && (
         <>
