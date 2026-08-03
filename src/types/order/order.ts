@@ -109,3 +109,16 @@ export interface PartyCloseResult {
   partyId: number;
   status: string;
 }
+
+// 배달팟 주문 완료 API 응답
+export interface PartyOrderResult {
+  partyId: number;
+  status: string;
+  settlementStatus: string;
+}
+
+// 배달팟 배달 완료 API 응답
+export interface PartyCompleteResult {
+  partyId: number;
+  status: string;
+}

@@ -13,4 +13,6 @@ export const API_ERROR_MESSAGE = {
   ORDER_JOIN: "배달팟 참여에 실패했어요. 잠시 후 다시 시도해주세요",
   ORDER_LEAVE: "배달팟 참여 취소에 실패했어요. 잠시 후 다시 시도해주세요",
   ORDER_CLOSE: "배달팟 모집 마감에 실패했어요. 잠시 후 다시 시도해주세요",
+  ORDER_COMPLETE: "주문 완료 처리에 실패했어요. 잠시 후 다시 시도해주세요",
+  DELIVERY_COMPLETE: "배달 완료 처리에 실패했어요. 잠시 후 다시 시도해주세요",
 } as const;

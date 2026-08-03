@@ -5,12 +5,14 @@ import type {
   MyPartyListParams,
   PartyCancelResult,
   PartyCloseResult,
+  PartyCompleteResult,
   PartyCreateResult,
   PartyDetail,
   PartyJoinResult,
   PartyLeaveResult,
   PartyListItem,
   PartyListParams,
+  PartyOrderResult,
   PartyParticipants,
 } from "@/types/order/order";
 
@@ -91,6 +93,24 @@ export const leaveParty = async (partyId: number) => {
 export const closeParty = async (partyId: number) => {
   const { data } = await authInstance.patch<ApiResponse<PartyCloseResult>>(
     `/delivery-parties/${partyId}/close`
+  );
+
+  return data.data;
+};
+
+// 배달팟 주문 완료 API
+export const orderParty = async (partyId: number) => {
+  const { data } = await authInstance.patch<ApiResponse<PartyOrderResult>>(
+    `/delivery-parties/${partyId}/order`
+  );
+
+  return data.data;
+};
+
+// 배달팟 배달 완료 API
+export const completeParty = async (partyId: number) => {
+  const { data } = await authInstance.patch<ApiResponse<PartyCompleteResult>>(
+    `/delivery-parties/${partyId}/complete`
   );
 
   return data.data;

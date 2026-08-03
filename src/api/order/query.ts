@@ -3,6 +3,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
   cancelParty,
   closeParty,
+  completeParty,
   createParty,
   getMyPartyList,
   getPartyDetail,
@@ -10,6 +11,7 @@ import {
   getPartyParticipants,
   joinParty,
   leaveParty,
+  orderParty,
 } from "@/api/order/api";
 import type { MyPartyListParams, PartyListParams } from "@/types/order/order";
 
@@ -100,6 +102,32 @@ export const useCloseParty = () => {
 
   return useMutation({
     mutationFn: closeParty,
+    onSuccess: (_, partyId) => {
+      queryClient.invalidateQueries({ queryKey: ["parties"] });
+      queryClient.invalidateQueries({ queryKey: ["parties", partyId] });
+    },
+  });
+};
+
+// 배달팟 주문 완료 API
+export const useOrderParty = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: orderParty,
+    onSuccess: (_, partyId) => {
+      queryClient.invalidateQueries({ queryKey: ["parties"] });
+      queryClient.invalidateQueries({ queryKey: ["parties", partyId] });
+    },
+  });
+};
+
+// 배달팟 배달 완료 API
+export const useCompleteParty = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: completeParty,
     onSuccess: (_, partyId) => {
       queryClient.invalidateQueries({ queryKey: ["parties"] });
       queryClient.invalidateQueries({ queryKey: ["parties", partyId] });
