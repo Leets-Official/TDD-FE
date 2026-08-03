@@ -44,10 +44,11 @@ export default function HomePage() {
   const navigate = useNavigate();
   const { openModal } = useModal();
   const { openToast } = useToast();
-  const { data: myPage } = useMyPage();
+  const { data: myPage, isPending: isMyPagePending } = useMyPage();
   const isDormVerified = myPage?.dormStatus === "APPROVED";
   const isNoshowRestricted = myPage?.status === "SUSPENDED";
-  const { data: bankAccount } = useBankAccount();
+  const { data: bankAccount, isPending: isBankAccountPending } =
+    useBankAccount();
   const isAccountRegistered = !!bankAccount;
   const {
     data: partyList,
@@ -123,6 +124,8 @@ export default function HomePage() {
   }, [myPartyList, openToast, navigate]);
 
   function handleCreateClick() {
+    if (isMyPagePending || isBankAccountPending) return;
+
     if (!isDormVerified) {
       openModal({
         props: DORM_VERIFICATION_MODAL_PROPS,
@@ -148,6 +151,8 @@ export default function HomePage() {
   }
 
   function handleCardClick(order: OrderItem) {
+    if (isMyPagePending) return;
+
     if (!isDormVerified) {
       openModal({
         props: DORM_VERIFICATION_MODAL_PROPS,

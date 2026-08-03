@@ -35,7 +35,7 @@ export default function OrderDetailPage() {
   const navigate = useNavigate();
   const { openModal } = useModal();
   const { openToast } = useToast();
-  const { data: myPage } = useMyPage();
+  const { data: myPage, isPending: isMyPagePending } = useMyPage();
   const isDormVerified = myPage?.dormStatus === "APPROVED";
   const isNoshowRestricted = myPage?.status === "SUSPENDED";
 
@@ -129,6 +129,8 @@ export default function OrderDetailPage() {
   }
 
   function handleApplyClick() {
+    if (isMyPagePending) return;
+
     if (!isDormVerified) {
       openModal({
         props: DORM_VERIFICATION_MODAL_PROPS,
@@ -241,14 +243,14 @@ export default function OrderDetailPage() {
     myPage !== undefined
       ? participants.find((p) => p.id === String(myPage.userId))
       : undefined;
+  const serverDerivedStatus: ParticipationStatus = myParticipant
+    ? participants.length >= order.maxCount
+      ? "matched"
+      : "applied"
+    : "none";
+  // 참여자 목록이 한 번이라도 성공적으로 로드됐으면 서버 값이 우선, 그 전까지만 로컬 낙관값 사용
   const effectiveStatus: ParticipationStatus =
-    status !== "none"
-      ? status
-      : myParticipant
-        ? participants.length >= order.maxCount
-          ? "matched"
-          : "applied"
-        : "none";
+    partyParticipants !== undefined ? serverDerivedStatus : status;
 
   // 마감 시각이 지났는데 최소 인원을 못 채웠으면 자동 취소로 간주 (모집중 상태일 때만, 참여자 조회가 끝난 후에만)
   const isAutoCancelled =
