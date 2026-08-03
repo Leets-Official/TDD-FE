@@ -1,0 +1,12 @@
+import { authInstance } from "@/api/instance";
+import type { ApiResponse } from "@/types/api";
+import type { PartyReviewTargets } from "@/types/order/review";
+
+// 매너 평가 대상 목록 조회 API
+export const getPartyReviewTargets = async (partyId: number) => {
+  const { data } = await authInstance.get<ApiResponse<PartyReviewTargets>>(
+    `/parties/${partyId}/review-targets`
+  );
+
+  return data.data;
+};
