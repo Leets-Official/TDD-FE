@@ -49,7 +49,7 @@ export function ProfileCard({
           <div
             className="h-full rounded-[4px] bg-primary"
             style={{
-              width: `${Math.min(100, Math.max(0, (mannerTemperature / 70) * 100))}%`,
+              width: `${Math.min(100, Math.max(0, mannerTemperature * 10))}%`,
             }}
           />
         </div>
