@@ -1,7 +1,8 @@
-import type { AvatarGroupItem } from "@/components/avatar/AvatarGroup";
 import type { StatusBadgeProps } from "@/components/badge/StatusBadge";
 import type { OrderItem } from "@/pages/home/orderItem";
 import type { PartyListItem } from "@/types/order/order";
+
+import { toPartyAvatars } from "./toPartyAvatars";
 
 // 모집마감/주문완료 전용 UI가 아직 없어 CLOSED·ORDERED는 매칭완료로 잠정 표시
 const STATUS_MAP: Record<string, NonNullable<StatusBadgeProps["status"]>> = {
@@ -22,13 +23,7 @@ export function isPartyAutoCancelled(party: PartyListItem, now: number) {
 }
 
 export function toMyOrderItem(party: PartyListItem, now: number): OrderItem {
-  const avatars: AvatarGroupItem[] = Array.from(
-    { length: party.currentParticipants },
-    (_, index) => ({
-      id: `${party.partyId}-participant-${index}`,
-      alt: "참여자",
-    })
-  );
+  const avatars = toPartyAvatars(party);
 
   return {
     id: String(party.partyId),

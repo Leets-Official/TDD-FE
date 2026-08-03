@@ -1,15 +1,10 @@
-import type { AvatarGroupItem } from "@/components/avatar/AvatarGroup";
 import type { OrderItem } from "@/pages/home/orderItem";
 import type { PartyListItem } from "@/types/order/order";
 
+import { toPartyAvatars } from "./toPartyAvatars";
+
 export function toOrderItem(party: PartyListItem): OrderItem {
-  const avatars: AvatarGroupItem[] = Array.from(
-    { length: party.currentParticipants },
-    (_, index) => ({
-      id: `${party.partyId}-participant-${index}`,
-      alt: "참여자",
-    })
-  );
+  const avatars = toPartyAvatars(party);
 
   return {
     id: String(party.partyId),
