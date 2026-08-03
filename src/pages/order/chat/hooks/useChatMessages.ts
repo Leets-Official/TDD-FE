@@ -38,6 +38,8 @@ export function useChatMessages() {
 
   // 방장 헤더에서 배달 도착 버튼 클릭 시 모달이 나타나고, 확인 시 배달 도착 메세지 push
   const handleDeliveryArrivedClick = () => {
+    if (!Number.isFinite(partyId)) return;
+
     // 배달 취소 모달은 현재 백엔드 타입이 없어서 주석처리
     // if (isDeliveryArrived) {
     //   openModal({

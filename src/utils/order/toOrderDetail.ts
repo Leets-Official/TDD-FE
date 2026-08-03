@@ -1,11 +1,14 @@
-import { FOOD_CATEGORY_MAP } from "@/constants/order/foodCategory";
+import {
+  DEFAULT_FOOD_CATEGORY,
+  FOOD_CATEGORY_MAP,
+} from "@/constants/order/foodCategory";
 import type { OrderDetail } from "@/pages/order/detail/orderDetail";
 import type { PartyDetail } from "@/types/order/order";
 
 export function toOrderDetail(party: PartyDetail): OrderDetail {
   return {
     id: String(party.id),
-    category: FOOD_CATEGORY_MAP[party.foodCategoryId],
+    category: FOOD_CATEGORY_MAP[party.foodCategoryId] ?? DEFAULT_FOOD_CATEGORY,
     title: party.title,
     description: party.description,
     location: party.dormitory ?? "",

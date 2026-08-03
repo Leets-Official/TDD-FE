@@ -1,5 +1,7 @@
 import type { FoodCategory } from "@/components/card/categoryIcons";
 
+export const DEFAULT_FOOD_CATEGORY: FoodCategory = "기타";
+
 export const FOOD_CATEGORY_MAP: Record<number, FoodCategory> = {
   1: "한식",
   2: "중식",
