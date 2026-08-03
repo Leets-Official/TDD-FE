@@ -8,9 +8,11 @@ export const API_ERROR_MESSAGE = {
   BOARD_COMMENT_CREATE: "댓글 등록에 실패했어요. 잠시 후 다시 시도해주세요",
   PROFILE_UPDATE: "프로필 수정에 실패했어요. 잠시 후 다시 시도해주세요",
   DORM_VERIFICATION: "기숙사 인증 제출에 실패했어요. 잠시 후 다시 시도해주세요",
+  ACCOUNT_SAVE: "계좌 저장에 실패했어요. 잠시 후 다시 시도해주세요",
+  PASSWORD_CHANGE: "비밀번호 변경에 실패했어요. 잠시 후 다시 시도해주세요",
+  WITHDRAW: "회원탈퇴에 실패했어요. 잠시 후 다시 시도해주세요",
 } as const;
 
-// 서버에 보내기 전에 막는 토스트
 export const PROFILE_IMAGE_TOAST_MESSAGE = {
   UNSUPPORTED_TYPE: "JPG, PNG, WEBP 형식의 이미지만 올릴 수 있어요",
 } as const;

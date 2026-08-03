@@ -45,3 +45,18 @@ export interface ProfileUpdateResponse {
 export interface ProfileImageUploadResponse {
   profile_image_url: string;
 }
+
+export interface WithdrawRequest {
+  password: string;
+}
+
+export interface PasswordChangeRequest {
+  currentPassword: string;
+  newPassword: string;
+}
+
+export interface BankAccount {
+  bankName: string;
+  accountNumber: string;
+  accountHolder: string;
+}

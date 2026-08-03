@@ -2,8 +2,13 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useNavigate } from "react-router";
 
 import {
+  deleteAccount,
+  getBankAccount,
   getMyPage,
+  patchBankAccount,
+  patchPassword,
   patchProfile,
+  postBankAccount,
   postSignup,
   uploadDormVerification,
   uploadProfileImage,
@@ -50,6 +55,55 @@ export const useUpdateProfile = () => {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["user", "me"] });
+    },
+  });
+};
+
+export const useChangePassword = () => {
+  return useMutation({ mutationFn: patchPassword });
+};
+
+export const useWithdraw = () => {
+  const clearAuth = useAuthStore((state) => state.clearAuth);
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: deleteAccount,
+    // 실패하면 계정이 남아 있으므로 성공했을 때만 정리합니다
+    onSuccess: () => {
+      clearAuth();
+      queryClient.removeQueries();
+    },
+  });
+};
+
+export const useBankAccount = () => {
+  return useQuery({
+    queryKey: ["user", "bank-account"],
+    queryFn: getBankAccount,
+  });
+};
+
+// 등록된 계좌가 없을 때만 성공합니다
+export const useRegisterBankAccount = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: postBankAccount,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["user", "bank-account"] });
+    },
+  });
+};
+
+// 등록된 계좌가 있을 때만 성공합니다
+export const useUpdateBankAccount = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: patchBankAccount,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["user", "bank-account"] });
     },
   });
 };
