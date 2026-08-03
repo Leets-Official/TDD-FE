@@ -5,7 +5,7 @@ import { SwitchRow } from "./components/SwitchRow";
 import { usePushToggle } from "./hooks/usePushToggle";
 
 export function NotificationPage() {
-  const { pushEnabled, handleChange } = usePushToggle();
+  const { pushEnabled, isPending, handleChange } = usePushToggle();
 
   return (
     <PageShell header={<BackHeader title="알림" />}>
@@ -14,6 +14,7 @@ export function NotificationPage() {
           title="알림 받기"
           checked={pushEnabled}
           onChange={handleChange}
+          disabled={isPending}
         />
       </div>
     </PageShell>

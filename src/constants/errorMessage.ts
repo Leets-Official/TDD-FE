@@ -30,6 +30,7 @@ export const API_ERROR_MESSAGE = {
 // 서버 응답이 아니라 브라우저 상태 때문에 막히는 경우
 export const PUSH_TOAST_MESSAGE = {
   UNSUPPORTED: "이 브라우저에서는 알림을 사용할 수 없어요",
+  PERMISSION_NEEDED: "알림을 켜려면 권한 허용이 필요해요",
 } as const;
 
 // 한 번 차단하면 코드로 다시 물을 수 없어 직접 켜도록 안내합니다
