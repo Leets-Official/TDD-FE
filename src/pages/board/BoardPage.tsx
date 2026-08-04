@@ -9,15 +9,26 @@ import { formatRelativeTime } from "@/utils/board/formatRelativeTime";
 
 import { BoardEmptyState } from "./components/BoardEmptyState";
 import { BoardListItem } from "./components/BoardListItem";
+import { BoardListSkeleton } from "./components/BoardListSkeleton";
 
 export default function BoardPage() {
+  return (
+    <PageShell header={<BackHeader title="게시판" />}>
+      <BoardPageContent />
+    </PageShell>
+  );
+}
+
+function BoardPageContent() {
   const navigate = useNavigate();
-  const { data: posts } = useBoardPosts();
+  const { data: posts, isPending } = useBoardPosts();
+
+  if (isPending) return <BoardListSkeleton />;
 
   if (!posts) return null;
 
   return (
-    <PageShell header={<BackHeader title="게시판" />}>
+    <>
       {posts.length === 0 ? (
         <BoardEmptyState onCreateClick={() => navigate(PATH.BOARD_CREATE)} />
       ) : (
@@ -50,6 +61,6 @@ export default function BoardPage() {
           </div>
         </>
       )}
-    </PageShell>
+    </>
   );
 }
