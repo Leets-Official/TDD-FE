@@ -1,5 +1,5 @@
-import { useEffect, useRef, useState } from "react";
-import { generatePath, useNavigate } from "react-router";
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router";
 
 import { useMyPartyList, usePartyList } from "@/api/order/query";
 import { useBankAccount, useMyPage } from "@/api/user/query";
@@ -99,29 +99,6 @@ export default function HomePage() {
       ),
     });
   }, [isMyPartyListError, myPartyListError, openToast]);
-
-  const notifiedMatchedPartyIdsRef = useRef<Set<number>>(new Set());
-  useEffect(() => {
-    const matchedParty = myPartyList?.find(
-      (party) =>
-        party.status === "CLOSED" &&
-        !notifiedMatchedPartyIdsRef.current.has(party.partyId)
-    );
-    if (!matchedParty) return;
-
-    notifiedMatchedPartyIdsRef.current.add(matchedParty.partyId);
-    openToast({
-      message: "배달팟이 매칭되었습니다!",
-      actionLabel: "채팅방 입장",
-      onActionClick: () => {
-        navigate(
-          generatePath(PATH.ORDER_CHAT, {
-            orderId: String(matchedParty.partyId),
-          })
-        );
-      },
-    });
-  }, [myPartyList, openToast, navigate]);
 
   function handleCreateClick() {
     if (isMyPagePending || isBankAccountPending) return;
