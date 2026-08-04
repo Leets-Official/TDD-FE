@@ -29,6 +29,8 @@ export default function ChatPage() {
     chatMessages,
     isOrderCompleted,
     isDeliveryArrived,
+    isSettlementRequested,
+    isSettlementCompleted,
     isTransferCompleted,
     handleOrderCompleteClick,
     handleDeliveryArrivedClick,
@@ -72,7 +74,9 @@ export default function ChatPage() {
                 onOrderComplete={handleOrderCompleteClick}
                 isDeliveryArrived={isDeliveryArrived}
                 onDeliveryArrived={handleDeliveryArrivedClick}
+                isSettlementRequested={isSettlementRequested}
                 onSettlementRequest={handleSettlementRequestClick}
+                isSettlementCompleted={isSettlementCompleted}
                 isTransferCompleted={isTransferCompleted}
                 onCopyAccount={() => handleCopyAccountClick(ACCOUNT_TEXT)}
                 onTransferComplete={handleTransferCompleteClick}
