@@ -12,6 +12,8 @@ import { PATH } from "@/routes/paths";
 import type { ChatMessage } from "@/types/order/chat";
 import { toChatMessage } from "@/utils/order/toChatMessage";
 
+import { useChatSocket } from "./useChatSocket";
+
 export function useChatMessages() {
   const navigate = useNavigate();
   const { orderId } = useParams();
@@ -51,6 +53,18 @@ export function useChatMessages() {
       },
     ]);
   };
+
+  // 소켓으로 들어온 메시지를 반영 (동일 messageId가 이미 있으면 무시)
+  useChatSocket({
+    partyId,
+    onMessage: (message) => {
+      setChatMessages((prev) =>
+        prev.some((item) => item.messageId === message.messageId)
+          ? prev
+          : [...prev, message]
+      );
+    },
+  });
 
   // 방장 헤더에서 배달 도착 버튼 클릭 시 모달이 나타나고, 확인 시 배달 도착 메세지 push
   const handleDeliveryArrivedClick = () => {
