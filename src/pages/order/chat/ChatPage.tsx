@@ -24,8 +24,10 @@ export default function ChatPage() {
     chatMessages,
     myUserId,
     isHost,
+    isOrderCompleted,
     isDeliveryArrived,
     isTransferCompleted,
+    handleOrderCompleteClick,
     handleDeliveryArrivedClick,
     handleSettlementRequestClick,
     handleSettlementCompleteClick,
@@ -63,6 +65,8 @@ export default function ChatPage() {
             {isMenuOpen && (
               <ChatMenuBar
                 isHost={isHost}
+                isOrderCompleted={isOrderCompleted}
+                onOrderComplete={handleOrderCompleteClick}
                 isDeliveryArrived={isDeliveryArrived}
                 onDeliveryArrived={handleDeliveryArrivedClick}
                 onSettlementRequest={handleSettlementRequestClick}
@@ -88,6 +92,17 @@ export default function ChatPage() {
               previousItem.senderId === item.senderId;
             const showNickname = !isMine && !isConsecutiveSameSender;
 
+            // 주문 완료 메세지의 경우
+            if (item.messageType === "ORDER_COMPLETED") {
+              return (
+                <ActionDeliveryBubble
+                  key={item.messageId}
+                  title="주문완료!"
+                  description="방장님이 주문을 완료했음을 알립니다"
+                  className={isMine ? "self-end" : "ml-14"}
+                />
+              );
+            }
             // 배달 도착 메세지의 경우
             if (item.messageType === "DELIVERY_ARRIVED") {
               return (

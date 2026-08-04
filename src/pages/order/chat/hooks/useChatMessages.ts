@@ -3,7 +3,11 @@ import { generatePath, useNavigate, useParams } from "react-router";
 
 import { useChatMessageHistory } from "@/api/order/chat/query";
 import { getApiErrorMessage } from "@/api/error";
-import { useCompleteParty, usePartyDetail } from "@/api/order/query";
+import {
+  useCompleteParty,
+  useOrderParty,
+  usePartyDetail,
+} from "@/api/order/query";
 import { useMyPage } from "@/api/user/query";
 import { API_ERROR_MESSAGE } from "@/constants/errorMessage";
 import { useModal } from "@/hooks/useModal";
@@ -20,6 +24,7 @@ export function useChatMessages() {
   const partyId = Number(orderId);
   const { openModal } = useModal();
   const { openToast } = useToast();
+  const { mutate: orderParty } = useOrderParty();
   const { mutate: completeParty } = useCompleteParty();
   const { data: messageHistory } = useChatMessageHistory(partyId);
   const { data: myPage } = useMyPage();
@@ -27,6 +32,7 @@ export function useChatMessages() {
   const myUserId = myPage?.userId;
   const hostUserId = partyDetail?.creatorId;
   const isHost = myUserId !== undefined && myUserId === hostUserId;
+  const [isOrderCompleted, setIsOrderCompleted] = useState(false);
   const [isDeliveryArrived, setIsDeliveryArrived] = useState(false);
   const [isTransferCompleted, setIsTransferCompleted] = useState(false);
   const [chatMessages, setChatMessages] = useState<ChatMessage[]>([]);
@@ -55,7 +61,7 @@ export function useChatMessages() {
   };
 
   // 소켓으로 들어온 메시지를 반영 (동일 messageId가 이미 있으면 무시)
-  useChatSocket({
+  const { sendMessage } = useChatSocket({
     partyId,
     onMessage: (message) => {
       setChatMessages((prev) =>
@@ -65,6 +71,46 @@ export function useChatMessages() {
       );
     },
   });
+
+  // 방장 헤더에서 주문 완료 버튼 클릭 시 모달이 나타나고, 확인 시 주문 완료 메세지 push
+  // ORDER_COMPLETED는 백엔드가 아직 자동 발행하지 않는 FE 임시 타입이라 로컬에만 보임
+  const handleOrderCompleteClick = () => {
+    if (!Number.isFinite(partyId)) return;
+
+    openModal({
+      props: {
+        title: "주문을 완료하셨나요?",
+        description:
+          '"네"를 누르시면\n배달팟 멤버들에게 주문 완료 알림이 보내지며,\n되돌릴 수 없어요.',
+        outlineLabel: "아니요",
+        primaryLabel: "네",
+      },
+      onConfirm: () => {
+        orderParty(partyId, {
+          onSuccess: () => {
+            setIsOrderCompleted(true);
+            if (hostUserId === undefined) return;
+
+            pushMessage({
+              messageType: "ORDER_COMPLETED",
+              senderId: hostUserId,
+              senderNickname: "방장",
+              content: null,
+              imageUrl: null,
+            });
+          },
+          onError: (error) => {
+            openToast({
+              message: getApiErrorMessage(
+                error,
+                API_ERROR_MESSAGE.ORDER_COMPLETE
+              ),
+            });
+          },
+        });
+      },
+    });
+  };
 
   // 방장 헤더에서 배달 도착 버튼 클릭 시 모달이 나타나고, 확인 시 배달 도착 메세지 push
   const handleDeliveryArrivedClick = () => {
@@ -208,24 +254,29 @@ export function useChatMessages() {
     navigate(generatePath(PATH.ORDER_REVIEW, { orderId }));
   };
 
+  // 낙관적 UI 없이, 소켓 브로드캐스트로 되돌아온 메시지를 그대로 반영한다
   const handleSendMessage = (value: string) => {
-    if (!value.trim() || myUserId === undefined) return;
+    if (!value.trim()) return;
 
-    pushMessage({
+    const sent = sendMessage({
       messageType: "USER",
-      senderId: myUserId,
-      senderNickname: "나",
       content: value,
       imageUrl: null,
     });
+
+    if (!sent) {
+      openToast({ message: "연결이 원활하지 않아 메시지를 보내지 못했어요" });
+    }
   };
 
   return {
     chatMessages,
     myUserId,
     isHost,
+    isOrderCompleted,
     isDeliveryArrived,
     isTransferCompleted,
+    handleOrderCompleteClick,
     handleDeliveryArrivedClick,
     handleSettlementRequestClick,
     handleSettlementCompleteClick,
