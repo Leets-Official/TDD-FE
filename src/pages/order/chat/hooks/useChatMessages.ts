@@ -7,7 +7,9 @@ import {
   useCompleteParty,
   useOrderParty,
   usePartyDetail,
+  usePartyParticipants,
 } from "@/api/order/query";
+import { useRequestSettlement } from "@/api/order/settlement/query";
 import { useMyPage } from "@/api/user/query";
 import { API_ERROR_MESSAGE } from "@/constants/errorMessage";
 import { useModal } from "@/hooks/useModal";
@@ -25,9 +27,11 @@ export function useChatMessages() {
   const { openToast } = useToast();
   const { mutate: orderParty } = useOrderParty();
   const { mutate: completeParty } = useCompleteParty();
+  const { mutate: requestSettlement } = useRequestSettlement();
   const { data: messageHistory } = useChatMessageHistory(partyId);
   const { data: myPage } = useMyPage();
   const { data: partyDetail } = usePartyDetail(partyId);
+  const { data: partyParticipants } = usePartyParticipants(partyId);
   const myUserId = myPage?.userId;
   const hostUserId = partyDetail?.creatorId;
   const isHost = myUserId !== undefined && myUserId === hostUserId;
@@ -40,6 +44,9 @@ export function useChatMessages() {
   const [isTransferCompleted, setIsTransferCompleted] = useState(false);
   const [chatMessages, setChatMessages] = useState<ChatMessage[]>([]);
   const hasSeededHistory = useRef(false);
+  const isSettlementRequested = chatMessages.some(
+    (message) => message.messageType === "SETTLEMENT_REQUEST"
+  );
 
   // 메시지 내역 조회 결과가 도착하면 최초 1회만 초기 목록으로 반영
   useEffect(() => {
@@ -146,10 +153,11 @@ export function useChatMessages() {
     });
   };
 
-  // 방장 헤더에서 정산 요청 버튼 클릭 시 모달 띄우고, 확인 시 정산 요청 메세지와 송금 요청 메세지 push
-  // 프론트에서 두 개를 push 하는 방향으로.
+  // 방장 헤더에서 정산 요청 버튼 클릭 시 모달 띄우고, 확인 시 정산 요청 API 호출
+  // TODO: 실제 주문 금액 입력 UI가 없어 총액/인당 금액을 임시 고정값(2만원/5천원)으로 보냄 — 추후 실제 입력으로 교체 필요
   const handleSettlementRequestClick = () => {
-    if (hostUserId === undefined) return;
+    if (!Number.isFinite(partyId) || hostUserId === undefined) return;
+    if (!partyParticipants) return;
 
     openModal({
       props: {
@@ -160,43 +168,32 @@ export function useChatMessages() {
         primaryLabel: "네",
       },
       onConfirm: () => {
-        pushMessage({
-          messageType: "SETTLEMENT_REQUEST",
-          senderId: hostUserId,
-          senderNickname: "방장",
-          content: null,
-          imageUrl: null,
-        });
-        pushMessage({
-          messageType: "TRANSFER_REQUEST",
-          senderId: hostUserId,
-          senderNickname: "방장",
-          content: null,
-          imageUrl: null,
-        });
-      },
-    });
-  };
+        const payments = partyParticipants.participants
+          .filter((participant) => participant.userId !== hostUserId)
+          .map((participant) => ({ userId: participant.userId, amount: 5000 }));
 
-  // 방장이 정산 완료 버튼 클릭 시 모달 띄우고 리뷰 요청 메세지 push
-  const handleSettlementCompleteClick = () => {
-    if (hostUserId === undefined) return;
-
-    openModal({
-      props: {
-        title: "정산을 모두 마치셨나요?",
-        description: '"네"를 누르시면 정산완료로 처리되며,\n되돌릴 수 없어요.',
-        outlineLabel: "아니요",
-        primaryLabel: "네",
-      },
-      onConfirm: () => {
-        pushMessage({
-          messageType: "REVIEW_PROMPT",
-          senderId: hostUserId,
-          senderNickname: "방장",
-          content: null,
-          imageUrl: null,
-        });
+        requestSettlement(
+          { partyId, body: { totalAmount: 20000, payments } },
+          {
+            onSuccess: () => {
+              pushMessage({
+                messageType: "REVIEW_PROMPT",
+                senderId: hostUserId,
+                senderNickname: "방장",
+                content: null,
+                imageUrl: null,
+              });
+            },
+            onError: (error) => {
+              openToast({
+                message: getApiErrorMessage(
+                  error,
+                  API_ERROR_MESSAGE.SETTLEMENT_REQUEST
+                ),
+              });
+            },
+          }
+        );
       },
     });
   };
@@ -255,11 +252,11 @@ export function useChatMessages() {
     isHost,
     isOrderCompleted,
     isDeliveryArrived,
+    isSettlementRequested,
     isTransferCompleted,
     handleOrderCompleteClick,
     handleDeliveryArrivedClick,
     handleSettlementRequestClick,
-    handleSettlementCompleteClick,
     handleTransferCompleteClick,
     handleCopyAccountClick,
     handleReviewClick,

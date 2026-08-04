@@ -6,6 +6,7 @@ export interface ChatMenuBarProps {
   onOrderComplete?: () => void;
   isDeliveryArrived?: boolean;
   onDeliveryArrived?: () => void;
+  isSettlementRequested?: boolean;
   onSettlementRequest?: () => void;
   isTransferCompleted?: boolean;
   onCopyAccount?: () => void;
@@ -18,6 +19,7 @@ export function ChatMenuBar({
   onOrderComplete,
   isDeliveryArrived = false,
   onDeliveryArrived,
+  isSettlementRequested = false,
   onSettlementRequest,
   isTransferCompleted = false,
   onCopyAccount,
@@ -60,10 +62,16 @@ export function ChatMenuBar({
           <Button
             variant="secondary"
             size="small"
-            disabled={!isDeliveryArrived}
+            disabled={!isDeliveryArrived || isSettlementRequested}
             onClick={onSettlementRequest}
+            aria-pressed={isSettlementRequested}
+            className={
+              isSettlementRequested
+                ? "border-[1.5px] border-divider-1 bg-white text-disabled hover:bg-white active:bg-white"
+                : undefined
+            }
           >
-            정산 요청
+            {isSettlementRequested ? "정산 요청됨" : "정산 요청"}
           </Button>
         </>
       ) : (
