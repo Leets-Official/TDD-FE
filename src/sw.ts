@@ -26,14 +26,33 @@ function parsePayload(data: PushMessageData | null): PushPayload {
 
 self.addEventListener("push", (event) => {
   const { title, body, category, url } = parsePayload(event.data);
+  const notificationTitle = title ?? "TDD";
+  const notificationBody = body ?? "";
+  const targetUrl = url ?? "/";
 
   event.waitUntil(
-    self.registration.showNotification(title ?? "TDD", {
-      body: body ?? "",
-      icon: "/pwa-192x192.png",
-      badge: "/pwa-64x64.png",
-      data: { url: url ?? "/", category },
-    })
+    Promise.all([
+      self.registration.showNotification(notificationTitle, {
+        body: notificationBody,
+        icon: "/pwa-192x192.png",
+        badge: "/pwa-64x64.png",
+        data: { url: targetUrl, category },
+      }),
+      // 앱이 이미 열려있는 탭에는 인앱 토스트로도 보여줄 수 있도록 함께 전달
+      self.clients
+        .matchAll({ type: "window", includeUncontrolled: true })
+        .then((clientList) => {
+          clientList.forEach((client) =>
+            client.postMessage({
+              type: "push-notification",
+              title: notificationTitle,
+              body: notificationBody,
+              url: targetUrl,
+              category,
+            })
+          );
+        }),
+    ])
   );
 });
 

@@ -14,6 +14,9 @@ export const API_ERROR_MESSAGE = {
   ORDER_LEAVE: "배달팟 참여 취소에 실패했어요. 잠시 후 다시 시도해주세요",
   ORDER_CLOSE: "배달팟 모집 마감에 실패했어요. 잠시 후 다시 시도해주세요",
   ORDER_COMPLETE: "주문 완료 처리에 실패했어요. 잠시 후 다시 시도해주세요",
+  REVIEW_TARGETS:
+    "평가 대상 목록을 불러오지 못했어요. 잠시 후 다시 시도해주세요",
+  REVIEW_CREATE: "매너 평가 등록에 실패했어요. 잠시 후 다시 시도해주세요",
   DELIVERY_COMPLETE: "배달 완료 처리에 실패했어요. 잠시 후 다시 시도해주세요",
   SIGNUP: "회원가입에 실패했어요. 잠시 후 다시 시도해주세요",
   PASSWORD_RESET: "비밀번호 재설정에 실패했어요. 잠시 후 다시 시도해주세요",
@@ -45,6 +48,7 @@ export const PROFILE_IMAGE_TOAST_MESSAGE = {
 
 // 서버 메시지 대신 항상 이 문구로 노출하는 토스트
 export const EMAIL_VERIFY_TOAST_MESSAGE = {
+  SEND_SUCCESS: "인증코드를 전송하였습니다!",
   SEND_FAILED:
     "학교 이메일 인증에 실패하였습니다!\n다시 시도해주세요(5분 내 3회 재시도 가능)",
   VERIFY_FAILED: "학교 이메일 인증에 실패하였습니다!",

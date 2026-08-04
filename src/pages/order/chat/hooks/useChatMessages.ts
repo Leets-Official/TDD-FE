@@ -22,6 +22,8 @@ export function useChatMessages() {
   const { mutate: completeParty } = useCompleteParty();
   const [isOrderCompleted, setIsOrderCompleted] = useState(false);
   const [isDeliveryArrived, setIsDeliveryArrived] = useState(false);
+  const [isSettlementRequested, setIsSettlementRequested] = useState(false);
+  const [isSettlementCompleted, setIsSettlementCompleted] = useState(false);
   const [isTransferCompleted, setIsTransferCompleted] = useState(false);
   const [chatMessages, setChatMessages] = useState<ChatMessage[]>(DUMMY_CHAT);
 
@@ -154,6 +156,7 @@ export function useChatMessages() {
         primaryLabel: "네",
       },
       onConfirm: () => {
+        setIsSettlementRequested(true);
         pushMessage({
           messageType: "SETTLEMENT_REQUEST",
           senderId: HOST_USER_ID,
@@ -182,6 +185,7 @@ export function useChatMessages() {
         primaryLabel: "네",
       },
       onConfirm: () => {
+        setIsSettlementCompleted(true);
         pushMessage({
           messageType: "REVIEW_PROMPT",
           senderId: HOST_USER_ID,
@@ -242,6 +246,8 @@ export function useChatMessages() {
     chatMessages,
     isOrderCompleted,
     isDeliveryArrived,
+    isSettlementRequested,
+    isSettlementCompleted,
     isTransferCompleted,
     handleOrderCompleteClick,
     handleDeliveryArrivedClick,

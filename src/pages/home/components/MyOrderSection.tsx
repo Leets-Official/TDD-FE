@@ -13,11 +13,13 @@ import { filterOrders } from "@/utils/home/filterOrders";
 
 import { CreateOrderFab } from "./CreateOrderFab";
 import { OrderEmptyState } from "./OrderEmptyState";
+import { OrderListSkeleton } from "./OrderListSkeleton";
 import type { OrderItem } from "@/types/home/home";
 
 export interface MyOrderSectionProps {
   inProgressOrders: OrderItem[];
   pastOrders: OrderItem[];
+  isPending: boolean;
   onCreateClick: () => void;
   onCardClick: (order: OrderItem) => void;
 }
@@ -25,10 +27,11 @@ export interface MyOrderSectionProps {
 export function MyOrderSection({
   inProgressOrders,
   pastOrders,
+  isPending,
   onCreateClick,
   onCardClick,
 }: MyOrderSectionProps) {
-  const [orderState, setOrderState] = useState("all");
+  const [orderState, setOrderState] = useState("");
   const [dorm, setDorm] = useState("");
   const [menu, setMenu] = useState("");
   const [orderTimeMinutes, setOrderTimeMinutes] = useState("");
@@ -41,7 +44,7 @@ export function MyOrderSection({
 
   return (
     <div className="relative flex flex-col">
-      <div className="flex scrollbar-none items-center gap-3.25 overflow-x-auto px-xxl py-s [&::-webkit-scrollbar]:hidden">
+      <div className="sticky top-0 z-10 flex scrollbar-none items-center gap-3.25 overflow-x-auto bg-white px-xxl py-s [&::-webkit-scrollbar]:hidden">
         <Dropdown
           variant="filter"
           label="진행중/지난"
@@ -73,8 +76,10 @@ export function MyOrderSection({
         />
       </div>
 
-      {filteredInProgressOrders.length === 0 &&
-      filteredPastOrders.length === 0 ? (
+      {isPending ? (
+        <OrderListSkeleton />
+      ) : filteredInProgressOrders.length === 0 &&
+        filteredPastOrders.length === 0 ? (
         <OrderEmptyState onCreateClick={onCreateClick} />
       ) : (
         <>

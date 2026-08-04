@@ -5,12 +5,12 @@ import {
   useRegisterPushSubscription,
   useUpdatePushSetting,
 } from "@/api/notification/query";
-import { useMyPage } from "@/api/user/query";
 import {
   API_ERROR_MESSAGE,
   PUSH_PERMISSION_GUIDE,
   PUSH_TOAST_MESSAGE,
 } from "@/constants/errorMessage";
+import { useMe } from "@/hooks/useMe";
 import { useModal } from "@/hooks/useModal";
 import { useToast } from "@/hooks/useToast";
 import {
@@ -21,7 +21,7 @@ import {
 } from "@/utils/push";
 
 export function usePushToggle() {
-  const { data: profile } = useMyPage();
+  const { me: profile } = useMe();
   const [changed, setChanged] = useState<boolean | null>(null);
   const [isPending, setIsPending] = useState(false);
 
