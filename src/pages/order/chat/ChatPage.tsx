@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { Fragment, useState } from "react";
 import { useNavigate } from "react-router";
 
 import { ChatInput } from "@/components/chatInput/ChatInput";
@@ -32,6 +32,7 @@ export default function ChatPage() {
     handleOrderCompleteClick,
     handleDeliveryArrivedClick,
     handleSettlementRequestClick,
+    handleSettlementCompleteClick,
     handleTransferCompleteClick,
     handleCopyAccountClick,
     handleReviewClick,
@@ -118,57 +119,51 @@ export default function ChatPage() {
               );
             }
             // 정산 요청 메세지의 경우 - 위와 동일한 이유
+            // 실제 채팅 메시지는 아니지만, 이 메시지 바로 다음에 방장/팀원별 다음 액션 카드를 로컬로 이어붙임
+            // (방장: 정산 완료 → 팀원: 송금/배달수령 완료 — 둘 다 개인 액션 안내라 항상 왼쪽에 위치)
             if (item.messageType === "SETTLEMENT_REQUEST") {
               const { amountText, accountText } = parseSettlementRequestContent(
                 item.content
               );
 
               return (
-                <ActionAccountBubble
-                  key={item.messageId}
-                  title={
-                    isHost
-                      ? "정산을 요청하였습니다!"
-                      : "방장님이 정산을 요청하였습니다!"
-                  }
-                  primaryText={amountText}
-                  secondaryText={accountText}
-                  buttonLabel={isHost ? undefined : "복사"}
-                  buttonDisabled={isTransferCompleted}
-                  onButtonClick={
-                    isHost
-                      ? undefined
-                      : () => handleCopyAccountClick(accountText)
-                  }
-                  className={isHost ? "self-end" : "ml-14"}
-                />
-              );
-            }
-            // 송금 요청 메세지의 경우 - 방장은 정산을 완료하시겠냐는 카드/ 팀원은 송금/배달수령을 완료하셨냐는 카드로 분기
-            if (item.messageType === "TRANSFER_REQUEST") {
-              if (isHost) {
-                return (
-                  <ActionDeliveryBubble
-                    key={item.messageId}
-                    title="정산을 완료하셨나요?"
-                    description="정산을 완료하고 배달팟 후기를 남겨봐요!"
-                    buttonLabel="정산 완료"
-                    onButtonClick={handleSettlementRequestClick}
-                    // 자동으로 보내주는것 이므로 항상 왼쪽에 위치
-                    className="ml-14"
+                <Fragment key={item.messageId}>
+                  <ActionAccountBubble
+                    title={
+                      isHost
+                        ? "정산을 요청하였습니다!"
+                        : "방장님이 정산을 요청하였습니다!"
+                    }
+                    primaryText={amountText}
+                    secondaryText={accountText}
+                    buttonLabel={isHost ? undefined : "복사"}
+                    buttonDisabled={isTransferCompleted}
+                    onButtonClick={
+                      isHost
+                        ? undefined
+                        : () => handleCopyAccountClick(accountText)
+                    }
+                    className={isHost ? "self-end" : "ml-14"}
                   />
-                );
-              }
-              return (
-                <ActionDeliveryBubble
-                  key={item.messageId}
-                  title="송금/배달수령을 완료하셨나요?"
-                  description="송금과 배달수령을 완료하고 배달팟 후기를 남겨봐요!"
-                  buttonLabel="송금/배달수령 완료"
-                  buttonDisabled={isTransferCompleted}
-                  onButtonClick={handleTransferCompleteClick}
-                  className="ml-14"
-                />
+                  {isHost ? (
+                    <ActionDeliveryBubble
+                      title="정산을 완료하셨나요?"
+                      description="정산을 완료하고 배달팟 후기를 남겨봐요!"
+                      buttonLabel="정산 완료"
+                      onButtonClick={handleSettlementCompleteClick}
+                      className="ml-14"
+                    />
+                  ) : (
+                    <ActionDeliveryBubble
+                      title="송금/배달수령을 완료하셨나요?"
+                      description="송금과 배달수령을 완료하고 배달팟 후기를 남겨봐요!"
+                      buttonLabel="송금/배달수령 완료"
+                      buttonDisabled={isTransferCompleted}
+                      onButtonClick={handleTransferCompleteClick}
+                      className="ml-14"
+                    />
+                  )}
+                </Fragment>
               );
             }
             // 리뷰 요청 메세지의 경우

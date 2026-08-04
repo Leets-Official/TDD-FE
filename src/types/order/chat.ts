@@ -6,7 +6,6 @@ export type ChatMessageType =
   | "DELIVERY_ARRIVED"
   | "DELIVERY_ARRIVED_CANCEL"
   | "SETTLEMENT_REQUEST"
-  | "TRANSFER_REQUEST"
   | "REVIEW_PROMPT";
 
 export interface ChatMessage {

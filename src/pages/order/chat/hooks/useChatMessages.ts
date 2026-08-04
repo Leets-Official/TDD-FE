@@ -175,15 +175,6 @@ export function useChatMessages() {
         requestSettlement(
           { partyId, body: { totalAmount: 20000, payments } },
           {
-            onSuccess: () => {
-              pushMessage({
-                messageType: "REVIEW_PROMPT",
-                senderId: hostUserId,
-                senderNickname: "방장",
-                content: null,
-                imageUrl: null,
-              });
-            },
             onError: (error) => {
               openToast({
                 message: getApiErrorMessage(
@@ -194,6 +185,29 @@ export function useChatMessages() {
             },
           }
         );
+      },
+    });
+  };
+
+  // 방장이 정산 완료 버튼(정산 요청 메세지 뒤에 로컬로 붙는 카드) 클릭 시 모달 띄우고 리뷰 요청 메세지 push
+  const handleSettlementCompleteClick = () => {
+    if (hostUserId === undefined) return;
+
+    openModal({
+      props: {
+        title: "정산을 모두 마치셨나요?",
+        description: '"네"를 누르시면 정산완료로 처리되며,\n되돌릴 수 없어요.',
+        outlineLabel: "아니요",
+        primaryLabel: "네",
+      },
+      onConfirm: () => {
+        pushMessage({
+          messageType: "REVIEW_PROMPT",
+          senderId: hostUserId,
+          senderNickname: "방장",
+          content: null,
+          imageUrl: null,
+        });
       },
     });
   };
@@ -257,6 +271,7 @@ export function useChatMessages() {
     handleOrderCompleteClick,
     handleDeliveryArrivedClick,
     handleSettlementRequestClick,
+    handleSettlementCompleteClick,
     handleTransferCompleteClick,
     handleCopyAccountClick,
     handleReviewClick,
