@@ -2,7 +2,7 @@ import { useState } from "react";
 import { generatePath, useNavigate, useParams } from "react-router";
 
 import { getApiErrorMessage } from "@/api/error";
-import { useCompleteParty } from "@/api/order/query";
+import { useCompleteParty, useOrderParty } from "@/api/order/query";
 import { CURRENT_USER_ID, HOST_USER_ID } from "@/constants/order/chat";
 import { API_ERROR_MESSAGE } from "@/constants/errorMessage";
 import { useModal } from "@/hooks/useModal";
@@ -18,7 +18,9 @@ export function useChatMessages() {
   const partyId = Number(orderId);
   const { openModal } = useModal();
   const { openToast } = useToast();
+  const { mutate: orderParty } = useOrderParty();
   const { mutate: completeParty } = useCompleteParty();
+  const [isOrderCompleted, setIsOrderCompleted] = useState(false);
   const [isDeliveryArrived, setIsDeliveryArrived] = useState(false);
   const [isTransferCompleted, setIsTransferCompleted] = useState(false);
   const [chatMessages, setChatMessages] = useState<ChatMessage[]>(DUMMY_CHAT);
@@ -34,6 +36,58 @@ export function useChatMessages() {
         createdAt: new Date().toISOString(),
       },
     ]);
+  };
+
+  // 방장 헤더에서 주문 완료 버튼 클릭 시 모달이 나타나고, 확인 시 주문 완료 메세지 push
+  const handleOrderCompleteClick = () => {
+    if (!Number.isFinite(partyId)) return;
+
+    // 주문완료 취소 모달은 현재 백엔드 타입이 없어서 주석처리
+    // if (isOrderCompleted) {
+    //   openModal({
+    //     props: {
+    //       title: "주문 완료를 취소할까요?",
+    //       outlineLabel: "아니요",
+    //       primaryLabel: "네",
+    //     },
+    //     onConfirm: () => {
+    //       setIsOrderCompleted(false);
+    //     },
+    //   });
+    //   return;
+    // }
+
+    openModal({
+      props: {
+        title: "주문을 완료하셨나요?",
+        description:
+          '"네"를 누르시면\n배달팟 멤버들에게 주문 완료 알림이 보내지며,\n이후 "주문 완료"버튼을 다시 누르면 취소할 수 있습니다.',
+        outlineLabel: "아니요",
+        primaryLabel: "네",
+      },
+      onConfirm: () => {
+        orderParty(partyId, {
+          onSuccess: () => {
+            setIsOrderCompleted(true);
+            pushMessage({
+              messageType: "ORDER_COMPLETE",
+              senderId: HOST_USER_ID,
+              senderNickname: "방장",
+              content: null,
+              imageUrl: null,
+            });
+          },
+          onError: (error) => {
+            openToast({
+              message: getApiErrorMessage(
+                error,
+                API_ERROR_MESSAGE.ORDER_COMPLETE
+              ),
+            });
+          },
+        });
+      },
+    });
   };
 
   // 방장 헤더에서 배달 도착 버튼 클릭 시 모달이 나타나고, 확인 시 배달 도착 메세지 push
@@ -186,8 +240,10 @@ export function useChatMessages() {
 
   return {
     chatMessages,
+    isOrderCompleted,
     isDeliveryArrived,
     isTransferCompleted,
+    handleOrderCompleteClick,
     handleDeliveryArrivedClick,
     handleSettlementRequestClick,
     handleSettlementCompleteClick,

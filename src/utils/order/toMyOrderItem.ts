@@ -4,11 +4,10 @@ import type { PartyListItem } from "@/types/order/order";
 
 import { toPartyAvatars } from "./toPartyAvatars";
 
-// 모집마감/주문완료 전용 UI가 아직 없어 CLOSED·ORDERED는 매칭완료로 잠정 표시
 const STATUS_MAP: Record<string, NonNullable<StatusBadgeProps["status"]>> = {
   RECRUITING: "recruiting",
-  CLOSED: "matched",
-  ORDERED: "matched",
+  CLOSED: "closed",
+  ORDERED: "ordered",
   COMPLETED: "arrived",
   CANCELED: "cancelled",
 };

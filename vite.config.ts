@@ -13,6 +13,10 @@ export default defineConfig({
     tailwindcss(),
     svgr(),
     VitePWA({
+      // 푸시 수신 처리를 직접 짜야 해서 SW를 src/sw.ts로 작성합니다
+      strategies: "injectManifest",
+      srcDir: "src",
+      filename: "sw.ts",
       injectRegister: "auto",
       registerType: "autoUpdate",
       includeAssets: ["**/*"],
@@ -50,7 +54,7 @@ export default defineConfig({
           },
         ],
       },
-      workbox: {
+      injectManifest: {
         globPatterns: ["**/*.{js,css,html,png,svg,ico,json}"],
         maximumFileSizeToCacheInBytes: 8 * 1024 * 1024,
       },
