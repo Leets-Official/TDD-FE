@@ -10,7 +10,8 @@
 html,
 body {
   overscroll-behavior: none;
-  touch-action: pan-x pan-y;
+  /* 확대는 접근성상 열어두고 실수로 걸리는 더블탭 줌만 막습니다 */
+  touch-action: manipulation;
 }
 
 body {
