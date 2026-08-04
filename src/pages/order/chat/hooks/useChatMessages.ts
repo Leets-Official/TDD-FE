@@ -3,8 +3,8 @@ import { generatePath, useNavigate, useParams } from "react-router";
 
 import { useChatMessageHistory } from "@/api/order/chat/query";
 import { getApiErrorMessage } from "@/api/error";
-import { useCompleteParty } from "@/api/order/query";
-import { CURRENT_USER_ID, HOST_USER_ID } from "@/constants/order/chat";
+import { useCompleteParty, usePartyDetail } from "@/api/order/query";
+import { useMyPage } from "@/api/user/query";
 import { API_ERROR_MESSAGE } from "@/constants/errorMessage";
 import { useModal } from "@/hooks/useModal";
 import { useToast } from "@/hooks/useToast";
@@ -20,6 +20,11 @@ export function useChatMessages() {
   const { openToast } = useToast();
   const { mutate: completeParty } = useCompleteParty();
   const { data: messageHistory } = useChatMessageHistory(partyId);
+  const { data: myPage } = useMyPage();
+  const { data: partyDetail } = usePartyDetail(partyId);
+  const myUserId = myPage?.userId;
+  const hostUserId = partyDetail?.creatorId;
+  const isHost = myUserId !== undefined && myUserId === hostUserId;
   const [isDeliveryArrived, setIsDeliveryArrived] = useState(false);
   const [isTransferCompleted, setIsTransferCompleted] = useState(false);
   const [chatMessages, setChatMessages] = useState<ChatMessage[]>([]);
@@ -78,9 +83,11 @@ export function useChatMessages() {
         completeParty(partyId, {
           onSuccess: () => {
             setIsDeliveryArrived(true);
+            if (hostUserId === undefined) return;
+
             pushMessage({
               messageType: "DELIVERY_ARRIVED",
-              senderId: HOST_USER_ID,
+              senderId: hostUserId,
               senderNickname: "방장",
               content: null,
               imageUrl: null,
@@ -102,6 +109,8 @@ export function useChatMessages() {
   // 방장 헤더에서 정산 요청 버튼 클릭 시 모달 띄우고, 확인 시 정산 요청 메세지와 송금 요청 메세지 push
   // 프론트에서 두 개를 push 하는 방향으로.
   const handleSettlementRequestClick = () => {
+    if (hostUserId === undefined) return;
+
     openModal({
       props: {
         title: "정산을 요청하시겠습니까?",
@@ -113,14 +122,14 @@ export function useChatMessages() {
       onConfirm: () => {
         pushMessage({
           messageType: "SETTLEMENT_REQUEST",
-          senderId: HOST_USER_ID,
+          senderId: hostUserId,
           senderNickname: "방장",
           content: null,
           imageUrl: null,
         });
         pushMessage({
           messageType: "TRANSFER_REQUEST",
-          senderId: HOST_USER_ID,
+          senderId: hostUserId,
           senderNickname: "방장",
           content: null,
           imageUrl: null,
@@ -131,6 +140,8 @@ export function useChatMessages() {
 
   // 방장이 정산 완료 버튼 클릭 시 모달 띄우고 리뷰 요청 메세지 push
   const handleSettlementCompleteClick = () => {
+    if (hostUserId === undefined) return;
+
     openModal({
       props: {
         title: "정산을 모두 마치셨나요?",
@@ -141,7 +152,7 @@ export function useChatMessages() {
       onConfirm: () => {
         pushMessage({
           messageType: "REVIEW_PROMPT",
-          senderId: HOST_USER_ID,
+          senderId: hostUserId,
           senderNickname: "방장",
           content: null,
           imageUrl: null,
@@ -184,11 +195,11 @@ export function useChatMessages() {
   };
 
   const handleSendMessage = (value: string) => {
-    if (!value.trim()) return;
+    if (!value.trim() || myUserId === undefined) return;
 
     pushMessage({
       messageType: "USER",
-      senderId: CURRENT_USER_ID,
+      senderId: myUserId,
       senderNickname: "나",
       content: value,
       imageUrl: null,
@@ -197,6 +208,8 @@ export function useChatMessages() {
 
   return {
     chatMessages,
+    myUserId,
+    isHost,
     isDeliveryArrived,
     isTransferCompleted,
     handleDeliveryArrivedClick,

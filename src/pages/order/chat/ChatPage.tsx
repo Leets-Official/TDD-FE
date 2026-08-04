@@ -4,12 +4,7 @@ import { useNavigate } from "react-router";
 import { ChatInput } from "@/components/chatInput/ChatInput";
 import { PageHeader } from "@/components/header/PageHeader";
 import { IconButton } from "@/components/iconButton/IconButton";
-import {
-  ACCOUNT_HOLDER,
-  ACCOUNT_TEXT,
-  CURRENT_USER_ID,
-  IS_HOST,
-} from "@/constants/order/chat";
+import { ACCOUNT_HOLDER, ACCOUNT_TEXT } from "@/constants/order/chat";
 import { PageShell } from "@/layouts/PageShell";
 import { formatChatTime } from "@/utils/order/formatChatTime";
 
@@ -27,6 +22,8 @@ export default function ChatPage() {
   const [messageValue, setMessageValue] = useState("");
   const {
     chatMessages,
+    myUserId,
+    isHost,
     isDeliveryArrived,
     isTransferCompleted,
     handleDeliveryArrivedClick,
@@ -65,7 +62,7 @@ export default function ChatPage() {
             />
             {isMenuOpen && (
               <ChatMenuBar
-                isHost={IS_HOST}
+                isHost={isHost}
                 isDeliveryArrived={isDeliveryArrived}
                 onDeliveryArrived={handleDeliveryArrivedClick}
                 onSettlementRequest={handleSettlementRequestClick}
@@ -81,8 +78,8 @@ export default function ChatPage() {
         {/* 채팅방 부분 */}
         <div className="flex flex-col gap-4">
           {chatMessages.map((item, index) => {
-            // 현재 채팅이 나의 채팅인지 여부 (임시 하드코딩)
-            const isMine = item.senderId === CURRENT_USER_ID;
+            // 현재 채팅이 나의 채팅인지 여부
+            const isMine = item.senderId === myUserId;
 
             // 바로 이전 채팅과 같은 사람이 연달아 보낸 메시지면 프로필(아바타+닉네임) 생략
             const previousItem = chatMessages[index - 1];
@@ -108,16 +105,16 @@ export default function ChatPage() {
                 <ActionAccountBubble
                   key={item.messageId}
                   title={
-                    IS_HOST
+                    isHost
                       ? "정산을 요청하였습니다!"
                       : "방장님이 정산을 요청하였습니다!"
                   }
                   primaryText={ACCOUNT_TEXT}
                   secondaryText={ACCOUNT_HOLDER}
-                  buttonLabel={IS_HOST ? undefined : "복사"}
+                  buttonLabel={isHost ? undefined : "복사"}
                   buttonDisabled={isTransferCompleted}
                   onButtonClick={
-                    IS_HOST
+                    isHost
                       ? undefined
                       : () => handleCopyAccountClick(ACCOUNT_TEXT)
                   }
@@ -127,7 +124,7 @@ export default function ChatPage() {
             }
             // 송금 요청 메세지의 경우 - 방장은 정산을 완료하시겠냐는 카드/ 팀원은 송금/배달수령을 완료하셨냐는 카드로 분기
             if (item.messageType === "TRANSFER_REQUEST") {
-              if (IS_HOST) {
+              if (isHost) {
                 return (
                   <ActionDeliveryBubble
                     key={item.messageId}
