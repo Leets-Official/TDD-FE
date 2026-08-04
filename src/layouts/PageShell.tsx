@@ -21,7 +21,7 @@ export function PageShell({
   return (
     <div
       className={cn(
-        "flex min-h-0 w-full flex-1 flex-col overflow-hidden bg-white pt-[env(safe-area-inset-top)] pb-[env(safe-area-inset-bottom)]",
+        "flex min-h-0 w-full flex-1 flex-col overflow-hidden bg-white pt-[env(safe-area-inset-top)] pb-[max(env(safe-area-inset-bottom),var(--keyboard-inset,0px))]",
         className
       )}
     >
