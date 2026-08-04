@@ -1,5 +1,4 @@
-import { PageShell } from "@/layouts/PageShell";
-import Logo from "@/assets/Logo.svg?react";
+import { AuthIntroShell } from "@/layouts/AuthIntroShell";
 import { TextField } from "@/components/textField/TextField";
 import { Button } from "@/components/button/Button";
 import { useNavigate } from "react-router";
@@ -7,30 +6,70 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { loginSchema, type LoginFormValues } from "@/schemas/auth";
 import { PATH } from "@/routes/paths";
+import { useLogin } from "@/api/auth/query";
+import { getApiErrorMessage, getApiFieldErrors } from "@/api/error";
+import { API_ERROR_MESSAGE } from "@/constants/errorMessage";
+import { useToast } from "@/hooks/useToast";
+
+const LOGIN_FORM_ID = "login-form";
 
 export default function LoginPage() {
   const navigate = useNavigate();
+  const { mutate: login, isPending } = useLogin();
+  const { openToast } = useToast();
   const {
     register,
     handleSubmit,
+    setError,
     formState: { errors },
   } = useForm<LoginFormValues>({
     resolver: zodResolver(loginSchema),
   });
 
-  const onSubmit = (_values: LoginFormValues) => {
-    // TODO: 로그인 API 연동
+  const onSubmit = (values: LoginFormValues) => {
+    login(values, {
+      onError: (error) => {
+        const fieldErrors = getApiFieldErrors(error);
+        const invalidFields = (
+          Object.keys(values) as (keyof LoginFormValues)[]
+        ).filter((field) => fieldErrors[field]);
+
+        if (invalidFields.length > 0) {
+          invalidFields.forEach((field) =>
+            setError(field, { message: fieldErrors[field] })
+          );
+
+          return;
+        }
+
+        openToast({
+          variant: "error",
+          message: getApiErrorMessage(error, API_ERROR_MESSAGE.LOGIN),
+        });
+      },
+    });
   };
 
   return (
-    <PageShell>
+    <AuthIntroShell
+      action={
+        <Button
+          type="submit"
+          form={LOGIN_FORM_ID}
+          disabled={isPending}
+          className="w-full"
+        >
+          로그인
+        </Button>
+      }
+    >
       <form
+        id={LOGIN_FORM_ID}
         onSubmit={handleSubmit(onSubmit)}
         noValidate
-        className="flex h-full w-full flex-col items-center justify-center px-5"
+        className="mt-[67px] flex w-full flex-col"
       >
-        <Logo className="h-10 w-[75px]" />
-        <div className="mt-[67px] flex w-full flex-col gap-6">
+        <div className="flex w-full flex-col gap-6">
           <TextField
             label="아이디"
             placeholder="학교 이메일 입력(.ac.kr)"
@@ -59,15 +98,12 @@ export default function LoginPage() {
           <Button
             variant="text"
             size="small"
-            onClick={() => navigate("/signup")}
+            onClick={() => navigate(PATH.SIGNUP)}
           >
             학교 이메일로 회원가입
           </Button>
         </div>
-        <Button type="submit" className="mt-[58px] w-full">
-          로그인
-        </Button>
       </form>
-    </PageShell>
+    </AuthIntroShell>
   );
 }

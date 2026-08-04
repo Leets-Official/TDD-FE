@@ -13,7 +13,7 @@ const meta = {
   args: {
     nickname: "피자피자 조아",
     dormitory: "1기숙사",
-    mannerTemperature: 38.6,
+    mannerTemperature: 8.6,
   },
   decorators: [
     (Story) => (

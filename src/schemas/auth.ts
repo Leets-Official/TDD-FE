@@ -1,13 +1,21 @@
 import { z } from "zod";
 
-import { DORMITORY_VALUES } from "@/constants/dormitory";
+import { DORMITORY_VALUES } from "@/constants/user/dormitory";
+
+const SCHOOL_EMAIL_DOMAIN = "gachon.ac.kr";
+
+const SCHOOL_EMAIL_REGEX = /^[\w.-]+@gachon\.ac\.kr$/;
+
+export const normalizeEmail = (value: string) => value.trim().toLowerCase();
 
 export const emailSchema = z
   .string()
+  .trim()
+  .toLowerCase()
   .min(1, "이메일을 다시 확인해주세요")
   .pipe(z.email("이메일을 다시 확인해주세요"))
-  .refine((value) => value.toLowerCase().endsWith(".ac.kr"), {
-    message: "학교 이메일을 입력해주세요",
+  .refine((value) => SCHOOL_EMAIL_REGEX.test(value), {
+    message: `학교 이메일(@${SCHOOL_EMAIL_DOMAIN})을 입력해주세요`,
   });
 
 export const loginSchema = z.object({

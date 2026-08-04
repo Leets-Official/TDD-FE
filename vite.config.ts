@@ -13,6 +13,10 @@ export default defineConfig({
     tailwindcss(),
     svgr(),
     VitePWA({
+      // 푸시 수신 처리를 직접 짜야 해서 SW를 src/sw.ts로 작성합니다
+      strategies: "injectManifest",
+      srcDir: "src",
+      filename: "sw.ts",
       injectRegister: "auto",
       registerType: "autoUpdate",
       includeAssets: ["**/*"],
@@ -27,7 +31,11 @@ export default defineConfig({
         theme_color: "#ff610d",
         background_color: "#ffffff",
         icons: [
-          // TODO: 임시 아이콘 (favicon.svg 기반) — 정식 로고 나오면 재생성
+          {
+            src: "pwa-64x64.png",
+            sizes: "64x64",
+            type: "image/png",
+          },
           {
             src: "pwa-192x192.png",
             sizes: "192x192",
@@ -46,7 +54,7 @@ export default defineConfig({
           },
         ],
       },
-      workbox: {
+      injectManifest: {
         globPatterns: ["**/*.{js,css,html,png,svg,ico,json}"],
         maximumFileSizeToCacheInBytes: 8 * 1024 * 1024,
       },

@@ -1,5 +1,5 @@
 import ChevronRightIcon from "@/assets/icons/ChevronRightIcon.svg?react";
-import type { DormVerificationStatus } from "@/types/dormVerification";
+import type { DormVerificationStatus } from "@/types/user/dormVerification";
 
 import { STATUS_META } from "./DormitoryVerificationCard.constants";
 import { dormitoryVerificationCardVariants } from "./DormitoryVerificationCard.variants";
@@ -8,7 +8,7 @@ export interface DormitoryVerificationCardProps {
   status: DormVerificationStatus;
   verifiedUntil?: string | null;
   rejectReason?: string | null;
-  onClick?: () => void;
+  onClick: () => void;
 }
 
 export function DormitoryVerificationCard({
@@ -17,7 +17,13 @@ export function DormitoryVerificationCard({
   rejectReason,
   onClick,
 }: DormitoryVerificationCardProps) {
-  const { tone, Icon, label, description: desc } = STATUS_META[status];
+  const {
+    tone,
+    Icon,
+    label,
+    description: desc,
+    isSubmittable,
+  } = STATUS_META[status];
 
   const {
     root,
@@ -43,9 +49,11 @@ export function DormitoryVerificationCard({
           </div>
           <p className={description()}>{descriptionText}</p>
         </div>
-        <button type="button">
-          <ChevronRightIcon className={chevron()} onClick={onClick} />
-        </button>
+        {isSubmittable && (
+          <button type="button" aria-label="기숙사 인증하기" onClick={onClick}>
+            <ChevronRightIcon className={chevron()} />
+          </button>
+        )}
       </div>
     </div>
   );
