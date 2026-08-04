@@ -6,7 +6,9 @@ export interface ChatMenuBarProps {
   onOrderComplete?: () => void;
   isDeliveryArrived?: boolean;
   onDeliveryArrived?: () => void;
+  isSettlementRequested?: boolean;
   onSettlementRequest?: () => void;
+  isSettlementCompleted?: boolean;
   isTransferCompleted?: boolean;
   onCopyAccount?: () => void;
   onTransferComplete?: () => void;
@@ -18,7 +20,9 @@ export function ChatMenuBar({
   onOrderComplete,
   isDeliveryArrived = false,
   onDeliveryArrived,
+  isSettlementRequested = false,
   onSettlementRequest,
+  isSettlementCompleted = false,
   isTransferCompleted = false,
   onCopyAccount,
   onTransferComplete,
@@ -28,42 +32,44 @@ export function ChatMenuBar({
       {isHost ? (
         // 채팅방 방장인 경우
         <>
+          {/* 완료 취소 API가 없어서, 다음 단계로 넘어가면 이전 단계 버튼은 되돌릴 수 없게 잠금 */}
           <Button
             variant="secondary"
             size="small"
+            disabled={
+              isOrderCompleted || isDeliveryArrived || isSettlementCompleted
+            }
             onClick={onOrderComplete}
             aria-pressed={isOrderCompleted}
-            className={
-              isOrderCompleted
-                ? // 여기 비활성화 스타일에서 선택이 되어야 함으로 따로 정의 -> 클릭 시 주문 완료 취소가 되어야함.
-                  "border-[1.5px] border-divider-1 bg-white text-disabled hover:bg-white active:bg-white"
-                : undefined
-            }
           >
             주문 완료
           </Button>
           <Button
             variant="secondary"
             size="small"
-            disabled={!isOrderCompleted}
+            disabled={
+              !isOrderCompleted ||
+              isDeliveryArrived ||
+              isSettlementRequested ||
+              isSettlementCompleted
+            }
             onClick={onDeliveryArrived}
             aria-pressed={isDeliveryArrived}
-            className={
-              isDeliveryArrived
-                ? // 여기 비활성화 스타일에서 선택이 되어야 함으로 따로 정의 -> 클릭 시 배달 도착 취소가 되어야함.
-                  "border-[1.5px] border-divider-1 bg-white text-disabled hover:bg-white active:bg-white"
-                : undefined
-            }
           >
             {isDeliveryArrived ? "도착 완료" : "배달 도착"}
           </Button>
           <Button
             variant="secondary"
             size="small"
-            disabled={!isDeliveryArrived}
+            disabled={
+              !isDeliveryArrived ||
+              isSettlementRequested ||
+              isSettlementCompleted
+            }
             onClick={onSettlementRequest}
+            aria-pressed={isSettlementRequested}
           >
-            정산 요청
+            {isSettlementCompleted ? "정산 완료" : "정산 요청"}
           </Button>
         </>
       ) : (
@@ -72,7 +78,7 @@ export function ChatMenuBar({
           <Button
             variant="outline"
             size="small"
-            disabled={isTransferCompleted}
+            disabled={isTransferCompleted || isSettlementCompleted}
             onClick={onCopyAccount}
           >
             송금(계좌복사)
@@ -80,7 +86,7 @@ export function ChatMenuBar({
           <Button
             variant="outline"
             size="small"
-            disabled={isTransferCompleted}
+            disabled={isTransferCompleted || isSettlementCompleted}
             onClick={onTransferComplete}
           >
             송금/배달수령 완료
