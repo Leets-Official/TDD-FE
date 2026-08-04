@@ -1,4 +1,4 @@
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 
 import {
   getPartyReviewTargets,
@@ -15,18 +15,10 @@ export const usePartyReviewTargets = (partyId: number) =>
   });
 
 // 매너 평가 등록 API
-export const usePostPartyReview = () => {
-  const queryClient = useQueryClient();
-
-  return useMutation({
+export const usePostPartyReview = () =>
+  useMutation({
     mutationFn: postPartyReview,
-    onSuccess: (_, { partyId }) => {
-      queryClient.invalidateQueries({
-        queryKey: ["parties", partyId, "review-targets"],
-      });
-    },
   });
-};
 
 // 신고 등록 API
 export const usePostPartyReport = () =>
