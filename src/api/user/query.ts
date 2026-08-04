@@ -13,6 +13,7 @@ import {
   uploadDormVerification,
   uploadProfileImage,
 } from "@/api/user/api";
+import { ensurePushSubscription } from "@/api/notification/ensurePushSubscription";
 import type { UploadImageContentType } from "@/constants/imageUpload";
 import { PATH } from "@/routes/paths";
 import { useAuthStore } from "@/stores/useAuthStore";
@@ -26,6 +27,7 @@ export const useSignup = () => {
     mutationFn: postSignup,
     onSuccess: (data) => {
       setTokens(data);
+      void ensurePushSubscription();
       navigate(PATH.HOME, { replace: true });
     },
   });
