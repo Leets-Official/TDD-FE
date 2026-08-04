@@ -1,5 +1,4 @@
 import { useEffect, useRef, useState } from "react";
-import { useNavigate } from "react-router";
 
 import { getApiErrorMessage } from "@/api/error";
 import { useUpdateProfile } from "@/api/user/query";
@@ -13,6 +12,7 @@ import {
 } from "@/constants/imageUpload";
 import { useToast } from "@/hooks/useToast";
 import type { ProfileFormValues } from "@/schemas/auth";
+import { useGoBack } from "@/hooks/useGoBack";
 
 const PROFILE_UPDATE_SUCCESS_MESSAGE = "프로필 수정이 완료되었습니다!";
 
@@ -22,7 +22,7 @@ interface SelectedImage {
 }
 
 export function useProfileEditSubmit() {
-  const navigate = useNavigate();
+  const goBack = useGoBack();
   const { openToast } = useToast();
   const { mutate: updateProfile, isPending } = useUpdateProfile();
 
@@ -63,7 +63,7 @@ export function useProfileEditSubmit() {
       { nickname, dormitory, imageFile },
       {
         onSuccess: () => {
-          navigate(-1);
+          goBack();
           openToast({ message: PROFILE_UPDATE_SUCCESS_MESSAGE });
         },
         onError: (error) => {

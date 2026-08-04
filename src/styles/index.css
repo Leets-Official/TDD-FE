@@ -10,6 +10,8 @@
 html,
 body {
   overscroll-behavior: none;
+  /* 확대는 접근성상 열어두고 실수로 걸리는 더블탭 줌만 막습니다 */
+  touch-action: manipulation;
 }
 
 body {
@@ -17,7 +19,8 @@ body {
   font-family: var(--font-sans);
 }
 
-@media (min-width: 394px) {
+/* 앱 컨테이너(430px)보다 넓은 브라우저에서만 바깥 여백을 어둡게  */
+@media (min-width: 431px) and (display-mode: browser) {
   body {
     background-color: #2a2624;
   }

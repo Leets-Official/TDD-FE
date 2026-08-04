@@ -3,8 +3,8 @@ import { useRef, useState } from "react";
 import { ProfileForm } from "@/components/auth/ProfileForm";
 import { Avatar } from "@/components/avatar/Avatar";
 import { Button } from "@/components/button/Button";
-import { useMyPage } from "@/api/user/query";
 import { UPLOAD_IMAGE_ACCEPT } from "@/constants/imageUpload";
+import { useMe } from "@/hooks/useMe";
 import { BackHeader } from "@/layouts/BackHeader";
 import { PageShell } from "@/layouts/PageShell";
 
@@ -13,7 +13,7 @@ import { useProfileEditSubmit } from "./hooks/useProfileEditSubmit";
 const PROFILE_EDIT_FORM_ID = "profile-edit-form";
 
 export function ProfileEditPage() {
-  const { data: profile } = useMyPage();
+  const { me: profile } = useMe();
   const [isValid, setIsValid] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const { previewUrl, selectImage, submitProfile, isPending } =

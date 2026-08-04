@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router";
 
-import { useMyPage } from "@/api/user/query";
+import { useMe } from "@/hooks/useMe";
 import { BackHeader } from "@/layouts/BackHeader";
 import { PageShell } from "@/layouts/PageShell";
 import { PATH } from "@/routes/paths";
@@ -21,7 +21,7 @@ export function MyPage() {
 
 function MyPageContent() {
   const navigate = useNavigate();
-  const { data: profile, isPending } = useMyPage();
+  const { me: profile, isPending, isNoshowRestricted } = useMe();
 
   if (isPending) return <MyPageSkeleton />;
 
@@ -40,7 +40,7 @@ function MyPageContent() {
         dormitory={profile.dormitory ?? "기숙사를 설정해주세요"}
         mannerTemperature={profile.mannerTemperature}
       />
-      {profile.status === "SUSPENDED" && (
+      {isNoshowRestricted && (
         <RestrictionCard
           noShowApprovedCount={profile.noShowApprovedCount}
           suspendedUntil={profile.suspendedUntil ?? ""}

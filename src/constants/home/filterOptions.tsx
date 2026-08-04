@@ -37,7 +37,7 @@ export const ORDER_TIME_OPTIONS: DropdownOption[] = [
 ];
 
 export const ORDER_STATE_OPTIONS: DropdownOption[] = [
-  { label: "전체", value: "all" },
+  { label: "전체", value: "" },
   { label: "진행중", value: "ongoing" },
   { label: "지난", value: "past" },
 ];

@@ -1,6 +1,5 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm, useWatch } from "react-hook-form";
-import { useNavigate } from "react-router";
 
 import { getApiErrorMessage } from "@/api/error";
 import {
@@ -11,12 +10,13 @@ import {
 import { API_ERROR_MESSAGE } from "@/constants/errorMessage";
 import { useToast } from "@/hooks/useToast";
 import { accountFormSchema, type AccountFormValues } from "@/schemas/account";
+import { useGoBack } from "@/hooks/useGoBack";
 
 const ACCOUNT_REGISTER_SUCCESS_MESSAGE = "계좌가 등록되었습니다!";
 const ACCOUNT_UPDATE_SUCCESS_MESSAGE = "계좌가 수정되었습니다!";
 
 export function useAccountForm() {
-  const navigate = useNavigate();
+  const goBack = useGoBack();
   const { openToast } = useToast();
   const { data: account, isPending: isLoading } = useBankAccount();
   const { mutate: registerAccount, isPending: isRegistering } =
@@ -81,7 +81,7 @@ export function useAccountForm() {
 
     save(body, {
       onSuccess: () => {
-        navigate(-1);
+        goBack();
         openToast({ message: successMessage });
       },
       onError: (error) => {

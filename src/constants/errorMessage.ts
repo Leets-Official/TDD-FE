@@ -48,6 +48,7 @@ export const PROFILE_IMAGE_TOAST_MESSAGE = {
 
 // 서버 메시지 대신 항상 이 문구로 노출하는 토스트
 export const EMAIL_VERIFY_TOAST_MESSAGE = {
+  SEND_SUCCESS: "인증코드를 전송하였습니다!",
   SEND_FAILED:
     "학교 이메일 인증에 실패하였습니다!\n다시 시도해주세요(5분 내 3회 재시도 가능)",
   VERIFY_FAILED: "학교 이메일 인증에 실패하였습니다!",

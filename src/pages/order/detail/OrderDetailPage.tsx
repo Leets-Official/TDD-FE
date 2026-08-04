@@ -10,15 +10,13 @@ import {
   usePartyDetail,
   usePartyParticipants,
 } from "@/api/order/query";
-import { useMyPage } from "@/api/user/query";
+import { useMe } from "@/hooks/useMe";
 import { CtaBar } from "@/components/ctaBar/CtaBar";
 import { BackHeader } from "@/layouts/BackHeader";
 import { Profiles } from "@/components/profiles/Profiles";
 import { API_ERROR_MESSAGE } from "@/constants/errorMessage";
-import {
-  DORM_VERIFICATION_MODAL_PROPS,
-  NOSHOW_RESTRICTION_MODAL_PROPS,
-} from "@/constants/order/guardModals";
+import { NOSHOW_RESTRICTION_MODAL_PROPS } from "@/constants/order/guardModals";
+import { useDormVerificationGuard } from "@/hooks/useDormVerificationGuard";
 import { useModal } from "@/hooks/useModal";
 import { useToast } from "@/hooks/useToast";
 import { PageShell } from "@/layouts/PageShell";
@@ -35,9 +33,8 @@ export default function OrderDetailPage() {
   const navigate = useNavigate();
   const { openModal } = useModal();
   const { openToast } = useToast();
-  const { data: myPage, isPending: isMyPagePending } = useMyPage();
-  const isDormVerified = myPage?.dormStatus === "APPROVED";
-  const isNoshowRestricted = myPage?.status === "SUSPENDED";
+  const { userId, isNoshowRestricted } = useMe();
+  const { ensureDormVerified } = useDormVerificationGuard();
 
   const partyId = Number(orderId);
   const {
@@ -83,8 +80,7 @@ export default function OrderDetailPage() {
     const intervalId = setInterval(() => setNow(Date.now()), 1000);
     return () => clearInterval(intervalId);
   }, []);
-  const isHost =
-    myPage !== undefined && order?.host.id === String(myPage.userId);
+  const isHost = userId !== undefined && order?.host.id === userId;
 
   const participants = partyParticipants
     ? toProfilesItems(partyParticipants.participants)
@@ -129,15 +125,7 @@ export default function OrderDetailPage() {
   }
 
   function handleApplyClick() {
-    if (isMyPagePending) return;
-
-    if (!isDormVerified) {
-      openModal({
-        props: DORM_VERIFICATION_MODAL_PROPS,
-        onConfirm: () => navigate(PATH.MYPAGE_DORMITORY),
-      });
-      return;
-    }
+    if (!ensureDormVerified()) return;
 
     if (isNoshowRestricted) {
       openModal({ props: NOSHOW_RESTRICTION_MODAL_PROPS });
@@ -240,8 +228,8 @@ export default function OrderDetailPage() {
 
   // 새로고침/재진입 시 로컬 status가 초기화되므로, 서버 참여자 목록에서 내 참여 여부를 우선 파생
   const myParticipant =
-    myPage !== undefined
-      ? participants.find((p) => p.id === String(myPage.userId))
+    userId !== undefined
+      ? participants.find((p) => p.id === userId)
       : undefined;
   const serverDerivedStatus: ParticipationStatus = myParticipant
     ? participants.length >= order.maxCount
