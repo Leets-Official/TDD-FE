@@ -12,7 +12,6 @@ import {
   type UploadImageContentType,
 } from "@/constants/imageUpload";
 import { useToast } from "@/hooks/useToast";
-import { PATH } from "@/routes/paths";
 
 const DORM_VERIFICATION_SUCCESS_MESSAGE = "인증 서류가 제출되었습니다!";
 
@@ -50,7 +49,7 @@ export function useDormVerificationSubmit() {
 
     submit(selectedFile, {
       onSuccess: () => {
-        navigate(PATH.HOME);
+        navigate(-1);
         openToast({ message: DORM_VERIFICATION_SUCCESS_MESSAGE });
       },
       onError: (error) => {
