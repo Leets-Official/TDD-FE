@@ -61,11 +61,9 @@ export default function ReviewPage() {
   const targets = (data?.targets ?? []).filter((target) => !target.reviewed);
 
   const [drafts, setDrafts] = useState<Record<number, MannerReviewDraft>>({});
-  const { mutateAsync: postReview, isPending: isSubmittingReview } =
-    usePostPartyReview();
-  const { mutateAsync: postReport, isPending: isSubmittingReport } =
-    usePostPartyReport();
-  const isSubmitting = isSubmittingReview || isSubmittingReport;
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const { mutateAsync: postReview } = usePostPartyReview();
+  const { mutateAsync: postReport } = usePostPartyReport();
 
   useEffect(() => {
     if (!isError) return;
@@ -80,23 +78,24 @@ export default function ReviewPage() {
     targets.every((target) => isDraftComplete(drafts[target.userId]));
 
   async function handleSubmit() {
-    const requests = targets.flatMap((target) => {
-      const draft = drafts[target.userId];
-      const reviewRequest = postReview({
-        partyId,
-        body: toReviewBody(target.userId, draft),
-      });
-      if (!draft.report) return [reviewRequest];
-
-      // 신고가 있는 경우 신고 요청도 함께
-      const reportRequest = postReport({
-        partyId,
-        body: toReportBody(target.userId, draft.report),
-      });
-      return [reviewRequest, reportRequest];
-    });
-
+    setIsSubmitting(true);
     try {
+      const requests = targets.flatMap((target) => {
+        const draft = drafts[target.userId];
+        const reviewRequest = postReview({
+          partyId,
+          body: toReviewBody(target.userId, draft),
+        });
+        if (!draft.report) return [reviewRequest];
+
+        // 신고가 있는 경우 신고 요청도 함께
+        const reportRequest = postReport({
+          partyId,
+          body: toReportBody(target.userId, draft.report),
+        });
+        return [reviewRequest, reportRequest];
+      });
+
       await Promise.all(requests);
 
       openToast({ message: "매너 평가가 등록되었어요" });
@@ -108,6 +107,8 @@ export default function ReviewPage() {
           API_ERROR_MESSAGE.REVIEW_CREATE
         ),
       });
+    } finally {
+      setIsSubmitting(false);
     }
   }
 
