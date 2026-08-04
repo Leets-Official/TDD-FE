@@ -45,6 +45,13 @@ export function useEmailVerification({
 
       throw error;
     }
+
+    if (isMountedRef.current) {
+      openToast({
+        variant: "success",
+        message: EMAIL_VERIFY_TOAST_MESSAGE.SEND_SUCCESS,
+      });
+    }
   };
 
   const submitCode = async (values: EmailVerifyFormValues) => {
