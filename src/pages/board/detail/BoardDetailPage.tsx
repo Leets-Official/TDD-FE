@@ -8,6 +8,10 @@ import { PageShell } from "@/layouts/PageShell";
 import { formatRelativeTime } from "@/utils/board/formatRelativeTime";
 
 import { BoardCommentItem } from "./components/BoardCommentItem";
+import {
+  BoardCommentListSkeleton,
+  BoardDetailSkeleton,
+} from "./components/BoardDetailSkeleton";
 import { BoardPostSection } from "./components/BoardPostSection";
 import { useBoardComments } from "./hooks/useBoardComments";
 
@@ -22,9 +26,10 @@ function BoardDetailPageContent({ postId }: { postId: string | undefined }) {
   const inputRef = useRef<HTMLInputElement>(null);
   const [messageValue, setMessageValue] = useState("");
 
-  const { data: post } = useBoardPostDetail(postId);
+  const { data: post, isPending: isPostPending } = useBoardPostDetail(postId);
   const {
     comments,
+    isCommentsPending,
     topLevelComments,
     getReplies,
     replyTargetId,
@@ -46,46 +51,58 @@ function BoardDetailPageContent({ postId }: { postId: string | undefined }) {
     handleSend(value, { onSuccess: () => setMessageValue("") });
   }
 
+  if (isPostPending)
+    return (
+      <PageShell header={<BackHeader title="게시판" />}>
+        <BoardDetailSkeleton />
+      </PageShell>
+    );
+
   if (!post) return null;
 
   return (
-    <>
-      <PageShell header={<BackHeader title="게시판" />}>
-        <BoardPostSection
-          title={post.title}
-          content={post.content}
-          commentCount={comments.length}
-          nickname={post.authorNickname}
-          timeLabel={formatRelativeTime(post.createdAt)}
+    <PageShell
+      header={<BackHeader title="게시판" />}
+      // ChatInput이 자체 패딩과 border-t를 갖고 있어 슬롯 기본 패딩을 없앱니다
+      bottomClassName="p-0"
+      bottom={
+        <ChatInput
+          ref={inputRef}
+          value={messageValue}
+          onChange={(event) => setMessageValue(event.target.value)}
+          onSend={handleSendMessage}
+          showImageUpload={false}
+          placeholder="메시지 입력"
         />
-
-        <div className="flex w-full flex-col">
-          {topLevelComments.map((comment) => (
-            <BoardCommentItem
-              key={comment.commentId}
-              nickname={comment.authorNickname}
-              content={comment.content}
-              timeLabel={formatRelativeTime(comment.createdAt)}
-              replies={getReplies(comment.commentId).map((reply) => ({
-                commentId: reply.commentId,
-                nickname: reply.authorNickname,
-                content: reply.content,
-                timeLabel: formatRelativeTime(reply.createdAt),
-              }))}
-              isHighlighted={replyTargetId === comment.commentId}
-              onReplyClick={() => handleReply(comment.commentId)}
-            />
-          ))}
-        </div>
-      </PageShell>
-      <ChatInput
-        ref={inputRef}
-        value={messageValue}
-        onChange={(event) => setMessageValue(event.target.value)}
-        onSend={handleSendMessage}
-        showImageUpload={false}
-        placeholder="메시지 입력"
+      }
+    >
+      <BoardPostSection
+        title={post.title}
+        content={post.content}
+        commentCount={comments.length}
+        nickname={post.authorNickname}
+        timeLabel={formatRelativeTime(post.createdAt)}
       />
-    </>
+
+      <div className="flex w-full flex-col">
+        {isCommentsPending && <BoardCommentListSkeleton />}
+        {topLevelComments.map((comment) => (
+          <BoardCommentItem
+            key={comment.commentId}
+            nickname={comment.authorNickname}
+            content={comment.content}
+            timeLabel={formatRelativeTime(comment.createdAt)}
+            replies={getReplies(comment.commentId).map((reply) => ({
+              commentId: reply.commentId,
+              nickname: reply.authorNickname,
+              content: reply.content,
+              timeLabel: formatRelativeTime(reply.createdAt),
+            }))}
+            isHighlighted={replyTargetId === comment.commentId}
+            onReplyClick={() => handleReply(comment.commentId)}
+          />
+        ))}
+      </div>
+    </PageShell>
   );
 }
