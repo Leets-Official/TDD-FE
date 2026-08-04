@@ -12,6 +12,7 @@ import { filterOrders } from "@/utils/home/filterOrders";
 
 import { CreateOrderFab } from "./CreateOrderFab";
 import { OrderEmptyState } from "./OrderEmptyState";
+import { OrderListSkeleton } from "./OrderListSkeleton";
 import type { OrderItem } from "@/types/home/home";
 
 export interface OrderListSectionProps {
@@ -20,6 +21,7 @@ export interface OrderListSectionProps {
   onDormChange: (value: string) => void;
   menu: string;
   onMenuChange: (value: string) => void;
+  isPending: boolean;
   onCreateClick: () => void;
   onCardClick: (order: OrderItem) => void;
 }
@@ -30,6 +32,7 @@ export function OrderListSection({
   onDormChange,
   menu,
   onMenuChange,
+  isPending,
   onCreateClick,
   onCardClick,
 }: OrderListSectionProps) {
@@ -50,7 +53,7 @@ export function OrderListSection({
 
   return (
     <div className="relative flex flex-col">
-      <div className="flex items-center gap-3.25 px-xxl py-s">
+      <div className="sticky top-0 z-10 flex items-center gap-3.25 bg-white px-xxl py-s">
         <Dropdown
           variant="filter"
           label="기숙사"
@@ -75,7 +78,9 @@ export function OrderListSection({
         />
       </div>
 
-      {filteredOrders.length === 0 ? (
+      {isPending ? (
+        <OrderListSkeleton />
+      ) : filteredOrders.length === 0 ? (
         <OrderEmptyState onCreateClick={onCreateClick} />
       ) : (
         <>

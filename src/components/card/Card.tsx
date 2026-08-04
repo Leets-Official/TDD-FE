@@ -110,7 +110,9 @@ export function Card({
                 </FlagBadge>
               ) : (
                 <span className="ml-2 text-body-2 text-text-4">
-                  ({minCount}~{maxCount}인)
+                  {minCount === maxCount
+                    ? `(${maxCount}인)`
+                    : `(${minCount} ~ ${maxCount}인)`}
                 </span>
               )}
             </div>
