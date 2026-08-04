@@ -31,10 +31,12 @@ export function useChatMessages() {
   const myUserId = myPage?.userId;
   const hostUserId = partyDetail?.creatorId;
   const isHost = myUserId !== undefined && myUserId === hostUserId;
-  // 로컬 state가 아니라 서버 상태(partyDetail.status)에서 파생 — 새로고침/재진입해도 정확함
   const isOrderCompleted =
-    partyDetail?.status === "ORDERED" || partyDetail?.status === "COMPLETED";
-  const isDeliveryArrived = partyDetail?.status === "COMPLETED";
+    partyDetail?.status === "ORDERED" ||
+    partyDetail?.status === "DELIVERED" ||
+    partyDetail?.status === "COMPLETED";
+  const isDeliveryArrived =
+    partyDetail?.status === "DELIVERED" || partyDetail?.status === "COMPLETED";
   const [isTransferCompleted, setIsTransferCompleted] = useState(false);
   const [chatMessages, setChatMessages] = useState<ChatMessage[]>([]);
   const hasSeededHistory = useRef(false);

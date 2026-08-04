@@ -1,7 +1,7 @@
 import type { FoodCategory } from "@/components/card/categoryIcons";
 
 export type PartyStatus =
-  "RECRUITING" | "CLOSED" | "ORDERED" | "COMPLETED" | "CANCELED";
+  "RECRUITING" | "CLOSED" | "ORDERED" | "DELIVERED" | "COMPLETED" | "CANCELED";
 
 export type ParticipantRole = "OWNER" | "MEMBER";
 
