@@ -36,14 +36,11 @@ export function ChatMenuBar({
           <Button
             variant="secondary"
             size="small"
-            disabled={isDeliveryArrived || isSettlementCompleted}
+            disabled={
+              isOrderCompleted || isDeliveryArrived || isSettlementCompleted
+            }
             onClick={onOrderComplete}
             aria-pressed={isOrderCompleted}
-            className={
-              isOrderCompleted
-                ? "border-[1.5px] border-divider-1 bg-white text-disabled hover:bg-white active:bg-white"
-                : undefined
-            }
           >
             주문 완료
           </Button>
@@ -52,30 +49,25 @@ export function ChatMenuBar({
             size="small"
             disabled={
               !isOrderCompleted ||
+              isDeliveryArrived ||
               isSettlementRequested ||
               isSettlementCompleted
             }
             onClick={onDeliveryArrived}
             aria-pressed={isDeliveryArrived}
-            className={
-              isDeliveryArrived
-                ? "border-[1.5px] border-divider-1 bg-white text-disabled hover:bg-white active:bg-white"
-                : undefined
-            }
           >
             {isDeliveryArrived ? "도착 완료" : "배달 도착"}
           </Button>
           <Button
             variant="secondary"
             size="small"
-            disabled={!isDeliveryArrived || isSettlementCompleted}
+            disabled={
+              !isDeliveryArrived ||
+              isSettlementRequested ||
+              isSettlementCompleted
+            }
             onClick={onSettlementRequest}
             aria-pressed={isSettlementRequested}
-            className={
-              isSettlementRequested
-                ? "border-[1.5px] border-divider-1 bg-white text-disabled hover:bg-white active:bg-white"
-                : undefined
-            }
           >
             {isSettlementCompleted ? "정산 완료" : "정산 요청"}
           </Button>
@@ -86,7 +78,7 @@ export function ChatMenuBar({
           <Button
             variant="outline"
             size="small"
-            disabled={isTransferCompleted}
+            disabled={isTransferCompleted || isSettlementCompleted}
             onClick={onCopyAccount}
           >
             송금(계좌복사)
@@ -94,7 +86,7 @@ export function ChatMenuBar({
           <Button
             variant="outline"
             size="small"
-            disabled={isTransferCompleted}
+            disabled={isTransferCompleted || isSettlementCompleted}
             onClick={onTransferComplete}
           >
             송금/배달수령 완료
