@@ -1,6 +1,7 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { generatePath, useNavigate, useParams } from "react-router";
 
+import { useChatMessageHistory } from "@/api/order/chat/query";
 import { getApiErrorMessage } from "@/api/error";
 import { useCompleteParty } from "@/api/order/query";
 import { CURRENT_USER_ID, HOST_USER_ID } from "@/constants/order/chat";
@@ -9,8 +10,7 @@ import { useModal } from "@/hooks/useModal";
 import { useToast } from "@/hooks/useToast";
 import { PATH } from "@/routes/paths";
 import type { ChatMessage } from "@/types/order/chat";
-
-import { DUMMY_CHAT } from "../chat.mock";
+import { toChatMessage } from "@/utils/order/toChatMessage";
 
 export function useChatMessages() {
   const navigate = useNavigate();
@@ -19,9 +19,19 @@ export function useChatMessages() {
   const { openModal } = useModal();
   const { openToast } = useToast();
   const { mutate: completeParty } = useCompleteParty();
+  const { data: messageHistory } = useChatMessageHistory(partyId);
   const [isDeliveryArrived, setIsDeliveryArrived] = useState(false);
   const [isTransferCompleted, setIsTransferCompleted] = useState(false);
-  const [chatMessages, setChatMessages] = useState<ChatMessage[]>(DUMMY_CHAT);
+  const [chatMessages, setChatMessages] = useState<ChatMessage[]>([]);
+  const hasSeededHistory = useRef(false);
+
+  // 메시지 내역 조회 결과가 도착하면 최초 1회만 초기 목록으로 반영
+  useEffect(() => {
+    if (messageHistory && !hasSeededHistory.current) {
+      setChatMessages(messageHistory.map(toChatMessage));
+      hasSeededHistory.current = true;
+    }
+  }, [messageHistory]);
 
   const pushMessage = (
     message: Omit<ChatMessage, "messageId" | "createdAt">
@@ -30,7 +40,8 @@ export function useChatMessages() {
       ...prev,
       {
         ...message,
-        messageId: prev.length + 1,
+        messageId:
+          (prev.length > 0 ? Math.max(...prev.map((m) => m.messageId)) : 0) + 1,
         createdAt: new Date().toISOString(),
       },
     ]);
