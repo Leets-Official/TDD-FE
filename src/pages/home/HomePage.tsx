@@ -45,7 +45,7 @@ export default function HomePage() {
   const navigate = useNavigate();
   const { openModal } = useModal();
   const { openToast } = useToast();
-  const { isPending: isMyPagePending, isNoshowRestricted } = useMe();
+  const { isNoshowRestricted } = useMe();
   const { ensureDormVerified } = useDormVerificationGuard();
   const { data: bankAccount, isPending: isBankAccountPending } =
     useBankAccount();
@@ -124,7 +124,7 @@ export default function HomePage() {
   }, [myPartyList, openToast, navigate]);
 
   function handleCreateClick() {
-    if (isMyPagePending || isBankAccountPending) return;
+    if (isBankAccountPending) return;
 
     if (!ensureDormVerified()) return;
 
@@ -145,8 +145,6 @@ export default function HomePage() {
   }
 
   function handleCardClick(order: OrderItem) {
-    if (isMyPagePending) return;
-
     if (!ensureDormVerified()) return;
 
     navigate(PATH.ORDER_DETAIL.replace(":orderId", order.id));

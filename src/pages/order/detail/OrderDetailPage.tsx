@@ -33,7 +33,7 @@ export default function OrderDetailPage() {
   const navigate = useNavigate();
   const { openModal } = useModal();
   const { openToast } = useToast();
-  const { userId, isPending: isMyPagePending, isNoshowRestricted } = useMe();
+  const { userId, isNoshowRestricted } = useMe();
   const { ensureDormVerified } = useDormVerificationGuard();
 
   const partyId = Number(orderId);
@@ -125,8 +125,6 @@ export default function OrderDetailPage() {
   }
 
   function handleApplyClick() {
-    if (isMyPagePending) return;
-
     if (!ensureDormVerified()) return;
 
     if (isNoshowRestricted) {

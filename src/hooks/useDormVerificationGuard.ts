@@ -9,12 +9,14 @@ import { useModal } from "@/hooks/useModal";
 import { PATH } from "@/routes/paths";
 
 export function useDormVerificationGuard() {
-  const { me, dormStatus, isError, refetch } = useMe();
+  const { me, dormStatus, isPending, isError, refetch } = useMe();
   const { openModal } = useModal();
   const navigate = useNavigate();
 
   // 인증 완료면 true, 아니면 상태별 안내 모달을 띄우고 false를 돌려줍니다
   function ensureDormVerified() {
+    if (isPending) return false;
+
     if (dormStatus === "APPROVED") return true;
 
     if (isError || dormStatus === undefined) {
