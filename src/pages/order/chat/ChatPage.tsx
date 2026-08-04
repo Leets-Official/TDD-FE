@@ -4,9 +4,10 @@ import { useNavigate } from "react-router";
 import { ChatInput } from "@/components/chatInput/ChatInput";
 import { PageHeader } from "@/components/header/PageHeader";
 import { IconButton } from "@/components/iconButton/IconButton";
-import { ACCOUNT_HOLDER, ACCOUNT_TEXT } from "@/constants/order/chat";
+import { ACCOUNT_TEXT } from "@/constants/order/chat";
 import { PageShell } from "@/layouts/PageShell";
 import { formatChatTime } from "@/utils/order/formatChatTime";
+import { parseSettlementRequestContent } from "@/utils/order/parseSettlementRequestContent";
 
 import MenuIcon from "@/assets/icons/MenuIcon.svg?react";
 
@@ -26,11 +27,11 @@ export default function ChatPage() {
     isHost,
     isOrderCompleted,
     isDeliveryArrived,
+    isSettlementRequested,
     isTransferCompleted,
     handleOrderCompleteClick,
     handleDeliveryArrivedClick,
     handleSettlementRequestClick,
-    handleSettlementCompleteClick,
     handleTransferCompleteClick,
     handleCopyAccountClick,
     handleReviewClick,
@@ -69,6 +70,7 @@ export default function ChatPage() {
                 onOrderComplete={handleOrderCompleteClick}
                 isDeliveryArrived={isDeliveryArrived}
                 onDeliveryArrived={handleDeliveryArrivedClick}
+                isSettlementRequested={isSettlementRequested}
                 onSettlementRequest={handleSettlementRequestClick}
                 isTransferCompleted={isTransferCompleted}
                 onCopyAccount={() => handleCopyAccountClick(ACCOUNT_TEXT)}
@@ -117,6 +119,10 @@ export default function ChatPage() {
             }
             // 정산 요청 메세지의 경우 - 위와 동일한 이유
             if (item.messageType === "SETTLEMENT_REQUEST") {
+              const { amountText, accountText } = parseSettlementRequestContent(
+                item.content
+              );
+
               return (
                 <ActionAccountBubble
                   key={item.messageId}
@@ -125,14 +131,14 @@ export default function ChatPage() {
                       ? "정산을 요청하였습니다!"
                       : "방장님이 정산을 요청하였습니다!"
                   }
-                  primaryText={ACCOUNT_TEXT}
-                  secondaryText={ACCOUNT_HOLDER}
+                  primaryText={amountText}
+                  secondaryText={accountText}
                   buttonLabel={isHost ? undefined : "복사"}
                   buttonDisabled={isTransferCompleted}
                   onButtonClick={
                     isHost
                       ? undefined
-                      : () => handleCopyAccountClick(ACCOUNT_TEXT)
+                      : () => handleCopyAccountClick(accountText)
                   }
                   className={isHost ? "self-end" : "ml-14"}
                 />
@@ -147,7 +153,7 @@ export default function ChatPage() {
                     title="정산을 완료하셨나요?"
                     description="정산을 완료하고 배달팟 후기를 남겨봐요!"
                     buttonLabel="정산 완료"
-                    onButtonClick={handleSettlementCompleteClick}
+                    onButtonClick={handleSettlementRequestClick}
                     // 자동으로 보내주는것 이므로 항상 왼쪽에 위치
                     className="ml-14"
                   />
