@@ -1,12 +1,15 @@
 import { useNavigate } from "react-router";
 
-import { DORM_VERIFICATION_MODAL_PROPS } from "@/constants/order/guardModals";
+import {
+  DORM_VERIFICATION_MODAL_PROPS,
+  ME_FETCH_FAILED_MODAL_PROPS,
+} from "@/constants/order/guardModals";
 import { useMe } from "@/hooks/useMe";
 import { useModal } from "@/hooks/useModal";
 import { PATH } from "@/routes/paths";
 
 export function useDormVerificationGuard() {
-  const { me, dormStatus } = useMe();
+  const { me, dormStatus, isError, refetch } = useMe();
   const { openModal } = useModal();
   const navigate = useNavigate();
 
@@ -14,14 +17,23 @@ export function useDormVerificationGuard() {
   function ensureDormVerified() {
     if (dormStatus === "APPROVED") return true;
 
-    const status = dormStatus ?? "NOT_SUBMITTED";
+    if (isError || dormStatus === undefined) {
+      openModal({
+        props: ME_FETCH_FAILED_MODAL_PROPS,
+        onConfirm: () => {
+          refetch();
+        },
+      });
+      return false;
+    }
+
     const props =
-      DORM_VERIFICATION_MODAL_PROPS[status] ??
+      DORM_VERIFICATION_MODAL_PROPS[dormStatus] ??
       DORM_VERIFICATION_MODAL_PROPS.NOT_SUBMITTED;
 
     openModal({
       props:
-        status === "REJECTED" && me?.rejectReason
+        dormStatus === "REJECTED" && me?.rejectReason
           ? { ...props, caption: `반려 사유: ${me.rejectReason}` }
           : props,
       onConfirm: props.primaryLabel

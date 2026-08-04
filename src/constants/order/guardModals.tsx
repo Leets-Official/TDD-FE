@@ -6,6 +6,14 @@ type GuardModalProps = Omit<
   "isOpen" | "onClose" | "onOutlineClick" | "onPrimaryClick"
 >;
 
+// 인증 상태를 못 읽은 것뿐이라 미인증으로 단정하지 않고 재시도를 안내합니다
+export const ME_FETCH_FAILED_MODAL_PROPS: GuardModalProps = {
+  title: "정보를 불러오지 못했어요",
+  description: "잠시 후 다시 시도해주세요",
+  outlineLabel: "닫기",
+  primaryLabel: "다시 시도",
+};
+
 // primaryLabel이 있는 상태만 기숙사 인증 페이지로 보냅니다 (PENDING은 사용자가 할 일이 없어 확인만)
 export const DORM_VERIFICATION_MODAL_PROPS: Record<
   Exclude<DormVerificationStatus, "APPROVED">,
