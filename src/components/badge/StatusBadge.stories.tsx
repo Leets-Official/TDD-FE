@@ -18,10 +18,17 @@ type Story = StoryObj<typeof meta>;
 
 export const Recruiting: Story = {};
 
-export const Matched: Story = {
+export const Closed: Story = {
   args: {
-    status: "matched",
-    children: "매칭완료",
+    status: "closed",
+    children: "모집마감",
+  },
+};
+
+export const Ordered: Story = {
+  args: {
+    status: "ordered",
+    children: "주문완료",
   },
 };
 
@@ -29,6 +36,13 @@ export const Arrived: Story = {
   args: {
     status: "arrived",
     children: "배달도착",
+  },
+};
+
+export const Settled: Story = {
+  args: {
+    status: "settled",
+    children: "정산완료",
   },
 };
 

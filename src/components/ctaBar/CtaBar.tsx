@@ -31,6 +31,8 @@ interface AppliedCtaBarProps extends TimedCtaBarProps {
 interface HostRecruitingCtaBarProps extends TimedCtaBarProps {
   status: "hostRecruiting";
   onCancelRecruit: () => void;
+  onCloseRecruit: () => void;
+  canCloseRecruit: boolean;
 }
 
 interface CompletedCtaBarProps extends CtaBarSharedProps {
@@ -123,25 +125,52 @@ function TimedCtaBar(
   });
 
   return (
-    <div className={BAR_CLASS}>
-      <div className="flex flex-col items-start gap-2">
-        <div className="flex items-center gap-2">
-          <AvatarGroup
-            avatars={avatars}
-            total={maxCount}
-            max={maxCount}
-            size={24}
+    <div
+      className={
+        props.status === "hostRecruiting"
+          ? cn(BAR_CLASS, "items-end")
+          : BAR_CLASS
+      }
+    >
+      {props.status === "hostRecruiting" ? (
+        <div className="flex flex-col items-start gap-2">
+          <div className="flex flex-col items-start">
+            <AvatarGroup
+              avatars={avatars}
+              total={maxCount}
+              max={maxCount}
+              size={24}
+            />
+            <span className="text-label whitespace-nowrap text-text-1">
+              {avatars.length}/{maxCount}명 참여신청 중
+            </span>
+          </div>
+          <TimeBadge
+            timeLabel={timeLabel}
+            isUrgent={isUrgent}
+            isExpired={isExpired}
           />
-          <span className="text-label text-text-1">
-            {avatars.length}/{maxCount}명 참여신청 중
-          </span>
         </div>
-        <TimeBadge
-          timeLabel={timeLabel}
-          isUrgent={isUrgent}
-          isExpired={isExpired}
-        />
-      </div>
+      ) : (
+        <div className="flex flex-col items-start gap-2">
+          <div className="flex items-center gap-2">
+            <AvatarGroup
+              avatars={avatars}
+              total={maxCount}
+              max={maxCount}
+              size={24}
+            />
+            <span className="text-label text-text-1">
+              {avatars.length}/{maxCount}명 참여신청 중
+            </span>
+          </div>
+          <TimeBadge
+            timeLabel={timeLabel}
+            isUrgent={isUrgent}
+            isExpired={isExpired}
+          />
+        </div>
+      )}
       {props.status === "recruiting" ? (
         <Button
           onClick={props.onApply}
@@ -152,14 +181,25 @@ function TimedCtaBar(
           참여 신청
         </Button>
       ) : props.status === "hostRecruiting" ? (
-        <Button
-          variant="outline"
-          onClick={props.onCancelRecruit}
-          size="medium"
-          className="w-32.5 whitespace-nowrap"
-        >
-          모집 취소
-        </Button>
+        <div className="flex items-center gap-2">
+          <Button
+            variant="outline"
+            onClick={props.onCancelRecruit}
+            size="medium"
+            className="whitespace-nowrap"
+          >
+            모집 취소
+          </Button>
+          <Button
+            variant="outline"
+            onClick={props.onCloseRecruit}
+            disabled={!props.canCloseRecruit}
+            size="medium"
+            className="whitespace-nowrap"
+          >
+            모집 마감
+          </Button>
+        </div>
       ) : (
         <Button
           variant="outline"
