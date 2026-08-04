@@ -1,7 +1,7 @@
 import { authInstance } from "@/api/instance";
 import type { ApiResponse } from "@/types/api";
 import type {
-  ChatMessageHistoryItem,
+  ChatMessage,
   ChatMessageHistoryParams,
   ChatRoomInfo,
 } from "@/types/order/chat";
@@ -11,9 +11,10 @@ export const getChatMessages = async (
   partyId: number,
   params?: ChatMessageHistoryParams
 ) => {
-  const { data } = await authInstance.get<
-    ApiResponse<ChatMessageHistoryItem[]>
-  >(`/parties/${partyId}/chat/messages`, { params });
+  const { data } = await authInstance.get<ApiResponse<ChatMessage[]>>(
+    `/parties/${partyId}/chat/messages`,
+    { params }
+  );
 
   return data.data;
 };

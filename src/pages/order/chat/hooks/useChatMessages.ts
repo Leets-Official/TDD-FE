@@ -14,7 +14,6 @@ import { useModal } from "@/hooks/useModal";
 import { useToast } from "@/hooks/useToast";
 import { PATH } from "@/routes/paths";
 import type { ChatMessage } from "@/types/order/chat";
-import { toChatMessage } from "@/utils/order/toChatMessage";
 
 import { useChatSocket } from "./useChatSocket";
 
@@ -43,7 +42,7 @@ export function useChatMessages() {
   // 메시지 내역 조회 결과가 도착하면 최초 1회만 초기 목록으로 반영
   useEffect(() => {
     if (messageHistory && !hasSeededHistory.current) {
-      setChatMessages(messageHistory.map(toChatMessage));
+      setChatMessages(messageHistory);
       hasSeededHistory.current = true;
     }
   }, [messageHistory]);
@@ -74,8 +73,7 @@ export function useChatMessages() {
     },
   });
 
-  // 방장 헤더에서 주문 완료 버튼 클릭 시 모달이 나타나고, 확인 시 주문 완료 메세지 push
-  // ORDER_COMPLETED는 백엔드가 아직 자동 발행하지 않는 FE 임시 타입이라 로컬에만 보임
+  // 방장 헤더에서 주문 완료 버튼 클릭 시 모달이 나타나고, 확인 시 API 호출
   const handleOrderCompleteClick = () => {
     if (!Number.isFinite(partyId)) return;
 
@@ -88,18 +86,8 @@ export function useChatMessages() {
         primaryLabel: "네",
       },
       onConfirm: () => {
+        // 서버가 성공 시 ORDER_COMPLETED 메시지를 자동 발행 → 소켓 구독으로 반영됨
         orderParty(partyId, {
-          onSuccess: () => {
-            if (hostUserId === undefined) return;
-
-            pushMessage({
-              messageType: "ORDER_COMPLETED",
-              senderId: hostUserId,
-              senderNickname: "방장",
-              content: null,
-              imageUrl: null,
-            });
-          },
           onError: (error) => {
             openToast({
               message: getApiErrorMessage(
@@ -141,18 +129,8 @@ export function useChatMessages() {
         primaryLabel: "네",
       },
       onConfirm: () => {
+        // 서버가 성공 시 DELIVERY_ARRIVED 메시지를 자동 발행 → 소켓 구독으로 반영됨
         completeParty(partyId, {
-          onSuccess: () => {
-            if (hostUserId === undefined) return;
-
-            pushMessage({
-              messageType: "DELIVERY_ARRIVED",
-              senderId: hostUserId,
-              senderNickname: "방장",
-              content: null,
-              imageUrl: null,
-            });
-          },
           onError: (error) => {
             openToast({
               message: getApiErrorMessage(

@@ -92,29 +92,30 @@ export default function ChatPage() {
               previousItem.senderId === item.senderId;
             const showNickname = !isMine && !isConsecutiveSameSender;
 
-            // 주문 완료 메세지의 경우
+            // 주문 완료 메세지의 경우 - 서버가 발행하는 시스템 메시지라 senderId가 null이므로,
+            // 방장만 트리거 가능한 메시지 특성상 senderId 매칭 대신 현재 보는 사람이 방장인지로 위치 결정
             if (item.messageType === "ORDER_COMPLETED") {
               return (
                 <ActionDeliveryBubble
                   key={item.messageId}
                   title="주문완료!"
                   description="방장님이 주문을 완료했음을 알립니다"
-                  className={isMine ? "self-end" : "ml-14"}
+                  className={isHost ? "self-end" : "ml-14"}
                 />
               );
             }
-            // 배달 도착 메세지의 경우
+            // 배달 도착 메세지의 경우 - 위와 동일한 이유
             if (item.messageType === "DELIVERY_ARRIVED") {
               return (
                 <ActionDeliveryBubble
                   key={item.messageId}
                   title="배달이 도착했어요!"
                   description="방장님이 배달이 도착했음을 알립니다"
-                  className={isMine ? "self-end" : "ml-14"}
+                  className={isHost ? "self-end" : "ml-14"}
                 />
               );
             }
-            // 정산 요청 메세지의 경우
+            // 정산 요청 메세지의 경우 - 위와 동일한 이유
             if (item.messageType === "SETTLEMENT_REQUEST") {
               return (
                 <ActionAccountBubble
@@ -133,7 +134,7 @@ export default function ChatPage() {
                       ? undefined
                       : () => handleCopyAccountClick(ACCOUNT_TEXT)
                   }
-                  className={isMine ? "self-end" : "ml-14"}
+                  className={isHost ? "self-end" : "ml-14"}
                 />
               );
             }
