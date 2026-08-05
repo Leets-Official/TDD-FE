@@ -102,7 +102,7 @@ export function ChatMenuBar({
           <Button
             variant="outline"
             size="small"
-            disabled={isTransferCompleted}
+            disabled={!isSettlementRequested || isTransferCompleted}
             onClick={onTransferComplete}
           >
             송금/배달수령 완료
