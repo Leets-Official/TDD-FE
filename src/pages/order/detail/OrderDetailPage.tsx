@@ -24,6 +24,11 @@ import { PATH } from "@/routes/paths";
 import { toOrderDetail } from "@/utils/order/toOrderDetail";
 import { toProfilesItems } from "@/utils/order/toProfilesItems";
 
+import {
+  OrderCtaBarSkeleton,
+  OrderDetailSkeleton,
+  OrderParticipantsSkeleton,
+} from "./components/OrderDetailSkeleton";
 import { OrderHostProfile } from "./components/OrderHostProfile";
 
 type ParticipationStatus = "none" | "applied" | "matched";
@@ -98,8 +103,12 @@ export default function OrderDetailPage() {
 
   if (isPending) {
     return (
-      <PageShell header={<BackHeader title="" />}>
-        <p className="px-5 py-6 text-body-1 text-text-4">불러오는 중...</p>
+      <PageShell
+        header={<BackHeader title="" />}
+        bottom={<OrderCtaBarSkeleton />}
+        bottomClassName="p-0"
+      >
+        <OrderDetailSkeleton />
       </PageShell>
     );
   }
@@ -328,7 +337,11 @@ export default function OrderDetailPage() {
 
         <div className="mt-10 flex flex-col gap-xl">
           <div className="-mx-5 h-px bg-divider-1" />
-          <Profiles participants={participants} maxCount={order.maxCount} />
+          {isParticipantsPending ? (
+            <OrderParticipantsSkeleton count={order.maxCount} />
+          ) : (
+            <Profiles participants={participants} maxCount={order.maxCount} />
+          )}
         </div>
       </div>
     </PageShell>

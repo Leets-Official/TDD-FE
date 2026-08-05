@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 
-import { Card } from "@/components/card/Card";
 import { Dropdown } from "@/components/dropdown/Dropdown";
 
 import {
@@ -11,6 +10,7 @@ import {
 import { filterOrders } from "@/utils/home/filterOrders";
 
 import { CreateOrderFab } from "./CreateOrderFab";
+import { OrderCardList } from "./OrderCardList";
 import { OrderEmptyState } from "./OrderEmptyState";
 import { OrderListSkeleton } from "./OrderListSkeleton";
 import type { OrderItem } from "@/types/home/home";
@@ -84,19 +84,12 @@ export function OrderListSection({
         <OrderEmptyState onCreateClick={onCreateClick} />
       ) : (
         <>
-          <ul className="flex flex-col gap-xxl px-xl pb-24">
-            {filteredOrders.map((order) => (
-              <li key={order.id}>
-                <button
-                  type="button"
-                  className="w-full text-left"
-                  onClick={() => onCardClick(order)}
-                >
-                  <Card {...order} hideStatusBadge />
-                </button>
-              </li>
-            ))}
-          </ul>
+          <OrderCardList
+            orders={filteredOrders}
+            onCardClick={onCardClick}
+            hideStatusBadge
+            className="px-xl pb-24"
+          />
           <CreateOrderFab onClick={onCreateClick} />
         </>
       )}

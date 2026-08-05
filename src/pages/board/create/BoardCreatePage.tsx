@@ -28,6 +28,7 @@ export default function BoardCreatePage() {
       { title, content },
       {
         onSuccess: (postId) => {
+          openToast({ message: "게시글이 성공적으로 작성되었어요!" });
           navigate(PATH.BOARD_DETAIL.replace(":postId", String(postId)), {
             replace: true,
           });
