@@ -1,6 +1,5 @@
 import { useState } from "react";
 
-import { Card } from "@/components/card/Card";
 import { Dropdown } from "@/components/dropdown/Dropdown";
 
 import {
@@ -12,6 +11,7 @@ import {
 import { filterOrders } from "@/utils/home/filterOrders";
 
 import { CreateOrderFab } from "./CreateOrderFab";
+import { OrderCardList } from "./OrderCardList";
 import { OrderEmptyState } from "./OrderEmptyState";
 import { OrderListSkeleton } from "./OrderListSkeleton";
 import type { OrderItem } from "@/types/home/home";
@@ -87,38 +87,20 @@ export function MyOrderSection({
             {orderState !== "past" && filteredInProgressOrders.length > 0 && (
               <section className="flex flex-col gap-l">
                 <h2 className="text-title-1 text-text-1">진행중인 배달팟</h2>
-                <ul className="flex flex-col gap-xxl">
-                  {filteredInProgressOrders.map((order) => (
-                    <li key={order.id}>
-                      <button
-                        type="button"
-                        className="w-full text-left"
-                        onClick={() => onCardClick(order)}
-                      >
-                        <Card {...order} />
-                      </button>
-                    </li>
-                  ))}
-                </ul>
+                <OrderCardList
+                  orders={filteredInProgressOrders}
+                  onCardClick={onCardClick}
+                />
               </section>
             )}
 
             {orderState !== "ongoing" && filteredPastOrders.length > 0 && (
               <section className="flex flex-col gap-l">
                 <h2 className="text-title-1 text-text-1">지난 배달팟</h2>
-                <ul className="flex flex-col gap-xxl">
-                  {filteredPastOrders.map((order) => (
-                    <li key={order.id}>
-                      <button
-                        type="button"
-                        className="w-full text-left"
-                        onClick={() => onCardClick(order)}
-                      >
-                        <Card {...order} />
-                      </button>
-                    </li>
-                  ))}
-                </ul>
+                <OrderCardList
+                  orders={filteredPastOrders}
+                  onCardClick={onCardClick}
+                />
               </section>
             )}
           </div>

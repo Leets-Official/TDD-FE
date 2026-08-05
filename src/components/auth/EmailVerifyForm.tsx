@@ -63,14 +63,21 @@ export function EmailVerifyForm({
   const handleRequestCode = async () => {
     if (isRequesting) return;
 
+    // iOS는 탭 이벤트 처리 중 호출된 focus만 키보드를 띄우므로 await 전에 미리 옮겨둡니다
+    setFocus("code");
+
     const isValid = await trigger("email");
-    if (!isValid) return;
+    if (!isValid) {
+      setFocus("email");
+      return;
+    }
 
     const email = normalizeEmail(getValues("email"));
     setIsRequesting(true);
     try {
       await onRequestCode(email);
     } catch {
+      setFocus("email");
       return;
     } finally {
       setIsRequesting(false);
@@ -79,7 +86,6 @@ export function EmailVerifyForm({
     resetField("code");
     setDeadline(Date.now() + CODE_EXPIRY_MS);
     setSentEmail(email);
-    setFocus("code");
   };
 
   return (

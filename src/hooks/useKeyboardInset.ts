@@ -6,11 +6,9 @@ export function useKeyboardInset() {
     const viewport = window.visualViewport;
     if (!viewport) return;
 
+    // offsetTop(페이지 팬 오프셋)은 제외합니다. 포함하면 사용자가 팬할 때 inset이 같이 변해 레이아웃이 흔들립니다
     const update = () => {
-      const inset = Math.max(
-        0,
-        window.innerHeight - viewport.height - viewport.offsetTop
-      );
+      const inset = Math.max(0, window.innerHeight - viewport.height);
       document.documentElement.style.setProperty(
         "--keyboard-inset",
         `${inset}px`
