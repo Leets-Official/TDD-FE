@@ -25,6 +25,7 @@ export default function ChatPage() {
     myUserId,
     isHost,
     partyTitle,
+    getAvatarSrc,
     isOrderCompleted,
     isDeliveryArrived,
     isSettlementRequested,
@@ -198,6 +199,9 @@ export default function ChatPage() {
                 key={item.messageId}
                 isMine={isMine}
                 nickname={showNickname ? item.senderNickname : undefined}
+                avatarSrc={
+                  showNickname ? getAvatarSrc(item.senderId) : undefined
+                }
                 message={item.content ?? ""}
                 time={formatChatTime(item.createdAt)}
               />

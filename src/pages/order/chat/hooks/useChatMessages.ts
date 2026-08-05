@@ -37,6 +37,15 @@ export function useChatMessages() {
   const myUserId = myPage?.userId;
   const hostUserId = partyDetail?.creatorId;
   const isHost = myUserId !== undefined && myUserId === hostUserId;
+  // 채팅 메시지 응답에는 프로필 이미지가 없어 참가자 목록에서 senderId로 매칭
+  const avatarByUserId = new Map(
+    (partyParticipants?.participants ?? []).map((participant) => [
+      participant.userId,
+      participant.profileImage,
+    ])
+  );
+  const getAvatarSrc = (userId: number) =>
+    avatarByUserId.get(userId) ?? undefined;
   const isOrderCompleted =
     partyDetail?.status === "ORDERED" ||
     partyDetail?.status === "DELIVERED" ||
@@ -263,6 +272,7 @@ export function useChatMessages() {
     myUserId,
     isHost,
     partyTitle: partyDetail?.title,
+    getAvatarSrc,
     isOrderCompleted,
     isDeliveryArrived,
     isSettlementRequested,
