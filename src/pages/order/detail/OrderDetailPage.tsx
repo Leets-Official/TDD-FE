@@ -44,6 +44,7 @@ export default function OrderDetailPage() {
   const {
     status,
     isCancelled,
+    isActionPending,
     handleApplyClick,
     handleCancelRecruitClick,
     handleCloseRecruitClick,
@@ -137,6 +138,7 @@ export default function OrderDetailPage() {
           onCancelRecruit: handleCancelRecruitClick,
           onCloseRecruit: handleCloseRecruitClick,
           canCloseRecruit: participants.length >= order.minCount,
+          isPending: isActionPending,
         };
       }
 
@@ -149,6 +151,7 @@ export default function OrderDetailPage() {
           maxCount: order.maxCount,
           deadline: order.deadline,
           onCancel: handleCancelClick,
+          isPending: isActionPending,
         };
       }
 
@@ -162,6 +165,7 @@ export default function OrderDetailPage() {
         maxCount: order.maxCount,
         deadline: order.deadline,
         onApply: handleApplyClick,
+        isPending: isActionPending,
       };
     };
 

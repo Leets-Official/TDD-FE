@@ -16,6 +16,8 @@ interface CtaBarSharedProps {
 interface TimedCtaBarProps extends CtaBarSharedProps {
   deadline: number;
   urgentThresholdMs?: number;
+  // 요청 처리 중에는 이 배달팟의 CTA를 모두 막아 중복 전송을 방지합니다
+  isPending?: boolean;
 }
 
 interface RecruitingCtaBarProps extends TimedCtaBarProps {
@@ -119,7 +121,7 @@ export function CtaBar(props: CtaBarProps) {
 function TimedCtaBar(
   props: RecruitingCtaBarProps | AppliedCtaBarProps | HostRecruitingCtaBarProps
 ) {
-  const { avatars, maxCount, deadline, urgentThresholdMs } = props;
+  const { avatars, maxCount, deadline, urgentThresholdMs, isPending } = props;
   const { timeLabel, isUrgent, isExpired } = useCountdown(deadline, {
     urgentThresholdMs,
   });
@@ -174,7 +176,7 @@ function TimedCtaBar(
       {props.status === "recruiting" ? (
         <Button
           onClick={props.onApply}
-          disabled={isExpired}
+          disabled={isExpired || isPending}
           size="medium"
           className="w-32.5"
         >
@@ -185,6 +187,7 @@ function TimedCtaBar(
           <Button
             variant="outline"
             onClick={props.onCancelRecruit}
+            disabled={isPending}
             size="medium"
             className="whitespace-nowrap"
           >
@@ -193,7 +196,7 @@ function TimedCtaBar(
           <Button
             variant="outline"
             onClick={props.onCloseRecruit}
-            disabled={!props.canCloseRecruit}
+            disabled={!props.canCloseRecruit || isPending}
             size="medium"
             className="whitespace-nowrap"
           >
@@ -204,6 +207,7 @@ function TimedCtaBar(
         <Button
           variant="outline"
           onClick={props.onCancel}
+          disabled={isPending}
           size="medium"
           className="w-32.5 whitespace-nowrap"
         >

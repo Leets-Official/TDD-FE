@@ -31,10 +31,13 @@ export function useOrderActions({ partyId, orderId }: UseOrderActionsParams) {
   const { isNoshowRestricted } = useMe();
   const { ensureDormVerified } = useDormVerificationGuard();
 
-  const { mutate: joinParty } = useJoinParty();
-  const { mutate: leaveParty } = useLeaveParty();
-  const { mutate: cancelParty } = useCancelParty();
-  const { mutate: closeParty } = useCloseParty();
+  const { mutate: joinParty, isPending: isJoining } = useJoinParty();
+  const { mutate: leaveParty, isPending: isLeaving } = useLeaveParty();
+  const { mutate: cancelParty, isPending: isCancelling } = useCancelParty();
+  const { mutate: closeParty, isPending: isClosing } = useCloseParty();
+
+  // 하나라도 처리 중이면 이 배달팟의 CTA를 전부 막는다 — 특히 참여 신청은 모달 없이 바로 호출돼 연타로 중복 전송된다
+  const isActionPending = isJoining || isLeaving || isCancelling || isClosing;
 
   // 참여자 목록이 오기 전까지만 쓰는 낙관적 값 — 이후로는 서버 응답이 우선
   const [status, setStatus] = useState<ParticipationStatus>("none");
@@ -136,6 +139,7 @@ export function useOrderActions({ partyId, orderId }: UseOrderActionsParams) {
   return {
     status,
     isCancelled,
+    isActionPending,
     handleApplyClick,
     handleCancelRecruitClick,
     handleCloseRecruitClick,
