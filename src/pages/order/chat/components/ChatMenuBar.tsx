@@ -80,7 +80,7 @@ export function ChatMenuBar({
           <Button
             variant="outline"
             size="small"
-            disabled={isTransferCompleted}
+            disabled={!isSettlementRequested || isTransferCompleted}
             onClick={onCopyAccount}
           >
             송금(계좌복사)

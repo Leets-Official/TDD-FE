@@ -4,7 +4,6 @@ import { useNavigate } from "react-router";
 import { ChatInput } from "@/components/chatInput/ChatInput";
 import { PageHeader } from "@/components/header/PageHeader";
 import { IconButton } from "@/components/iconButton/IconButton";
-import { ACCOUNT_TEXT } from "@/constants/order/chat";
 import { PageShell } from "@/layouts/PageShell";
 import { formatChatTime } from "@/utils/order/formatChatTime";
 import { parseSettlementRequestContent } from "@/utils/order/parseSettlementRequestContent";
@@ -44,6 +43,14 @@ export default function ChatPage() {
     setMessageValue("");
   };
 
+  // 가장 최근 정산 요청 메시지를 찾아 실제 계좌 정보를 가져온다
+  const settlementRequestMessage = [...chatMessages]
+    .reverse()
+    .find((item) => item.messageType === "SETTLEMENT_REQUEST");
+  const { accountText: settlementAccountText } = parseSettlementRequestContent(
+    settlementRequestMessage?.content ?? null
+  );
+
   return (
     <>
       <PageShell
@@ -74,7 +81,9 @@ export default function ChatPage() {
                 isSettlementRequested={isSettlementRequested}
                 onSettlementRequest={handleSettlementRequestClick}
                 isTransferCompleted={isTransferCompleted}
-                onCopyAccount={() => handleCopyAccountClick(ACCOUNT_TEXT)}
+                onCopyAccount={() =>
+                  handleCopyAccountClick(settlementAccountText)
+                }
                 onTransferComplete={handleTransferCompleteClick}
               />
             )}
