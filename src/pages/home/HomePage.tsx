@@ -35,8 +35,13 @@ const TABS = [
   { label: "내 배달팟", value: "mine" },
 ];
 
-// 진행중(ONGOING) 정책: RECRUITING·CLOSED·ORDERED / 그 외는 지난 배달팟(COMPLETED)
-const ONGOING_STATUSES = new Set(["RECRUITING", "CLOSED", "ORDERED"]);
+// 진행중(ONGOING) 정책: RECRUITING·CLOSED·ORDERED·DELIVERED(정산 전) / 그 외(SETTLED 등)는 지난 배달팟
+const ONGOING_STATUSES = new Set([
+  "RECRUITING",
+  "CLOSED",
+  "ORDERED",
+  "DELIVERED",
+]);
 
 export default function HomePage() {
   const [tab, setTab] = useState(TABS[0].value);
