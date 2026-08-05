@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useSearchParams } from "react-router";
 
 import { HomeHeader } from "@/components/header/HomeHeader";
 import { TabBar } from "@/components/tabBar/TabBar";
@@ -15,31 +16,46 @@ const TABS = [
   { label: "배달팟 목록", value: "all" },
   { label: "내 배달팟", value: "mine" },
 ];
+const DEFAULT_TAB = TABS[0].value;
+const TAB_PARAM = "tab";
 
 interface TabContentProps {
   onCreateClick: () => void;
   onCardClick: (order: OrderItem) => void;
 }
 
-interface AllOrdersTabProps extends TabContentProps {
-  dorm: string;
-  onDormChange: (value: string) => void;
-  menu: string;
-  onMenuChange: (value: string) => void;
-}
-
 export default function HomePage() {
-  const [tab, setTab] = useState(TABS[0].value);
-  const [dorm, setDorm] = useState("");
-  const [menu, setMenu] = useState("");
+  // 상세로 갔다가 뒤로 왔을 때 탭이 유지되도록 URL에 둔다
+  const [searchParams, setSearchParams] = useSearchParams();
   const { handleCreateClick, handleCardClick } = useHomeActions();
+
+  const tabParam = searchParams.get(TAB_PARAM);
+  // 주소창에 아무 값이나 넣을 수 있으므로 모르는 값은 기본 탭으로 떨어뜨린다
+  const tab = TABS.some(({ value }) => value === tabParam)
+    ? (tabParam as string)
+    : DEFAULT_TAB;
+
+  const handleTabChange = (value: string) => {
+    setSearchParams(
+      (prev) => {
+        const next = new URLSearchParams(prev);
+
+        if (value === DEFAULT_TAB) next.delete(TAB_PARAM);
+        else next.set(TAB_PARAM, value);
+
+        return next;
+      },
+      // 탭 전환이 히스토리에 쌓이면 뒤로가기가 페이지를 못 벗어난다
+      { replace: true }
+    );
+  };
 
   return (
     <PageShell
       header={
         <>
           <HomeHeader />
-          <TabBar tabs={TABS} value={tab} onChange={setTab} />
+          <TabBar tabs={TABS} value={tab} onChange={handleTabChange} />
         </>
       }
     >
@@ -50,10 +66,6 @@ export default function HomePage() {
         />
       ) : (
         <AllOrdersTab
-          dorm={dorm}
-          onDormChange={setDorm}
-          menu={menu}
-          onMenuChange={setMenu}
           onCreateClick={handleCreateClick}
           onCardClick={handleCardClick}
         />
@@ -62,23 +74,19 @@ export default function HomePage() {
   );
 }
 
-function AllOrdersTab({
-  dorm,
-  onDormChange,
-  menu,
-  onMenuChange,
-  onCreateClick,
-  onCardClick,
-}: AllOrdersTabProps) {
+function AllOrdersTab({ onCreateClick, onCardClick }: TabContentProps) {
+  // dorm/menu는 서버 조회 파라미터라 목록 훅과 같은 층에 둔다
+  const [dorm, setDorm] = useState("");
+  const [menu, setMenu] = useState("");
   const { orders, isPending } = useAllOrders({ dorm, menu });
 
   return (
     <OrderListSection
       orders={orders}
       dorm={dorm}
-      onDormChange={onDormChange}
+      onDormChange={setDorm}
       menu={menu}
-      onMenuChange={onMenuChange}
+      onMenuChange={setMenu}
       isPending={isPending}
       onCreateClick={onCreateClick}
       onCardClick={onCardClick}
