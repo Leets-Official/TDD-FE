@@ -1,11 +1,13 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 
 import { getApiErrorMessage } from "@/api/error";
 import { useMyPartyList } from "@/api/order/query";
-import { API_ERROR_MESSAGE } from "@/constants/errorMessage";
+import { ORDER_ERROR_MESSAGE } from "@/constants/errorMessage/order";
+import { useNowAt } from "@/hooks/useNowAt";
 import { useToast } from "@/hooks/useToast";
 import type { PartyListItem } from "@/types/order/order";
 import {
+  getPartyAutoCancelAt,
   isPartyAutoCancelled,
   toMyOrderItem,
 } from "@/utils/order/toMyOrderItem";
@@ -22,17 +24,12 @@ export function useMyOrders() {
   const { openToast } = useToast();
   const { data: myPartyList, isPending, isError, error } = useMyPartyList();
 
-  // 마감 시각 경과 여부를 실시간으로 반영하기 위한 tick
-  const [now, setNow] = useState(() => Date.now());
-  useEffect(() => {
-    const intervalId = setInterval(() => setNow(Date.now()), 1000);
-    return () => clearInterval(intervalId);
-  }, []);
+  const now = useNowAt((myPartyList ?? []).map(getPartyAutoCancelAt));
 
   useEffect(() => {
     if (!isError) return;
     openToast({
-      message: getApiErrorMessage(error, API_ERROR_MESSAGE.MY_ORDER_LIST),
+      message: getApiErrorMessage(error, ORDER_ERROR_MESSAGE.MY_LIST),
     });
   }, [isError, error, openToast]);
 
