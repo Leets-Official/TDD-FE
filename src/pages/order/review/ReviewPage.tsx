@@ -9,6 +9,7 @@ import {
 } from "@/api/order/review/query";
 import { Button } from "@/components/button/Button";
 import { ORDER_ERROR_MESSAGE } from "@/constants/errorMessage/order";
+import { ORDER_TOAST_MESSAGE } from "@/constants/toastMessage";
 import { useToast } from "@/hooks/useToast";
 import { BackHeader } from "@/layouts/BackHeader";
 import { PageShell } from "@/layouts/PageShell";
@@ -98,7 +99,7 @@ export default function ReviewPage() {
 
       await Promise.all(requests);
 
-      openToast({ message: "매너 평가가 등록되었어요" });
+      openToast({ message: ORDER_TOAST_MESSAGE.REVIEW_SUCCESS });
       navigate(PATH.HOME, { replace: true });
     } catch (submitError) {
       openToast({

@@ -11,6 +11,7 @@ import { useEmailVerification } from "@/hooks/useEmailVerification";
 import type { PasswordFormValues } from "@/schemas/auth";
 import { useSignupSubmit } from "@/pages/signup/hooks/useSignupSubmit";
 import { VERIFIED_EMAIL_KEY } from "@/constants/storage";
+import { EMAIL_VERIFY_TOAST_MESSAGE } from "@/constants/toastMessage";
 import { useGoBack } from "@/hooks/useGoBack";
 import { PATH } from "@/routes/paths";
 
@@ -41,7 +42,7 @@ export default function SignupPage() {
     purpose: "SIGNUP",
     onVerified: (email) => {
       markVerified(email);
-      openToast({ message: "학교 이메일 인증이 완료되었습니다!" });
+      openToast({ message: EMAIL_VERIFY_TOAST_MESSAGE.VERIFY_SUCCESS });
       goToStep("password");
     },
   });

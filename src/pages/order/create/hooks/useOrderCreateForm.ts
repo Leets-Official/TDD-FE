@@ -7,6 +7,7 @@ import { useCreateParty } from "@/api/order/query";
 import type { FoodCategory } from "@/components/card/categoryIcons";
 import { ORDER_ERROR_MESSAGE } from "@/constants/errorMessage/order";
 import { FOOD_CATEGORY_ID_MAP } from "@/constants/order/foodCategory";
+import { ORDER_TOAST_MESSAGE } from "@/constants/toastMessage";
 import { useToast } from "@/hooks/useToast";
 import { PATH } from "@/routes/paths";
 import {
@@ -70,7 +71,7 @@ export function useOrderCreateForm() {
           navigate(PATH.ORDER_DETAIL.replace(":orderId", String(result.id)), {
             replace: true,
           });
-          openToast({ message: "배달팟이 성공적으로 만들어졌어요!" });
+          openToast({ message: ORDER_TOAST_MESSAGE.CREATE_SUCCESS });
         },
         onError: (error) => {
           openToast({

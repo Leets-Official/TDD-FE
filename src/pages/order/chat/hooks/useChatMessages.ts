@@ -13,6 +13,7 @@ import {
 import { useRequestSettlement } from "@/api/order/settlement/query";
 import { useMyPage } from "@/api/user/query";
 import { ORDER_ERROR_MESSAGE } from "@/constants/errorMessage/order";
+import { ORDER_TOAST_MESSAGE } from "@/constants/toastMessage";
 import { useModal } from "@/hooks/useModal";
 import { useToast } from "@/hooks/useToast";
 import { PATH } from "@/routes/paths";
@@ -226,17 +227,17 @@ export function useChatMessages() {
   // 계좌번호 복사 버튼 클릭 시 토스트 - 복사 성공 여부에 따라 문구 분기
   const handleCopyAccountClick = (accountText: string) => {
     if (!accountText) {
-      openToast({ message: "계좌 정보를 불러오지 못했어요" });
+      openToast({ message: ORDER_TOAST_MESSAGE.ACCOUNT_LOAD_FAILED });
       return;
     }
 
     navigator.clipboard
       .writeText(accountText)
       .then(() => {
-        openToast({ message: "계좌번호가 복사되었습니다" });
+        openToast({ message: ORDER_TOAST_MESSAGE.ACCOUNT_COPY_SUCCESS });
       })
       .catch(() => {
-        openToast({ message: "계좌번호 복사에 실패했습니다" });
+        openToast({ message: ORDER_TOAST_MESSAGE.ACCOUNT_COPY_FAILED });
       });
   };
 
@@ -257,7 +258,7 @@ export function useChatMessages() {
     });
 
     if (!sent) {
-      openToast({ message: "연결이 원활하지 않아 메시지를 보내지 못했어요" });
+      openToast({ message: ORDER_TOAST_MESSAGE.MESSAGE_SEND_FAILED });
     }
   };
 

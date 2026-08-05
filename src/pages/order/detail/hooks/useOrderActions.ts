@@ -10,6 +10,7 @@ import {
 } from "@/api/order/query";
 import { ORDER_ERROR_MESSAGE } from "@/constants/errorMessage/order";
 import { NOSHOW_RESTRICTION_MODAL_PROPS } from "@/constants/guardModal";
+import { ORDER_TOAST_MESSAGE } from "@/constants/toastMessage";
 import { useDormVerificationGuard } from "@/hooks/useDormVerificationGuard";
 import { useMe } from "@/hooks/useMe";
 import { useModal } from "@/hooks/useModal";
@@ -54,7 +55,7 @@ export function useOrderActions({ partyId, orderId }: UseOrderActionsParams) {
             ? "matched"
             : "applied"
         );
-        openToast({ message: "배달팟 참여 신청이 완료되었습니다!" });
+        openToast({ message: ORDER_TOAST_MESSAGE.JOIN_SUCCESS });
       },
       onError: (error) => {
         openToast({
