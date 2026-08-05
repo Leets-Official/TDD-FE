@@ -61,13 +61,12 @@ export function ChatMenuBar({
           <Button
             variant="secondary"
             size="small"
-            disabled={!isOrderCompleted}
+            disabled={!isOrderCompleted || isDeliveryArrived}
             onClick={onDeliveryArrived}
             aria-pressed={isDeliveryArrived}
             className={
               isDeliveryArrived
-                ? // 여기 비활성화 스타일에서 선택이 되어야 함으로 따로 정의 -> 클릭 시 배달 도착 취소가 되어야함.
-                  "border-[1.5px] border-divider-1 bg-white text-disabled hover:bg-white active:bg-white"
+                ? "border-[1.5px] border-divider-1 bg-white text-disabled hover:bg-white active:bg-white"
                 : undefined
             }
           >
