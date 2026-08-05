@@ -40,9 +40,12 @@ export function useChatMessages() {
   const isOrderCompleted =
     partyDetail?.status === "ORDERED" ||
     partyDetail?.status === "DELIVERED" ||
-    partyDetail?.status === "COMPLETED";
+    partyDetail?.status === "COMPLETED" ||
+    partyDetail?.status === "SETTLED";
   const isDeliveryArrived =
-    partyDetail?.status === "DELIVERED" || partyDetail?.status === "COMPLETED";
+    partyDetail?.status === "DELIVERED" ||
+    partyDetail?.status === "COMPLETED" ||
+    partyDetail?.status === "SETTLED";
   const [isTransferCompleted, setIsTransferCompleted] = useState(false);
   const [chatMessages, setChatMessages] = useState<ChatMessage[]>([]);
   const hasSeededHistory = useRef(false);
