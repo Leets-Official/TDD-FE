@@ -24,7 +24,8 @@ export function useChatSocket({ partyId, onMessage }: UseChatSocketParams) {
   }, [onMessage]);
 
   useEffect(() => {
-    if (!Number.isFinite(partyId)) return;
+    // accessToken이 아직 없으면(로그인 스토어 rehydrate 전 등) 인증 실패가 뻔한 연결을 시도하지 않는다
+    if (!Number.isFinite(partyId) || !accessToken) return;
 
     const client = createChatStompClient({
       partyId,
