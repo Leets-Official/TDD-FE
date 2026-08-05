@@ -42,14 +42,8 @@ export function useChatSocket({ partyId, onMessage }: UseChatSocketParams) {
     client.onStompError = (frame) => {
       console.error("[chat] STOMP 에러 프레임:", frame.headers, frame.body);
     };
-    client.onWebSocketClose = (event) => {
-      console.warn("[chat] WebSocket 종료:", event.code, event.reason);
-    };
     client.onWebSocketError = (event) => {
       console.error("[chat] WebSocket 에러:", event);
-    };
-    client.onDisconnect = (frame) => {
-      console.warn("[chat] STOMP 연결 해제:", frame.headers);
     };
 
     clientRef.current = client;
