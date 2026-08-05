@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useState } from "react";
 import { generatePath, useNavigate, useParams } from "react-router";
 
 import { useChatMessageHistory } from "@/api/order/chat/query";
@@ -56,8 +56,23 @@ export function useChatMessages() {
     partyDetail?.status === "COMPLETED" ||
     partyDetail?.status === "SETTLED";
   const [isTransferCompleted, setIsTransferCompleted] = useState(false);
-  const [chatMessages, setChatMessages] = useState<ChatMessage[]>([]);
-  const hasSeededHistory = useRef(false);
+  // 소켓으로 실시간 수신한 메시지만 누적 — 히스토리(messageHistory)와는 렌더 시 병합
+  const [realtimeMessages, setRealtimeMessages] = useState<ChatMessage[]>([]);
+  // 다른 채팅방으로 전환되면(orderId 변경) 이전 방에서 쌓인 실시간 메시지를 비운다.
+  const [trackedOrderId, setTrackedOrderId] = useState(orderId);
+  if (orderId !== trackedOrderId) {
+    setTrackedOrderId(orderId);
+    setRealtimeMessages([]);
+  }
+  // 히스토리 조회 결과와 실시간 수신 메시지를 병합 — 소켓이 히스토리보다 먼저 받은 메시지가 덮어쓰지 않도록 병합
+  const chatMessages = [
+    ...new Map(
+      [...(messageHistory ?? []), ...realtimeMessages].map((item) => [
+        item.messageId,
+        item,
+      ])
+    ).values(),
+  ].sort((a, b) => a.messageId - b.messageId);
   const isSettlementRequested = chatMessages.some(
     (message) => message.messageType === "SETTLEMENT_REQUEST"
   );
@@ -65,19 +80,11 @@ export function useChatMessages() {
     (message) => message.messageType === "REVIEW_REQUEST"
   );
 
-  // 메시지 내역 조회 결과가 도착하면 최초 1회만 초기 목록으로 반영
-  useEffect(() => {
-    if (messageHistory && !hasSeededHistory.current) {
-      setChatMessages(messageHistory);
-      hasSeededHistory.current = true;
-    }
-  }, [messageHistory]);
-
-  // 소켓으로 들어온 메시지를 반영 (동일 messageId가 이미 있으면 무시)
+  // 소켓으로 들어온 메시지를 실시간 누적 목록에 반영 (동일 messageId가 이미 있으면 무시)
   const { sendMessage } = useChatSocket({
     partyId,
     onMessage: (message) => {
-      setChatMessages((prev) =>
+      setRealtimeMessages((prev) =>
         prev.some((item) => item.messageId === message.messageId)
           ? prev
           : [...prev, message]
