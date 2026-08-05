@@ -2,14 +2,12 @@ import { useState } from "react";
 
 import { getApiErrorMessage } from "@/api/error";
 import { useSubmitDormVerification } from "@/api/user/query";
-import {
-  API_ERROR_MESSAGE,
-  PROFILE_IMAGE_TOAST_MESSAGE,
-} from "@/constants/errorMessage";
+import { USER_ERROR_MESSAGE } from "@/constants/errorMessage/user";
 import {
   isUploadImageContentType,
   type UploadImageContentType,
 } from "@/constants/imageUpload";
+import { PROFILE_IMAGE_TOAST_MESSAGE } from "@/constants/toastMessage";
 import { useGoBack } from "@/hooks/useGoBack";
 import { useToast } from "@/hooks/useToast";
 
@@ -57,7 +55,7 @@ export function useDormVerificationSubmit() {
           variant: "error",
           message: getApiErrorMessage(
             error,
-            API_ERROR_MESSAGE.DORM_VERIFICATION
+            USER_ERROR_MESSAGE.DORM_VERIFICATION
           ),
         });
       },

@@ -6,7 +6,7 @@ import { getApiErrorMessage } from "@/api/error";
 import { Button } from "@/components/button/Button";
 import { TextField } from "@/components/textField/TextField";
 import { Textarea } from "@/components/textarea/Textarea";
-import { API_ERROR_MESSAGE } from "@/constants/errorMessage";
+import { BOARD_ERROR_MESSAGE } from "@/constants/errorMessage/board";
 import { useToast } from "@/hooks/useToast";
 import { BackHeader } from "@/layouts/BackHeader";
 import { PageShell } from "@/layouts/PageShell";
@@ -35,7 +35,7 @@ export default function BoardCreatePage() {
         },
         onError: (error) => {
           openToast({
-            message: getApiErrorMessage(error, API_ERROR_MESSAGE.BOARD_CREATE),
+            message: getApiErrorMessage(error, BOARD_ERROR_MESSAGE.CREATE),
           });
         },
       }

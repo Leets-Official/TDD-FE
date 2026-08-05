@@ -4,7 +4,7 @@ import { useForm, useWatch } from "react-hook-form";
 
 import { getApiErrorMessage, getApiFieldErrors } from "@/api/error";
 import { useChangePassword } from "@/api/user/query";
-import { API_ERROR_MESSAGE } from "@/constants/errorMessage";
+import { USER_ERROR_MESSAGE } from "@/constants/errorMessage/user";
 import { useModal } from "@/hooks/useModal";
 import { useToast } from "@/hooks/useToast";
 import {
@@ -73,7 +73,10 @@ export function usePasswordChangeForm() {
 
         openToast({
           variant: "error",
-          message: getApiErrorMessage(error, API_ERROR_MESSAGE.PASSWORD_CHANGE),
+          message: getApiErrorMessage(
+            error,
+            USER_ERROR_MESSAGE.PASSWORD_CHANGE
+          ),
         });
       },
     });

@@ -4,7 +4,7 @@ import { useBankAccount } from "@/api/user/query";
 import {
   ACCOUNT_UNREGISTERED_MODAL_PROPS,
   NOSHOW_RESTRICTION_MODAL_PROPS,
-} from "@/constants/order/guardModals";
+} from "@/constants/guardModal";
 import { useDormVerificationGuard } from "@/hooks/useDormVerificationGuard";
 import { useMe } from "@/hooks/useMe";
 import { useModal } from "@/hooks/useModal";

@@ -8,7 +8,7 @@ import {
   usePostPartyReview,
 } from "@/api/order/review/query";
 import { Button } from "@/components/button/Button";
-import { API_ERROR_MESSAGE } from "@/constants/errorMessage";
+import { ORDER_ERROR_MESSAGE } from "@/constants/errorMessage/order";
 import { useToast } from "@/hooks/useToast";
 import { BackHeader } from "@/layouts/BackHeader";
 import { PageShell } from "@/layouts/PageShell";
@@ -68,7 +68,7 @@ export default function ReviewPage() {
   useEffect(() => {
     if (!isError) return;
     openToast({
-      message: getApiErrorMessage(error, API_ERROR_MESSAGE.REVIEW_TARGETS),
+      message: getApiErrorMessage(error, ORDER_ERROR_MESSAGE.REVIEW_TARGETS),
     });
   }, [isError, error, openToast]);
 
@@ -104,7 +104,7 @@ export default function ReviewPage() {
       openToast({
         message: getApiErrorMessage(
           submitError,
-          API_ERROR_MESSAGE.REVIEW_CREATE
+          ORDER_ERROR_MESSAGE.REVIEW_CREATE
         ),
       });
     } finally {

@@ -1,7 +1,7 @@
 import { useEffect, useRef } from "react";
 
 import { useSendEmailCode, useVerifyEmailCode } from "@/api/auth/query";
-import { EMAIL_VERIFY_TOAST_MESSAGE } from "@/constants/errorMessage";
+import { EMAIL_VERIFY_TOAST_MESSAGE } from "@/constants/toastMessage";
 import { useToast } from "@/hooks/useToast";
 import type { EmailVerifyFormValues } from "@/schemas/auth";
 import type { EmailCodePurpose } from "@/types/auth/auth";

@@ -12,7 +12,7 @@ import {
 } from "@/api/order/query";
 import { useRequestSettlement } from "@/api/order/settlement/query";
 import { useMyPage } from "@/api/user/query";
-import { API_ERROR_MESSAGE } from "@/constants/errorMessage";
+import { ORDER_ERROR_MESSAGE } from "@/constants/errorMessage/order";
 import { useModal } from "@/hooks/useModal";
 import { useToast } from "@/hooks/useToast";
 import { PATH } from "@/routes/paths";
@@ -109,10 +109,7 @@ export function useChatMessages() {
         orderParty(partyId, {
           onError: (error) => {
             openToast({
-              message: getApiErrorMessage(
-                error,
-                API_ERROR_MESSAGE.ORDER_COMPLETE
-              ),
+              message: getApiErrorMessage(error, ORDER_ERROR_MESSAGE.COMPLETE),
             });
           },
         });
@@ -139,7 +136,7 @@ export function useChatMessages() {
             openToast({
               message: getApiErrorMessage(
                 error,
-                API_ERROR_MESSAGE.DELIVERY_COMPLETE
+                ORDER_ERROR_MESSAGE.DELIVERY_COMPLETE
               ),
             });
           },
@@ -174,7 +171,7 @@ export function useChatMessages() {
               openToast({
                 message: getApiErrorMessage(
                   error,
-                  API_ERROR_MESSAGE.SETTLEMENT_REQUEST
+                  ORDER_ERROR_MESSAGE.SETTLEMENT_REQUEST
                 ),
               });
             },
@@ -202,7 +199,7 @@ export function useChatMessages() {
             openToast({
               message: getApiErrorMessage(
                 error,
-                API_ERROR_MESSAGE.SETTLEMENT_COMPLETE
+                ORDER_ERROR_MESSAGE.SETTLEMENT_COMPLETE
               ),
             });
           },
