@@ -11,7 +11,7 @@ import {
 } from "@/utils/order/toMyOrderItem";
 
 // 진행중(ONGOING) 정책: RECRUITING·CLOSED·ORDERED·DELIVERED(정산 전) / 그 외(SETTLED 등)는 지난 배달팟
-const ONGOING_STATUSES = new Set([
+const ONGOING_STATUSES = new Set<PartyListItem["status"]>([
   "RECRUITING",
   "CLOSED",
   "ORDERED",
