@@ -62,6 +62,30 @@ export const Expired: Story = {
   },
 };
 
+export const HostRecruiting: Story = {
+  args: {
+    status: "hostRecruiting",
+    avatars: avatars.slice(0, 2),
+    maxCount: 4,
+    deadline: Date.now() + 7 * 60 * 1000 + 32 * 1000,
+    onCancelRecruit: () => {},
+    onCloseRecruit: () => {},
+    canCloseRecruit: true,
+  },
+};
+
+export const HostRecruitingCloseDisabled: Story = {
+  args: {
+    status: "hostRecruiting",
+    avatars: avatars.slice(0, 2),
+    maxCount: 4,
+    deadline: Date.now() + 7 * 60 * 1000 + 32 * 1000,
+    onCancelRecruit: () => {},
+    onCloseRecruit: () => {},
+    canCloseRecruit: false,
+  },
+};
+
 export const Completed: Story = {
   args: {
     status: "completed",

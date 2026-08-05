@@ -11,7 +11,8 @@ export function useBoardComments(postId: string | undefined) {
   const queryClient = useQueryClient();
   const commentsKey = ["board", "posts", postId, "comments"];
 
-  const { data: comments = [] } = useBoardCommentList(postId);
+  const { data: comments = [], isPending: isCommentsPending } =
+    useBoardCommentList(postId);
   const [replyTargetId, setReplyTargetId] = useState<number | null>(null);
   const { mutate: createComment, isPending: isSending } =
     useCreateBoardComment(postId);
@@ -78,6 +79,7 @@ export function useBoardComments(postId: string | undefined) {
 
   return {
     comments,
+    isCommentsPending,
     topLevelComments,
     getReplies,
     replyTargetId,

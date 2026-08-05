@@ -8,6 +8,7 @@ import {
   postSendEmailCode,
   postVerifyEmailCode,
 } from "@/api/auth/api";
+import { ensurePushSubscription } from "@/api/notification/ensurePushSubscription";
 import { PATH } from "@/routes/paths";
 import { useAuthStore } from "@/stores/useAuthStore";
 
@@ -19,6 +20,7 @@ export const useLogin = () => {
     mutationFn: login,
     onSuccess: (tokens) => {
       setTokens(tokens);
+      void ensurePushSubscription();
       navigate(PATH.HOME, { replace: true });
     },
   });

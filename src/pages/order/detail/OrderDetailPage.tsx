@@ -4,19 +4,19 @@ import { generatePath, useNavigate, useParams } from "react-router";
 import { getApiErrorMessage } from "@/api/error";
 import {
   useCancelParty,
+  useCloseParty,
   useJoinParty,
   useLeaveParty,
   usePartyDetail,
   usePartyParticipants,
 } from "@/api/order/query";
+import { useMe } from "@/hooks/useMe";
 import { CtaBar } from "@/components/ctaBar/CtaBar";
 import { BackHeader } from "@/layouts/BackHeader";
-import { Profiles, type ProfilesItem } from "@/components/profiles/Profiles";
+import { Profiles } from "@/components/profiles/Profiles";
 import { API_ERROR_MESSAGE } from "@/constants/errorMessage";
-import {
-  DORM_VERIFICATION_MODAL_PROPS,
-  NOSHOW_RESTRICTION_MODAL_PROPS,
-} from "@/constants/order/guardModals";
+import { NOSHOW_RESTRICTION_MODAL_PROPS } from "@/constants/order/guardModals";
+import { useDormVerificationGuard } from "@/hooks/useDormVerificationGuard";
 import { useModal } from "@/hooks/useModal";
 import { useToast } from "@/hooks/useToast";
 import { PageShell } from "@/layouts/PageShell";
@@ -26,13 +26,6 @@ import { toProfilesItems } from "@/utils/order/toProfilesItems";
 
 import { OrderHostProfile } from "./components/OrderHostProfile";
 
-const ME: ProfilesItem = { id: "me", nickname: "나", temperature: 36.5 };
-
-// TODO: 로그인 사용자의 실제 기숙사 인증 여부로 교체
-const IS_DORM_VERIFIED = true;
-// TODO: 로그인 사용자의 실제 노쇼 정지 상태로 교체
-const IS_NOSHOW_RESTRICTED = false;
-
 type ParticipationStatus = "none" | "applied" | "matched";
 
 export default function OrderDetailPage() {
@@ -40,6 +33,8 @@ export default function OrderDetailPage() {
   const navigate = useNavigate();
   const { openModal } = useModal();
   const { openToast } = useToast();
+  const { userId, isNoshowRestricted } = useMe();
+  const { ensureDormVerified } = useDormVerificationGuard();
 
   const partyId = Number(orderId);
   const {
@@ -55,6 +50,7 @@ export default function OrderDetailPage() {
     error: participantsError,
   } = usePartyParticipants(partyId);
   const { mutate: cancelParty } = useCancelParty();
+  const { mutate: closeParty } = useCloseParty();
   const { mutate: joinParty } = useJoinParty();
   const { mutate: leaveParty } = useLeaveParty();
   const order = partyDetail ? toOrderDetail(partyDetail) : undefined;
@@ -84,8 +80,7 @@ export default function OrderDetailPage() {
     const intervalId = setInterval(() => setNow(Date.now()), 1000);
     return () => clearInterval(intervalId);
   }, []);
-  // TODO: 로그인한 내 userId를 알 수 있는 API가 없어 아직 실제로는 항상 false
-  const isHost = order?.host.id === ME.id;
+  const isHost = userId !== undefined && order?.host.id === userId;
 
   const participants = partyParticipants
     ? toProfilesItems(partyParticipants.participants)
@@ -130,15 +125,9 @@ export default function OrderDetailPage() {
   }
 
   function handleApplyClick() {
-    if (!IS_DORM_VERIFIED) {
-      openModal({
-        props: DORM_VERIFICATION_MODAL_PROPS,
-        onConfirm: () => navigate(PATH.MYPAGE_DORMITORY),
-      });
-      return;
-    }
+    if (!ensureDormVerified()) return;
 
-    if (IS_NOSHOW_RESTRICTED) {
+    if (isNoshowRestricted) {
       openModal({ props: NOSHOW_RESTRICTION_MODAL_PROPS });
       return;
     }
@@ -185,6 +174,25 @@ export default function OrderDetailPage() {
     });
   }
 
+  function handleCloseRecruitClick() {
+    openModal({
+      props: {
+        title: "정말로 모집을 \n 마감하시겠습니까?",
+        outlineLabel: "아니요",
+        primaryLabel: "네",
+      },
+      onConfirm: () => {
+        closeParty(partyId, {
+          onError: (error) => {
+            openToast({
+              message: getApiErrorMessage(error, API_ERROR_MESSAGE.ORDER_CLOSE),
+            });
+          },
+        });
+      },
+    });
+  }
+
   function handleCancelClick() {
     openModal({
       props: {
@@ -218,6 +226,20 @@ export default function OrderDetailPage() {
     alt: p.nickname,
   }));
 
+  // 새로고침/재진입 시 로컬 status가 초기화되므로, 서버 참여자 목록에서 내 참여 여부를 우선 파생
+  const myParticipant =
+    userId !== undefined
+      ? participants.find((p) => p.id === userId)
+      : undefined;
+  const serverDerivedStatus: ParticipationStatus = myParticipant
+    ? participants.length >= order.maxCount
+      ? "matched"
+      : "applied"
+    : "none";
+  // 참여자 목록이 한 번이라도 성공적으로 로드됐으면 서버 값이 우선, 그 전까지만 로컬 낙관값 사용
+  const effectiveStatus: ParticipationStatus =
+    partyParticipants !== undefined ? serverDerivedStatus : status;
+
   // 마감 시각이 지났는데 최소 인원을 못 채웠으면 자동 취소로 간주 (모집중 상태일 때만, 참여자 조회가 끝난 후에만)
   const isAutoCancelled =
     !isParticipantsPending &&
@@ -226,33 +248,41 @@ export default function OrderDetailPage() {
     now > order.deadline &&
     participants.length < order.minCount;
   const cancelled = isCancelled || order.isCancelled || isAutoCancelled;
+  const isRecruitingOpen = order.status === "RECRUITING";
+  const completedCta = {
+    status: "completed",
+    avatars,
+    maxCount: order.maxCount,
+    onEnterChat: handleEnterChat,
+  } as const;
 
   const ctaBarProps = cancelled
     ? ({ status: "cancelled" } as const)
-    : status === "matched"
-      ? ({
-          status: "completed",
-          avatars,
-          maxCount: order.maxCount,
-          onEnterChat: handleEnterChat,
-        } as const)
+    : effectiveStatus === "matched"
+      ? completedCta
       : isHost
-        ? ({
-            status: "hostRecruiting",
-            avatars,
-            maxCount: order.maxCount,
-            deadline: order.deadline,
-            onCancelRecruit: handleCancelRecruitClick,
-          } as const)
-        : status === "applied"
-          ? ({
-              status: "applied",
+        ? !isRecruitingOpen
+          ? completedCta
+          : ({
+              status: "hostRecruiting",
               avatars,
               maxCount: order.maxCount,
               deadline: order.deadline,
-              onCancel: handleCancelClick,
+              onCancelRecruit: handleCancelRecruitClick,
+              onCloseRecruit: handleCloseRecruitClick,
+              canCloseRecruit: participants.length >= order.minCount,
             } as const)
-          : participants.length >= order.maxCount
+        : effectiveStatus === "applied"
+          ? !isRecruitingOpen
+            ? completedCta
+            : ({
+                status: "applied",
+                avatars,
+                maxCount: order.maxCount,
+                deadline: order.deadline,
+                onCancel: handleCancelClick,
+              } as const)
+          : !isRecruitingOpen || participants.length >= order.maxCount
             ? ({ status: "full" } as const)
             : ({
                 status: "recruiting",

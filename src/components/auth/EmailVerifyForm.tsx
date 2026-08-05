@@ -98,28 +98,20 @@ export function EmailVerifyForm({
           state={errors.email ? "error" : "default"}
           feedback={emailFeedback}
           rightElement={
-            isCodeSent ? (
-              <Button
-                type="button"
-                variant="outline"
-                size="small"
-                className="shrink-0"
-                disabled={!emailValue || isRequesting}
-                onClick={handleRequestCode}
-              >
-                재전송
-              </Button>
-            ) : (
-              <Button
-                type="button"
-                size="small"
-                className="shrink-0"
-                disabled={!emailValue || isRequesting}
-                onClick={handleRequestCode}
-              >
-                인증코드 받기
-              </Button>
-            )
+            <Button
+              type="button"
+              variant={isCodeSent ? "outline" : "default"}
+              size="small"
+              className="shrink-0"
+              disabled={!emailValue || isRequesting}
+              onClick={handleRequestCode}
+            >
+              {isRequesting
+                ? "전송 중"
+                : isCodeSent
+                  ? "재전송"
+                  : "인증코드 받기"}
+            </Button>
           }
           {...register("email", {
             onChange: () => {

@@ -17,8 +17,10 @@ import { cardVariants } from "./Card.variants";
 
 const STATUS_LABELS: Record<NonNullable<StatusBadgeProps["status"]>, string> = {
   recruiting: "모집중",
-  matched: "매칭완료",
+  closed: "모집마감",
+  ordered: "주문완료",
   arrived: "배달도착",
+  settled: "정산완료",
   cancelled: "취소",
 };
 
@@ -48,7 +50,11 @@ export function Card({
   location,
 }: CardProps) {
   const isResolvedStatus =
-    status === "matched" || status === "arrived" || status === "cancelled";
+    status === "closed" ||
+    status === "ordered" ||
+    status === "arrived" ||
+    status === "settled" ||
+    status === "cancelled";
   const {
     timeLabel,
     isUrgent: isTimeUrgent,
@@ -104,7 +110,9 @@ export function Card({
                 </FlagBadge>
               ) : (
                 <span className="ml-2 text-body-2 text-text-4">
-                  ({minCount}~{maxCount}인)
+                  {minCount === maxCount
+                    ? `(${maxCount}인)`
+                    : `(${minCount} ~ ${maxCount}인)`}
                 </span>
               )}
             </div>

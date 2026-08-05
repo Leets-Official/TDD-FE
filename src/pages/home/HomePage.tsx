@@ -1,7 +1,9 @@
-import { useEffect, useRef, useState } from "react";
-import { generatePath, useNavigate } from "react-router";
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router";
 
 import { useMyPartyList, usePartyList } from "@/api/order/query";
+import { useBankAccount } from "@/api/user/query";
+import { useMe } from "@/hooks/useMe";
 import { getApiErrorMessage } from "@/api/error";
 import type { PartyListItem } from "@/types/order/order";
 import type { FoodCategory } from "@/components/card/categoryIcons";
@@ -10,10 +12,10 @@ import { TabBar } from "@/components/tabBar/TabBar";
 import { API_ERROR_MESSAGE } from "@/constants/errorMessage";
 import {
   ACCOUNT_UNREGISTERED_MODAL_PROPS,
-  DORM_VERIFICATION_MODAL_PROPS,
   NOSHOW_RESTRICTION_MODAL_PROPS,
 } from "@/constants/order/guardModals";
 import { FOOD_CATEGORY_ID_MAP } from "@/constants/order/foodCategory";
+import { useDormVerificationGuard } from "@/hooks/useDormVerificationGuard";
 import { useModal } from "@/hooks/useModal";
 import { useToast } from "@/hooks/useToast";
 import { PageShell } from "@/layouts/PageShell";
@@ -36,13 +38,6 @@ const TABS = [
 // 진행중(ONGOING) 정책: RECRUITING·CLOSED·ORDERED / 그 외는 지난 배달팟(COMPLETED)
 const ONGOING_STATUSES = new Set(["RECRUITING", "CLOSED", "ORDERED"]);
 
-// TODO: 로그인 사용자의 실제 기숙사 인증 여부로 교체
-const IS_DORM_VERIFIED = true;
-// TODO: 로그인 사용자의 실제 노쇼 정지 상태로 교체
-const IS_NOSHOW_RESTRICTED = false;
-// TODO: 로그인 사용자의 실제 계좌 등록 여부로 교체
-const IS_ACCOUNT_REGISTERED = true;
-
 export default function HomePage() {
   const [tab, setTab] = useState(TABS[0].value);
   const [dorm, setDorm] = useState("");
@@ -50,6 +45,11 @@ export default function HomePage() {
   const navigate = useNavigate();
   const { openModal } = useModal();
   const { openToast } = useToast();
+  const { isNoshowRestricted } = useMe();
+  const { ensureDormVerified } = useDormVerificationGuard();
+  const { data: bankAccount, isPending: isBankAccountPending } =
+    useBankAccount();
+  const isAccountRegistered = !!bankAccount;
   const {
     data: partyList,
     isPending,
@@ -100,44 +100,17 @@ export default function HomePage() {
     });
   }, [isMyPartyListError, myPartyListError, openToast]);
 
-  const notifiedMatchedPartyIdsRef = useRef<Set<number>>(new Set());
-  useEffect(() => {
-    const matchedParty = myPartyList?.find(
-      (party) =>
-        party.status === "CLOSED" &&
-        !notifiedMatchedPartyIdsRef.current.has(party.partyId)
-    );
-    if (!matchedParty) return;
-
-    notifiedMatchedPartyIdsRef.current.add(matchedParty.partyId);
-    openToast({
-      message: "배달팟이 매칭되었습니다!",
-      actionLabel: "채팅방 입장",
-      onActionClick: () => {
-        navigate(
-          generatePath(PATH.ORDER_CHAT, {
-            orderId: String(matchedParty.partyId),
-          })
-        );
-      },
-    });
-  }, [myPartyList, openToast, navigate]);
-
   function handleCreateClick() {
-    if (!IS_DORM_VERIFIED) {
-      openModal({
-        props: DORM_VERIFICATION_MODAL_PROPS,
-        onConfirm: () => navigate(PATH.MYPAGE_DORMITORY),
-      });
-      return;
-    }
+    if (isBankAccountPending) return;
 
-    if (IS_NOSHOW_RESTRICTED) {
+    if (!ensureDormVerified()) return;
+
+    if (isNoshowRestricted) {
       openModal({ props: NOSHOW_RESTRICTION_MODAL_PROPS });
       return;
     }
 
-    if (!IS_ACCOUNT_REGISTERED) {
+    if (!isAccountRegistered) {
       openModal({
         props: ACCOUNT_UNREGISTERED_MODAL_PROPS,
         onConfirm: () => navigate(PATH.MYPAGE_ACCOUNT),
@@ -149,34 +122,28 @@ export default function HomePage() {
   }
 
   function handleCardClick(order: OrderItem) {
-    if (!IS_DORM_VERIFIED) {
-      openModal({
-        props: DORM_VERIFICATION_MODAL_PROPS,
-        onConfirm: () => navigate(PATH.MYPAGE_DORMITORY),
-      });
-      return;
-    }
+    if (!ensureDormVerified()) return;
 
     navigate(PATH.ORDER_DETAIL.replace(":orderId", order.id));
   }
 
   return (
-    <PageShell header={<HomeHeader />}>
-      <TabBar tabs={TABS} value={tab} onChange={setTab} />
-
+    <PageShell
+      header={
+        <>
+          <HomeHeader />
+          <TabBar tabs={TABS} value={tab} onChange={setTab} />
+        </>
+      }
+    >
       {tab === "mine" ? (
-        isMyPartyListPending ? (
-          <p className="px-5 py-6 text-body-1 text-text-4">불러오는 중...</p>
-        ) : (
-          <MyOrderSection
-            inProgressOrders={inProgressOrders}
-            pastOrders={pastOrders}
-            onCreateClick={handleCreateClick}
-            onCardClick={handleCardClick}
-          />
-        )
-      ) : isPending ? (
-        <p className="px-5 py-6 text-body-1 text-text-4">불러오는 중...</p>
+        <MyOrderSection
+          inProgressOrders={inProgressOrders}
+          pastOrders={pastOrders}
+          isPending={isMyPartyListPending}
+          onCreateClick={handleCreateClick}
+          onCardClick={handleCardClick}
+        />
       ) : (
         <OrderListSection
           orders={recruitingOrders}
@@ -184,6 +151,7 @@ export default function HomePage() {
           onDormChange={setDorm}
           menu={menu}
           onMenuChange={setMenu}
+          isPending={isPending}
           onCreateClick={handleCreateClick}
           onCardClick={handleCardClick}
         />

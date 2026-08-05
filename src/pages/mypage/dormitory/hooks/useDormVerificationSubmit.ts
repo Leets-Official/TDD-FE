@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { useNavigate } from "react-router";
 
 import { getApiErrorMessage } from "@/api/error";
 import { useSubmitDormVerification } from "@/api/user/query";
@@ -11,8 +10,8 @@ import {
   isUploadImageContentType,
   type UploadImageContentType,
 } from "@/constants/imageUpload";
+import { useGoBack } from "@/hooks/useGoBack";
 import { useToast } from "@/hooks/useToast";
-import { PATH } from "@/routes/paths";
 
 const DORM_VERIFICATION_SUCCESS_MESSAGE = "인증 서류가 제출되었습니다!";
 
@@ -22,7 +21,7 @@ interface SelectedFile {
 }
 
 export function useDormVerificationSubmit() {
-  const navigate = useNavigate();
+  const goBack = useGoBack();
   const { openToast } = useToast();
   const { mutate: submit, isPending } = useSubmitDormVerification();
   const [selectedFile, setSelectedFile] = useState<SelectedFile | null>(null);
@@ -50,7 +49,7 @@ export function useDormVerificationSubmit() {
 
     submit(selectedFile, {
       onSuccess: () => {
-        navigate(PATH.HOME);
+        goBack();
         openToast({ message: DORM_VERIFICATION_SUCCESS_MESSAGE });
       },
       onError: (error) => {

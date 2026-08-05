@@ -86,10 +86,17 @@ export const AutoCancelled: Story = {
   },
 };
 
-export const Matched: Story = {
+export const Closed: Story = {
   args: {
     deadline: Date.now() + 7 * 60 * 1000 + 32 * 1000,
-    status: "matched",
+    status: "closed",
+  },
+};
+
+export const Ordered: Story = {
+  args: {
+    deadline: Date.now() + 7 * 60 * 1000 + 32 * 1000,
+    status: "ordered",
   },
 };
 
@@ -97,6 +104,13 @@ export const Arrived: Story = {
   args: {
     deadline: Date.now() + 7 * 60 * 1000 + 32 * 1000,
     status: "arrived",
+  },
+};
+
+export const Settled: Story = {
+  args: {
+    deadline: Date.now() + 7 * 60 * 1000 + 32 * 1000,
+    status: "settled",
   },
 };
 

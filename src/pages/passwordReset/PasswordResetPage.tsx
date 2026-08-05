@@ -7,9 +7,10 @@ import { PageShell } from "@/layouts/PageShell";
 import { useToast } from "@/hooks/useToast";
 import { useVerifiedEmail } from "@/hooks/useVerifiedEmail";
 import { useEmailVerification } from "@/hooks/useEmailVerification";
-import { useNavigate } from "react-router";
 import { usePasswordResetSubmit } from "@/pages/passwordReset/hooks/usePasswordResetSubmit";
 import { VERIFIED_EMAIL_KEY } from "@/constants/storage";
+import { useGoBack } from "@/hooks/useGoBack";
+import { PATH } from "@/routes/paths";
 
 const EMAIL_VERIFY_FORM_ID = "password-reset-email-verify-form";
 const PASSWORD_FORM_ID = "password-reset-password-form";
@@ -17,7 +18,7 @@ const PASSWORD_FORM_ID = "password-reset-password-form";
 type PasswordResetStep = "email" | "password";
 
 export default function PasswordResetPage() {
-  const navigate = useNavigate();
+  const goBack = useGoBack(PATH.LOGIN);
   const { openToast } = useToast();
   const { email, isVerified, markVerified, clearVerified } = useVerifiedEmail(
     VERIFIED_EMAIL_KEY.PASSWORD_RESET
@@ -44,7 +45,7 @@ export default function PasswordResetPage() {
 
   const handleBack = () => {
     clearVerified();
-    navigate(-1);
+    goBack();
   };
 
   const stepConfig = {

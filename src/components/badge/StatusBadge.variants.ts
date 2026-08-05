@@ -5,8 +5,10 @@ export const statusBadgeVariants = tv({
   variants: {
     status: {
       recruiting: "border-divider-2 bg-bg-1 text-text-1",
-      matched: "border-transparent bg-secondary text-primary",
+      closed: "rounded-full border-primary bg-white text-primary",
+      ordered: "border-transparent bg-secondary text-primary",
       arrived: "border-transparent bg-text-1-color text-white",
+      settled: "rounded-full border-success bg-white text-success",
       cancelled: "border-transparent bg-bg-3 text-text-4",
     },
   },

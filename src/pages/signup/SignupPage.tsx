@@ -8,10 +8,11 @@ import { PageShell } from "@/layouts/PageShell";
 import { useToast } from "@/hooks/useToast";
 import { useVerifiedEmail } from "@/hooks/useVerifiedEmail";
 import { useEmailVerification } from "@/hooks/useEmailVerification";
-import { useNavigate } from "react-router";
 import type { PasswordFormValues } from "@/schemas/auth";
 import { useSignupSubmit } from "@/pages/signup/hooks/useSignupSubmit";
 import { VERIFIED_EMAIL_KEY } from "@/constants/storage";
+import { useGoBack } from "@/hooks/useGoBack";
+import { PATH } from "@/routes/paths";
 
 const EMAIL_VERIFY_FORM_ID = "signup-email-verify-form";
 const PASSWORD_FORM_ID = "signup-password-form";
@@ -20,7 +21,7 @@ const PROFILE_FORM_ID = "signup-profile-form";
 type SignupStep = "email" | "password" | "profile";
 
 export default function SignupPage() {
-  const navigate = useNavigate();
+  const goBack = useGoBack(PATH.LOGIN);
   const { openToast } = useToast();
   const { email, isVerified, markVerified, clearVerified } = useVerifiedEmail(
     VERIFIED_EMAIL_KEY.SIGNUP
@@ -63,7 +64,7 @@ export default function SignupPage() {
     }
     // 인증을 마친 뒤에는 email 단계로 되돌리지 않고 페이지 나감
     clearVerified();
-    navigate(-1);
+    goBack();
   };
 
   const stepConfig = {
