@@ -27,6 +27,7 @@ export default function ChatPage() {
     isOrderCompleted,
     isDeliveryArrived,
     isSettlementRequested,
+    isSettlementCompleted,
     isTransferCompleted,
     handleOrderCompleteClick,
     handleDeliveryArrivedClick,
@@ -79,7 +80,9 @@ export default function ChatPage() {
                 isDeliveryArrived={isDeliveryArrived}
                 onDeliveryArrived={handleDeliveryArrivedClick}
                 isSettlementRequested={isSettlementRequested}
+                isSettlementCompleted={isSettlementCompleted}
                 onSettlementRequest={handleSettlementRequestClick}
+                onSettlementComplete={handleSettlementCompleteClick}
                 isTransferCompleted={isTransferCompleted}
                 onCopyAccount={() =>
                   handleCopyAccountClick(settlementAccountText)
@@ -175,8 +178,9 @@ export default function ChatPage() {
                 </Fragment>
               );
             }
-            // 리뷰 요청 메세지의 경우
-            if (item.messageType === "REVIEW_PROMPT") {
+            // 리뷰 요청 메세지의 경우 - 서버가 발행하는 시스템 메시지라 senderId가 null이므로,
+            // 위의 ORDER_COMPLETED 등과 동일한 이유로 isHost 기준 위치 결정
+            if (item.messageType === "REVIEW_REQUEST") {
               return (
                 <ActionDeliveryBubble
                   key={item.messageId}
@@ -184,7 +188,7 @@ export default function ChatPage() {
                   description="멤버들에 대한 후기를 남겨주세요!"
                   buttonLabel="후기 남기기"
                   onButtonClick={handleReviewClick}
-                  className="ml-14"
+                  className={isHost ? "self-end" : "ml-14"}
                 />
               );
             }

@@ -6,7 +6,7 @@ export type ChatMessageType =
   | "DELIVERY_ARRIVED"
   | "DELIVERY_ARRIVED_CANCEL"
   | "SETTLEMENT_REQUEST"
-  | "REVIEW_PROMPT";
+  | "REVIEW_REQUEST";
 
 export interface ChatMessage {
   messageId: number;

@@ -8,6 +8,7 @@ import {
   useOrderParty,
   usePartyDetail,
   usePartyParticipants,
+  useSettleParty,
 } from "@/api/order/query";
 import { useRequestSettlement } from "@/api/order/settlement/query";
 import { useMyPage } from "@/api/user/query";
@@ -28,6 +29,7 @@ export function useChatMessages() {
   const { mutate: orderParty } = useOrderParty();
   const { mutate: completeParty } = useCompleteParty();
   const { mutate: requestSettlement } = useRequestSettlement();
+  const { mutate: settleParty } = useSettleParty();
   const { data: messageHistory } = useChatMessageHistory(partyId);
   const { data: myPage } = useMyPage();
   const { data: partyDetail } = usePartyDetail(partyId);
@@ -47,6 +49,9 @@ export function useChatMessages() {
   const isSettlementRequested = chatMessages.some(
     (message) => message.messageType === "SETTLEMENT_REQUEST"
   );
+  const isSettlementCompleted = chatMessages.some(
+    (message) => message.messageType === "REVIEW_REQUEST"
+  );
 
   // 메시지 내역 조회 결과가 도착하면 최초 1회만 초기 목록으로 반영
   useEffect(() => {
@@ -55,20 +60,6 @@ export function useChatMessages() {
       hasSeededHistory.current = true;
     }
   }, [messageHistory]);
-
-  const pushMessage = (
-    message: Omit<ChatMessage, "messageId" | "createdAt">
-  ) => {
-    setChatMessages((prev) => [
-      ...prev,
-      {
-        ...message,
-        messageId:
-          (prev.length > 0 ? Math.max(...prev.map((m) => m.messageId)) : 0) + 1,
-        createdAt: new Date().toISOString(),
-      },
-    ]);
-  };
 
   // 소켓으로 들어온 메시지를 반영 (동일 messageId가 이미 있으면 무시)
   const { sendMessage } = useChatSocket({
@@ -189,9 +180,9 @@ export function useChatMessages() {
     });
   };
 
-  // 방장이 정산 완료 버튼(정산 요청 메세지 뒤에 로컬로 붙는 카드) 클릭 시 모달 띄우고 리뷰 요청 메세지 push
+  // 방장이 정산 완료 버튼(정산 요청 메세지 뒤에 로컬로 붙는 카드) 클릭 시 모달 띄우고, 확인 시 MVP 정산 완료 API 호출
   const handleSettlementCompleteClick = () => {
-    if (hostUserId === undefined) return;
+    if (!Number.isFinite(partyId)) return;
 
     openModal({
       props: {
@@ -201,12 +192,16 @@ export function useChatMessages() {
         primaryLabel: "네",
       },
       onConfirm: () => {
-        pushMessage({
-          messageType: "REVIEW_PROMPT",
-          senderId: hostUserId,
-          senderNickname: "방장",
-          content: null,
-          imageUrl: null,
+        // 서버가 성공 시 REVIEW_REQUEST 메시지를 자동 발행 → 소켓 구독으로 반영됨
+        settleParty(partyId, {
+          onError: (error) => {
+            openToast({
+              message: getApiErrorMessage(
+                error,
+                API_ERROR_MESSAGE.SETTLEMENT_COMPLETE
+              ),
+            });
+          },
         });
       },
     });
@@ -267,6 +262,7 @@ export function useChatMessages() {
     isOrderCompleted,
     isDeliveryArrived,
     isSettlementRequested,
+    isSettlementCompleted,
     isTransferCompleted,
     handleOrderCompleteClick,
     handleDeliveryArrivedClick,

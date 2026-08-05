@@ -7,7 +7,9 @@ export interface ChatMenuBarProps {
   isDeliveryArrived?: boolean;
   onDeliveryArrived?: () => void;
   isSettlementRequested?: boolean;
+  isSettlementCompleted?: boolean;
   onSettlementRequest?: () => void;
+  onSettlementComplete?: () => void;
   isTransferCompleted?: boolean;
   onCopyAccount?: () => void;
   onTransferComplete?: () => void;
@@ -20,11 +22,23 @@ export function ChatMenuBar({
   isDeliveryArrived = false,
   onDeliveryArrived,
   isSettlementRequested = false,
+  isSettlementCompleted = false,
   onSettlementRequest,
+  onSettlementComplete,
   isTransferCompleted = false,
   onCopyAccount,
   onTransferComplete,
 }: ChatMenuBarProps) {
+  // 정산 요청 전엔 "정산 요청", 요청 후엔 같은 자리에서 "정산 완료"로 바뀜
+  const settlementLabel = isSettlementCompleted
+    ? "정산 완료됨"
+    : isSettlementRequested
+      ? "정산 완료"
+      : "정산 요청";
+  const settlementDisabled = !isDeliveryArrived || isSettlementCompleted;
+  const settlementOnClick = isSettlementRequested
+    ? onSettlementComplete
+    : onSettlementRequest;
   return (
     <div className="flex items-center gap-2 border-b border-divider-2 bg-bg-1 px-5 pt-1 pb-2">
       {isHost ? (
@@ -62,16 +76,16 @@ export function ChatMenuBar({
           <Button
             variant="secondary"
             size="small"
-            disabled={!isDeliveryArrived || isSettlementRequested}
-            onClick={onSettlementRequest}
-            aria-pressed={isSettlementRequested}
+            disabled={settlementDisabled}
+            onClick={settlementOnClick}
+            aria-pressed={isSettlementCompleted}
             className={
-              isSettlementRequested
+              isSettlementCompleted
                 ? "border-[1.5px] border-divider-1 bg-white text-disabled hover:bg-white active:bg-white"
                 : undefined
             }
           >
-            {isSettlementRequested ? "정산 요청됨" : "정산 요청"}
+            {settlementLabel}
           </Button>
         </>
       ) : (
