@@ -47,9 +47,9 @@ export default function ChatPage() {
   };
 
   // 가장 최근 정산 요청 메시지를 찾아 실제 계좌 정보를 가져온다
-  const settlementRequestMessage = [...chatMessages]
-    .reverse()
-    .find((item) => item.messageType === "SETTLEMENT_REQUEST");
+  const settlementRequestMessage = chatMessages.findLast(
+    (item) => item.messageType === "SETTLEMENT_REQUEST"
+  );
   const { accountText: settlementAccountText } = parseSettlementRequestContent(
     settlementRequestMessage?.content ?? null
   );

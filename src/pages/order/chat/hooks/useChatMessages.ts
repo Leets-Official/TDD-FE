@@ -221,6 +221,11 @@ export function useChatMessages() {
 
   // 계좌번호 복사 버튼 클릭 시 토스트 - 복사 성공 여부에 따라 문구 분기
   const handleCopyAccountClick = (accountText: string) => {
+    if (!accountText) {
+      openToast({ message: "계좌 정보를 불러오지 못했어요" });
+      return;
+    }
+
     navigator.clipboard
       .writeText(accountText)
       .then(() => {
