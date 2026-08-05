@@ -30,7 +30,6 @@ export function useChatSocket({ partyId, onMessage }: UseChatSocketParams) {
       partyId,
       accessToken,
       onMessage: (message) => {
-        console.log("[chat] 수신:", message.body);
         try {
           onMessageRef.current(JSON.parse(message.body) as ChatMessage);
         } catch (e) {
@@ -67,7 +66,6 @@ export function useChatSocket({ partyId, onMessage }: UseChatSocketParams) {
       const client = clientRef.current;
       if (!client?.connected) return false;
 
-      console.log("[chat] PUB 전송:", chatPublishDestination(partyId), payload);
       client.publish({
         destination: chatPublishDestination(partyId),
         body: JSON.stringify(payload),

@@ -30,8 +30,7 @@ export const createChatStompClient = ({
     heartbeatOutgoing: 4000,
   });
 
-  client.onConnect = (frame) => {
-    console.log("[chat] STOMP 연결됨:", frame.headers);
+  client.onConnect = () => {
     client.subscribe(chatTopicDestination(partyId), onMessage);
   };
 

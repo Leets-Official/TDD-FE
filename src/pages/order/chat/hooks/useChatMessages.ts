@@ -117,21 +117,6 @@ export function useChatMessages() {
   const handleDeliveryArrivedClick = () => {
     if (!Number.isFinite(partyId)) return;
 
-    // 배달 취소 모달은 현재 백엔드 타입이 없어서 주석처리
-    // if (isDeliveryArrived) {
-    //   openModal({
-    //     props: {
-    //       title: "배달 도착 완료를 취소할까요?",
-    //       outlineLabel: "아니요",
-    //       primaryLabel: "네",
-    //     },
-    //     onConfirm: () => {
-    //       setIsDeliveryArrived(false);
-    //     },
-    //   });
-    //   return;
-    // }
-
     openModal({
       props: {
         title: "배달이 도착하셨나요?",
