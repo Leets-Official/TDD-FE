@@ -1,6 +1,7 @@
 import { Button } from "@/components/button/Button";
 import { useGoBack } from "@/hooks/useGoBack";
 import { PageShell } from "@/layouts/PageShell";
+import { PATH } from "@/routes/paths";
 import { useNavigate } from "react-router";
 
 export function NotFoundPage() {
@@ -21,7 +22,11 @@ export function NotFoundPage() {
           </p>
         </div>
         <div className="flex gap-4">
-          <Button variant="outline" size="medium" onClick={() => navigate("/")}>
+          <Button
+            variant="outline"
+            size="medium"
+            onClick={() => navigate(PATH.HOME)}
+          >
             홈으로
           </Button>
           <Button size="medium" onClick={useGoBack()}>
