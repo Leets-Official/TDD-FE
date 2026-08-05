@@ -24,6 +24,7 @@ export default function ChatPage() {
     chatMessages,
     myUserId,
     isHost,
+    partyTitle,
     isOrderCompleted,
     isDeliveryArrived,
     isSettlementRequested,
@@ -58,7 +59,7 @@ export default function ChatPage() {
         header={
           <>
             <PageHeader
-              title="OO햄버거 같이 배달하실분"
+              title={partyTitle ?? "채팅방"}
               onBack={() => {
                 navigate(-1);
               }}

@@ -262,6 +262,7 @@ export function useChatMessages() {
     chatMessages,
     myUserId,
     isHost,
+    partyTitle: partyDetail?.title,
     isOrderCompleted,
     isDeliveryArrived,
     isSettlementRequested,
