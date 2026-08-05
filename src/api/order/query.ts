@@ -12,6 +12,7 @@ import {
   joinParty,
   leaveParty,
   orderParty,
+  settleParty,
 } from "@/api/order/api";
 import type { MyPartyListParams, PartyListParams } from "@/types/order/order";
 
@@ -128,6 +129,19 @@ export const useCompleteParty = () => {
 
   return useMutation({
     mutationFn: completeParty,
+    onSuccess: (_, partyId) => {
+      queryClient.invalidateQueries({ queryKey: ["parties"] });
+      queryClient.invalidateQueries({ queryKey: ["parties", partyId] });
+    },
+  });
+};
+
+// 배달팟 MVP 정산 완료 API
+export const useSettleParty = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: settleParty,
     onSuccess: (_, partyId) => {
       queryClient.invalidateQueries({ queryKey: ["parties"] });
       queryClient.invalidateQueries({ queryKey: ["parties", partyId] });

@@ -1,7 +1,13 @@
 import type { FoodCategory } from "@/components/card/categoryIcons";
 
 export type PartyStatus =
-  "RECRUITING" | "CLOSED" | "ORDERED" | "COMPLETED" | "CANCELED";
+  | "RECRUITING"
+  | "CLOSED"
+  | "ORDERED"
+  | "DELIVERED"
+  | "COMPLETED"
+  | "SETTLED"
+  | "CANCELED";
 
 export type ParticipantRole = "OWNER" | "MEMBER";
 
@@ -124,6 +130,12 @@ export interface PartyOrderResult {
 
 // 배달팟 배달 완료 API 응답
 export interface PartyCompleteResult {
+  partyId: number;
+  status: PartyStatus;
+}
+
+// 배달팟 MVP 정산 완료 API 응답
+export interface PartySettleResult {
   partyId: number;
   status: PartyStatus;
 }
