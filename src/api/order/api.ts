@@ -14,6 +14,7 @@ import type {
   PartyListParams,
   PartyOrderResult,
   PartyParticipants,
+  PartySettleResult,
 } from "@/types/order/order";
 
 // 배달팟 목록 조회 API
@@ -106,6 +107,15 @@ export const orderParty = async (partyId: number) => {
 export const completeParty = async (partyId: number) => {
   const { data } = await authInstance.patch<ApiResponse<PartyCompleteResult>>(
     `/parties/${partyId}/complete`
+  );
+
+  return data.data;
+};
+
+// 배달팟 MVP 정산 완료 API
+export const settleParty = async (partyId: number) => {
+  const { data } = await authInstance.patch<ApiResponse<PartySettleResult>>(
+    `/parties/${partyId}/settle`
   );
 
   return data.data;

@@ -8,7 +8,9 @@ const STATUS_MAP: Record<string, NonNullable<StatusBadgeProps["status"]>> = {
   RECRUITING: "recruiting",
   CLOSED: "closed",
   ORDERED: "ordered",
+  DELIVERED: "arrived",
   COMPLETED: "arrived",
+  SETTLED: "settled",
   CANCELED: "cancelled",
 };
 
