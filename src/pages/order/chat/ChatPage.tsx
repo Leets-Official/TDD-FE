@@ -164,6 +164,7 @@ export default function ChatPage() {
                       title="정산을 완료하셨나요?"
                       description="정산을 완료하고 배달팟 후기를 남겨봐요!"
                       buttonLabel="정산 완료"
+                      buttonDisabled={isSettlementCompleted}
                       onButtonClick={handleSettlementCompleteClick}
                       className="ml-14"
                     />
