@@ -18,6 +18,8 @@ export const API_ERROR_MESSAGE = {
     "평가 대상 목록을 불러오지 못했어요. 잠시 후 다시 시도해주세요",
   REVIEW_CREATE: "매너 평가 등록에 실패했어요. 잠시 후 다시 시도해주세요",
   DELIVERY_COMPLETE: "배달 완료 처리에 실패했어요. 잠시 후 다시 시도해주세요",
+  SETTLEMENT_REQUEST: "정산 요청에 실패했어요. 잠시 후 다시 시도해주세요",
+  SETTLEMENT_COMPLETE: "정산 완료 처리에 실패했어요. 잠시 후 다시 시도해주세요",
   SIGNUP: "회원가입에 실패했어요. 잠시 후 다시 시도해주세요",
   PASSWORD_RESET: "비밀번호 재설정에 실패했어요. 잠시 후 다시 시도해주세요",
   BOARD_CREATE: "게시글 작성에 실패했어요. 잠시 후 다시 시도해주세요",
