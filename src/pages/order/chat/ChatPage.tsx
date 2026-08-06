@@ -39,6 +39,7 @@ export default function ChatPage() {
     handleCopyAccountClick,
     handleReviewClick,
     handleSendMessage,
+    handleSendImages,
   } = useChatMessages();
 
   const handleSend = (value: string) => {
@@ -100,6 +101,7 @@ export default function ChatPage() {
           value={messageValue}
           onChange={(event) => setMessageValue(event.target.value)}
           onSend={handleSend}
+          onImagesSelected={handleSendImages}
         />
       }
     >
@@ -209,6 +211,9 @@ export default function ChatPage() {
               nickname={showNickname ? item.senderNickname : undefined}
               avatarSrc={showNickname ? getAvatarSrc(item.senderId) : undefined}
               message={item.content ?? ""}
+              imageUrl={
+                item.messageType === "IMAGE" ? item.imageUrl : undefined
+              }
               time={formatChatTime(item.createdAt)}
             />
           );
