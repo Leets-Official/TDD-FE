@@ -1,6 +1,6 @@
 import { getApiErrorMessage } from "@/api/error";
 import { useSignup } from "@/api/user/query";
-import { API_ERROR_MESSAGE } from "@/constants/errorMessage";
+import { AUTH_ERROR_MESSAGE } from "@/constants/errorMessage/auth";
 import { useToast } from "@/hooks/useToast";
 import type { ProfileFormValues } from "@/schemas/auth";
 
@@ -36,7 +36,7 @@ export function useSignupSubmit({
         onError: (error) => {
           openToast({
             variant: "error",
-            message: getApiErrorMessage(error, API_ERROR_MESSAGE.SIGNUP),
+            message: getApiErrorMessage(error, AUTH_ERROR_MESSAGE.SIGNUP),
           });
         },
       }

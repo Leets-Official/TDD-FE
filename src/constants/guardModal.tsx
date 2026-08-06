@@ -6,6 +6,13 @@ type GuardModalProps = Omit<
   "isOpen" | "onClose" | "onOutlineClick" | "onPrimaryClick"
 >;
 
+// 한 번 차단하면 코드로 다시 물을 수 없어 직접 켜도록 안내합니다
+export const PUSH_PERMISSION_MODAL_PROPS: GuardModalProps = {
+  title: "알림이 차단되어 있어요",
+  description: "설정에서 알림을 허용해주세요",
+  primaryLabel: "확인",
+};
+
 // 인증 상태를 못 읽은 것뿐이라 미인증으로 단정하지 않고 재시도를 안내합니다
 export const ME_FETCH_FAILED_MODAL_PROPS: GuardModalProps = {
   title: "정보를 불러오지 못했어요",

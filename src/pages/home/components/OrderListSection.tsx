@@ -1,6 +1,7 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 import { Dropdown } from "@/components/dropdown/Dropdown";
+import { useNowAt } from "@/hooks/useNowAt";
 
 import {
   DORM_OPTIONS,
@@ -37,13 +38,10 @@ export function OrderListSection({
   onCardClick,
 }: OrderListSectionProps) {
   const [orderTimeMinutes, setOrderTimeMinutes] = useState("");
-  const [now, setNow] = useState(() => Date.now());
-  useEffect(() => {
-    const intervalId = setInterval(() => setNow(Date.now()), 1000);
-    return () => clearInterval(intervalId);
-  }, []);
 
+  const now = useNowAt(orders.map((order) => order.deadline));
   const activeOrders = orders.filter((order) => order.deadline > now);
+
   // dorm/menu는 usePartyList 호출 시 categoryId/dormitoryId로 이미 서버에서 필터링됨
   const filteredOrders = filterOrders(activeOrders, {
     dorm: "",

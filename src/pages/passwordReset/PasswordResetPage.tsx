@@ -9,6 +9,7 @@ import { useVerifiedEmail } from "@/hooks/useVerifiedEmail";
 import { useEmailVerification } from "@/hooks/useEmailVerification";
 import { usePasswordResetSubmit } from "@/pages/passwordReset/hooks/usePasswordResetSubmit";
 import { VERIFIED_EMAIL_KEY } from "@/constants/storage";
+import { EMAIL_VERIFY_TOAST_MESSAGE } from "@/constants/toastMessage";
 import { useGoBack } from "@/hooks/useGoBack";
 import { PATH } from "@/routes/paths";
 
@@ -32,7 +33,7 @@ export default function PasswordResetPage() {
     purpose: "RESET_PASSWORD",
     onVerified: (email) => {
       markVerified(email);
-      openToast({ message: "학교 이메일 인증이 완료되었습니다!" });
+      openToast({ message: EMAIL_VERIFY_TOAST_MESSAGE.VERIFY_SUCCESS });
       setIsStepValid(false);
       setStep("password");
     },

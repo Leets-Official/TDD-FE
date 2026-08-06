@@ -15,6 +15,7 @@ import {
   settleParty,
 } from "@/api/order/api";
 import type { MyPartyListParams, PartyListParams } from "@/types/order/order";
+import { isValidPartyId } from "@/utils/order/isValidPartyId";
 
 // 배달팟 목록 조회 API
 export const usePartyList = (params?: PartyListParams) =>
@@ -35,7 +36,7 @@ export const usePartyDetail = (partyId: number) =>
   useQuery({
     queryKey: ["parties", partyId],
     queryFn: () => getPartyDetail(partyId),
-    enabled: Number.isFinite(partyId),
+    enabled: isValidPartyId(partyId),
   });
 
 // 배달팟 참여자 목록 API
@@ -43,7 +44,7 @@ export const usePartyParticipants = (partyId: number) =>
   useQuery({
     queryKey: ["parties", partyId, "participants"],
     queryFn: () => getPartyParticipants(partyId),
-    enabled: Number.isFinite(partyId),
+    enabled: isValidPartyId(partyId),
   });
 
 // 배달팟 취소(모집 취소) API

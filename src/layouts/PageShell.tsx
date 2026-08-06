@@ -21,8 +21,7 @@ export function PageShell({
   return (
     <div
       className={cn(
-        // 키보드가 뜬 동안에는 홈 인디케이터가 키보드에 가려지므로 하단 safe-area를 걷어냅니다
-        "flex min-h-0 w-full flex-1 flex-col overflow-hidden bg-white pt-[env(safe-area-inset-top)] pb-[max(0px,calc(env(safe-area-inset-bottom)-var(--keyboard-inset,0px)))]",
+        "flex min-h-0 w-full flex-1 flex-col overflow-hidden bg-white",
         className
       )}
     >

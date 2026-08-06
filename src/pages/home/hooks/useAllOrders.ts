@@ -3,7 +3,7 @@ import { useEffect } from "react";
 import { getApiErrorMessage } from "@/api/error";
 import { usePartyList } from "@/api/order/query";
 import type { FoodCategory } from "@/components/card/categoryIcons";
-import { API_ERROR_MESSAGE } from "@/constants/errorMessage";
+import { ORDER_ERROR_MESSAGE } from "@/constants/errorMessage/order";
 import { FOOD_CATEGORY_ID_MAP } from "@/constants/order/foodCategory";
 import { useToast } from "@/hooks/useToast";
 import { toOrderItem } from "@/utils/order/toOrderItem";
@@ -28,7 +28,7 @@ export function useAllOrders({ dorm, menu }: UseAllOrdersParams) {
   useEffect(() => {
     if (!isError) return;
     openToast({
-      message: getApiErrorMessage(error, API_ERROR_MESSAGE.ORDER_LIST),
+      message: getApiErrorMessage(error, ORDER_ERROR_MESSAGE.LIST),
     });
   }, [isError, error, openToast]);
 

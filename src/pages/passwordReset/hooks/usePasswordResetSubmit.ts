@@ -1,6 +1,6 @@
 import { getApiErrorMessage } from "@/api/error";
 import { usePasswordReset } from "@/api/auth/query";
-import { API_ERROR_MESSAGE } from "@/constants/errorMessage";
+import { AUTH_ERROR_MESSAGE } from "@/constants/errorMessage/auth";
 import { useToast } from "@/hooks/useToast";
 import type { PasswordFormValues } from "@/schemas/auth";
 
@@ -26,7 +26,7 @@ export function usePasswordResetSubmit({
             variant: "error",
             message: getApiErrorMessage(
               error,
-              API_ERROR_MESSAGE.PASSWORD_RESET
+              AUTH_ERROR_MESSAGE.PASSWORD_RESET
             ),
           });
         },
