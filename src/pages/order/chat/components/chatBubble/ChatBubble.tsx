@@ -1,5 +1,7 @@
 import type { ComponentPropsWithRef } from "react";
+import { useState } from "react";
 
+import ImageUpIcon from "@/assets/icons/ImageUpIcon.svg?react";
 import { Avatar } from "@/components/avatar/Avatar";
 import { type VariantProps } from "@/utils/cn";
 
@@ -9,7 +11,8 @@ export interface ChatBubbleProps
   extends
     Omit<ComponentPropsWithRef<"div">, "children">,
     VariantProps<typeof chatBubbleVariants> {
-  message: string;
+  message?: string;
+  imageUrl?: string | null;
   time?: string;
   nickname?: string;
   avatarSrc?: string;
@@ -17,6 +20,7 @@ export interface ChatBubbleProps
 
 export function ChatBubble({
   message,
+  imageUrl,
   time,
   isMine,
   nickname,
@@ -26,12 +30,32 @@ export function ChatBubble({
 }: ChatBubbleProps) {
   const isContinuation = !isMine && !nickname;
   const styles = chatBubbleVariants({ isMine, continuation: isContinuation });
+  // 로드 실패 시 대체 이미지로 표시
+  const [imageFailed, setImageFailed] = useState(false);
 
-  const bubble = (
-    <div className={styles.bubble()}>
-      <p className={styles.message()}>{message}</p>
-    </div>
-  );
+  let bubble: React.ReactNode;
+  if (imageUrl && !imageFailed) {
+    bubble = (
+      <img
+        src={imageUrl}
+        alt="전송된 사진"
+        className={styles.image()}
+        onError={() => setImageFailed(true)}
+      />
+    );
+  } else if (imageUrl) {
+    bubble = (
+      <div className={styles.imageFallback()}>
+        <ImageUpIcon className="size-6 text-text-4" />
+      </div>
+    );
+  } else {
+    bubble = (
+      <div className={styles.bubble()}>
+        <p className={styles.message()}>{message}</p>
+      </div>
+    );
+  }
 
   if (!nickname) {
     return (

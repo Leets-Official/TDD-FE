@@ -10,6 +10,9 @@ export const chatBubbleVariants = tv({
     bubble:
       "flex max-w-[70vw] shrink-0 items-center px-padding-m py-padding-xxs",
     message: "text-body-1 wrap-break-word",
+    image: "size-40 shrink-0 rounded-sm object-cover",
+    imageFallback:
+      "flex size-40 shrink-0 items-center justify-center rounded-sm bg-bg-3",
     time: "shrink-0 text-caption-2 whitespace-nowrap text-text-4",
   },
   variants: {
