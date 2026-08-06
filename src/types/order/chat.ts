@@ -40,3 +40,10 @@ export interface ChatSendMessagePayload {
   content: string | null;
   imageUrl: string | null;
 }
+
+// 채팅 이미지 업로드 1단계(업로드 URL 발급) 응답
+export interface ChatImagePresignResponse {
+  key: string;
+  uploadUrl: string;
+  contentType: string;
+}
