@@ -1,4 +1,4 @@
-import { Fragment, useState } from "react";
+import { Fragment, useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router";
 
 import { ChatInput } from "@/components/chatInput/ChatInput";
@@ -39,12 +39,19 @@ export default function ChatPage() {
     handleCopyAccountClick,
     handleReviewClick,
     handleSendMessage,
+    handleSendImages,
   } = useChatMessages();
 
   const handleSend = (value: string) => {
     handleSendMessage(value);
     setMessageValue("");
   };
+
+  // 메시지가 추가될 때(입장 시 히스토리 로드 포함)마다 맨 아래로 스크롤
+  const bottomRef = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    bottomRef.current?.scrollIntoView();
+  }, [chatMessages.length]);
 
   // 가장 최근 정산 요청 메시지를 찾아 실제 계좌 정보를 가져온다
   const settlementRequestMessage = chatMessages.findLast(
@@ -100,6 +107,7 @@ export default function ChatPage() {
           value={messageValue}
           onChange={(event) => setMessageValue(event.target.value)}
           onSend={handleSend}
+          onImagesSelected={handleSendImages}
         />
       }
     >
@@ -209,10 +217,14 @@ export default function ChatPage() {
               nickname={showNickname ? item.senderNickname : undefined}
               avatarSrc={showNickname ? getAvatarSrc(item.senderId) : undefined}
               message={item.content ?? ""}
+              imageUrl={
+                item.messageType === "IMAGE" ? item.imageUrl : undefined
+              }
               time={formatChatTime(item.createdAt)}
             />
           );
         })}
+        <div ref={bottomRef} />
       </div>
     </PageShell>
   );

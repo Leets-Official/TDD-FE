@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { generatePath, useNavigate, useParams } from "react-router";
 
+import { uploadChatImage } from "@/api/order/chat/api";
 import { useChatMessageHistory } from "@/api/order/chat/query";
 import { getApiErrorMessage } from "@/api/error";
 import {
@@ -14,6 +15,8 @@ import { useRequestSettlement } from "@/api/order/settlement/query";
 import { useMyPage } from "@/api/user/query";
 import { ORDER_ERROR_MESSAGE } from "@/constants/errorMessage/order";
 import { ORDER_TOAST_MESSAGE } from "@/constants/toastMessage";
+import { API_ERROR_MESSAGE } from "@/constants/errorMessage";
+import { isUploadImageContentType } from "@/constants/imageUpload";
 import { useModal } from "@/hooks/useModal";
 import { useToast } from "@/hooks/useToast";
 import { PATH } from "@/routes/paths";
@@ -262,6 +265,34 @@ export function useChatMessages() {
     }
   };
 
+  // 사진첩에서 선택한 이미지를 순서대로 업로드하고, 성공할 때마다 IMAGE 메시지를 전송한다
+  const handleSendImages = async (files: File[]) => {
+    if (!Number.isFinite(partyId)) return;
+
+    for (const file of files) {
+      if (!isUploadImageContentType(file.type)) {
+        openToast({ message: "지원하지 않는 이미지 형식이에요" });
+        continue;
+      }
+
+      try {
+        const key = await uploadChatImage(partyId, file, file.type);
+        const sent = sendMessage({
+          messageType: "IMAGE",
+          content: null,
+          imageUrl: key,
+        });
+
+        if (!sent) {
+          openToast({ message: "이미지를 보내지 못했어요" });
+          break;
+        }
+      } catch {
+        openToast({ message: "이미지 업로드에 실패했어요" });
+      }
+    }
+  };
+
   return {
     chatMessages,
     myUserId,
@@ -281,5 +312,6 @@ export function useChatMessages() {
     handleCopyAccountClick,
     handleReviewClick,
     handleSendMessage,
+    handleSendImages,
   };
 }
