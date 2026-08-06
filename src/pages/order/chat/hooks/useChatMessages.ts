@@ -15,7 +15,6 @@ import { useRequestSettlement } from "@/api/order/settlement/query";
 import { useMyPage } from "@/api/user/query";
 import { ORDER_ERROR_MESSAGE } from "@/constants/errorMessage/order";
 import { ORDER_TOAST_MESSAGE } from "@/constants/toastMessage";
-import { API_ERROR_MESSAGE } from "@/constants/errorMessage";
 import { isUploadImageContentType } from "@/constants/imageUpload";
 import { useModal } from "@/hooks/useModal";
 import { useToast } from "@/hooks/useToast";
