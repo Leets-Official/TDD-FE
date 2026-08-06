@@ -16,6 +16,7 @@ import { useMe } from "@/hooks/useMe";
 import { useModal } from "@/hooks/useModal";
 import { useToast } from "@/hooks/useToast";
 import { PATH } from "@/routes/paths";
+import { isValidPartyId } from "@/utils/order/isValidPartyId";
 
 export type ParticipationStatus = "none" | "applied" | "matched";
 
@@ -51,6 +52,7 @@ export function useOrderActions({ partyId, orderId }: UseOrderActionsParams) {
   const [isCancelled, setIsCancelled] = useState(false);
 
   function handleApplyClick() {
+    if (!isValidPartyId(partyId)) return;
     if (!ensureDormVerified()) return;
 
     if (isNoshowRestricted) {
@@ -76,6 +78,7 @@ export function useOrderActions({ partyId, orderId }: UseOrderActionsParams) {
   }
 
   function handleCancelRecruitClick() {
+    if (!isValidPartyId(partyId)) return;
     openModal({
       props: confirmModalProps("정말로 모집을 \n 취소하시겠습니까?"),
       onConfirm: () => {
@@ -94,6 +97,7 @@ export function useOrderActions({ partyId, orderId }: UseOrderActionsParams) {
   }
 
   function handleCloseRecruitClick() {
+    if (!isValidPartyId(partyId)) return;
     openModal({
       props: confirmModalProps("정말로 모집을 \n 마감하시겠습니까?"),
       onConfirm: () => {
@@ -109,6 +113,7 @@ export function useOrderActions({ partyId, orderId }: UseOrderActionsParams) {
   }
 
   function handleCancelClick() {
+    if (!isValidPartyId(partyId)) return;
     openModal({
       props: confirmModalProps("정말로 배달팟 참여를 \n 취소하시겠습니까?"),
       onConfirm: () => {
@@ -127,7 +132,7 @@ export function useOrderActions({ partyId, orderId }: UseOrderActionsParams) {
   }
 
   function handleEnterChat() {
-    if (!orderId) return;
+    if (!isValidPartyId(partyId) || !orderId) return;
     navigate(generatePath(PATH.ORDER_CHAT, { orderId }));
   }
 

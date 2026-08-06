@@ -6,6 +6,7 @@ import { useMe } from "@/hooks/useMe";
 import { useNowAt } from "@/hooks/useNowAt";
 import { BackHeader } from "@/layouts/BackHeader";
 import { PageShell } from "@/layouts/PageShell";
+import { isValidPartyId } from "@/utils/order/isValidPartyId";
 
 import { OrderDetailBody } from "./components/OrderDetailBody";
 import {
@@ -29,9 +30,29 @@ function OrderDetailMessage({ children }: { children: ReactNode }) {
 
 export default function OrderDetailPage() {
   const { orderId } = useParams();
+  const partyId = Number(orderId);
+
+  if (!isValidPartyId(partyId) || !orderId) {
+    return (
+      <PageShell header={<BackHeader title="" />}>
+        <OrderDetailMessage>존재하지 않는 배달팟이에요.</OrderDetailMessage>
+      </PageShell>
+    );
+  }
+
+  return (
+    <OrderDetailContent key={partyId} partyId={partyId} orderId={orderId} />
+  );
+}
+
+interface OrderDetailContentProps {
+  partyId: number;
+  orderId: string;
+}
+
+function OrderDetailContent({ partyId, orderId }: OrderDetailContentProps) {
   const { userId } = useMe();
 
-  const partyId = Number(orderId);
   const {
     order,
     participants,
@@ -39,6 +60,7 @@ export default function OrderDetailPage() {
     isPending,
     isError,
     isParticipantsPending,
+    isParticipantsFetching,
     isParticipantsError,
   } = useOrderDetail(partyId);
   const {
@@ -55,14 +77,6 @@ export default function OrderDetailPage() {
   const now = useNowAt([order?.deadline]);
 
   const resolveView = (): OrderDetailView => {
-    if (!Number.isFinite(partyId)) {
-      return {
-        body: (
-          <OrderDetailMessage>존재하지 않는 배달팟이에요.</OrderDetailMessage>
-        ),
-      };
-    }
-
     if (isPending) {
       return { body: <OrderDetailSkeleton />, bottom: <OrderCtaBarSkeleton /> };
     }
@@ -106,6 +120,10 @@ export default function OrderDetailPage() {
     const effectiveStatus: ParticipationStatus = hasParticipantsLoaded
       ? serverDerivedStatus
       : status;
+    // 최초 조회 전, 조회 실패, mutation 후 재검증 중에는 오래된 참가자 상태로 액션하지 못하게 한다.
+    const isParticipantSnapshotPending =
+      !hasParticipantsLoaded || isParticipantsFetching || isParticipantsError;
+    const isCtaPending = isActionPending || isParticipantSnapshotPending;
 
     // 마감 시각이 지났는데 최소 인원을 못 채웠으면 자동 취소로 간주 (모집중 상태일 때만, 참여자 조회가 끝난 후에만)
     const isAutoCancelled =
@@ -138,7 +156,7 @@ export default function OrderDetailPage() {
           onCancelRecruit: handleCancelRecruitClick,
           onCloseRecruit: handleCloseRecruitClick,
           canCloseRecruit: participants.length >= order.minCount,
-          isPending: isActionPending,
+          isPending: isCtaPending,
         };
       }
 
@@ -151,7 +169,7 @@ export default function OrderDetailPage() {
           maxCount: order.maxCount,
           deadline: order.deadline,
           onCancel: handleCancelClick,
-          isPending: isActionPending,
+          isPending: isCtaPending,
         };
       }
 
@@ -165,7 +183,7 @@ export default function OrderDetailPage() {
         maxCount: order.maxCount,
         deadline: order.deadline,
         onApply: handleApplyClick,
-        isPending: isActionPending,
+        isPending: isCtaPending,
       };
     };
 

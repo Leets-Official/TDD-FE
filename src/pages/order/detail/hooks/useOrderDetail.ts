@@ -18,6 +18,8 @@ export function useOrderDetail(partyId: number) {
   const {
     data: partyParticipants,
     isPending: isParticipantsPending,
+    isFetching: isParticipantsFetching,
+    isSuccess: isParticipantsSuccess,
     isError: isParticipantsError,
     error: participantsError,
   } = usePartyParticipants(partyId);
@@ -44,11 +46,12 @@ export function useOrderDetail(partyId: number) {
     participants: partyParticipants
       ? toProfilesItems(partyParticipants.participants)
       : [],
-    // 한 번이라도 로드됐는지 — 낙관적 로컬 상태 대신 서버 값을 쓸 시점 판단에 필요
-    hasParticipantsLoaded: partyParticipants !== undefined,
+    // CTA는 성공한 참가자 스냅샷이 생긴 뒤에만 서버 상태에서 파생한다.
+    hasParticipantsLoaded: isParticipantsSuccess,
     isPending,
     isError,
     isParticipantsPending,
+    isParticipantsFetching,
     isParticipantsError,
   };
 }
