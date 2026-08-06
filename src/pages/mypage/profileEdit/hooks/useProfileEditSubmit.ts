@@ -2,14 +2,12 @@ import { useEffect, useRef, useState } from "react";
 
 import { getApiErrorMessage } from "@/api/error";
 import { useUpdateProfile } from "@/api/user/query";
-import {
-  API_ERROR_MESSAGE,
-  PROFILE_IMAGE_TOAST_MESSAGE,
-} from "@/constants/errorMessage";
+import { USER_ERROR_MESSAGE } from "@/constants/errorMessage/user";
 import {
   isUploadImageContentType,
   type UploadImageContentType,
 } from "@/constants/imageUpload";
+import { PROFILE_IMAGE_TOAST_MESSAGE } from "@/constants/toastMessage";
 import { useToast } from "@/hooks/useToast";
 import type { ProfileFormValues } from "@/schemas/auth";
 import { useGoBack } from "@/hooks/useGoBack";
@@ -71,7 +69,7 @@ export function useProfileEditSubmit() {
             variant: "error",
             message: getApiErrorMessage(
               error,
-              API_ERROR_MESSAGE.PROFILE_UPDATE
+              USER_ERROR_MESSAGE.PROFILE_UPDATE
             ),
           });
         },

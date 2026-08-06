@@ -3,7 +3,7 @@ import { useState } from "react";
 
 import { useBoardCommentList, useCreateBoardComment } from "@/api/board/query";
 import { getApiErrorMessage } from "@/api/error";
-import { API_ERROR_MESSAGE } from "@/constants/errorMessage";
+import { BOARD_ERROR_MESSAGE } from "@/constants/errorMessage/board";
 import { useToast } from "@/hooks/useToast";
 import type { BoardCommentListItem } from "@/types/board/board";
 
@@ -69,7 +69,7 @@ export function useBoardComments(postId: string | undefined) {
           openToast({
             message: getApiErrorMessage(
               error,
-              API_ERROR_MESSAGE.BOARD_COMMENT_CREATE
+              BOARD_ERROR_MESSAGE.COMMENT_CREATE
             ),
           });
         },

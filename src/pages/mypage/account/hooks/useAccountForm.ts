@@ -7,7 +7,7 @@ import {
   useRegisterBankAccount,
   useUpdateBankAccount,
 } from "@/api/user/query";
-import { API_ERROR_MESSAGE } from "@/constants/errorMessage";
+import { USER_ERROR_MESSAGE } from "@/constants/errorMessage/user";
 import { useToast } from "@/hooks/useToast";
 import { accountFormSchema, type AccountFormValues } from "@/schemas/account";
 import { useGoBack } from "@/hooks/useGoBack";
@@ -87,7 +87,7 @@ export function useAccountForm() {
       onError: (error) => {
         openToast({
           variant: "error",
-          message: getApiErrorMessage(error, API_ERROR_MESSAGE.ACCOUNT_SAVE),
+          message: getApiErrorMessage(error, USER_ERROR_MESSAGE.ACCOUNT_SAVE),
         });
       },
     });

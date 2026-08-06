@@ -6,7 +6,8 @@ import { getApiErrorMessage } from "@/api/error";
 import { Button } from "@/components/button/Button";
 import { TextField } from "@/components/textField/TextField";
 import { Textarea } from "@/components/textarea/Textarea";
-import { API_ERROR_MESSAGE } from "@/constants/errorMessage";
+import { BOARD_ERROR_MESSAGE } from "@/constants/errorMessage/board";
+import { BOARD_TOAST_MESSAGE } from "@/constants/toastMessage";
 import { useToast } from "@/hooks/useToast";
 import { BackHeader } from "@/layouts/BackHeader";
 import { PageShell } from "@/layouts/PageShell";
@@ -28,14 +29,14 @@ export default function BoardCreatePage() {
       { title, content },
       {
         onSuccess: (postId) => {
-          openToast({ message: "게시글이 성공적으로 작성되었어요!" });
+          openToast({ message: BOARD_TOAST_MESSAGE.CREATE_SUCCESS });
           navigate(PATH.BOARD_DETAIL.replace(":postId", String(postId)), {
             replace: true,
           });
         },
         onError: (error) => {
           openToast({
-            message: getApiErrorMessage(error, API_ERROR_MESSAGE.BOARD_CREATE),
+            message: getApiErrorMessage(error, BOARD_ERROR_MESSAGE.CREATE),
           });
         },
       }

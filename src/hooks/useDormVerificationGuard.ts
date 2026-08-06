@@ -3,7 +3,7 @@ import { useNavigate } from "react-router";
 import {
   DORM_VERIFICATION_MODAL_PROPS,
   ME_FETCH_FAILED_MODAL_PROPS,
-} from "@/constants/order/guardModals";
+} from "@/constants/guardModal";
 import { useMe } from "@/hooks/useMe";
 import { useModal } from "@/hooks/useModal";
 import { PATH } from "@/routes/paths";

@@ -8,7 +8,8 @@ import {
   usePostPartyReview,
 } from "@/api/order/review/query";
 import { Button } from "@/components/button/Button";
-import { API_ERROR_MESSAGE } from "@/constants/errorMessage";
+import { ORDER_ERROR_MESSAGE } from "@/constants/errorMessage/order";
+import { ORDER_TOAST_MESSAGE } from "@/constants/toastMessage";
 import { useToast } from "@/hooks/useToast";
 import { BackHeader } from "@/layouts/BackHeader";
 import { PageShell } from "@/layouts/PageShell";
@@ -68,7 +69,7 @@ export default function ReviewPage() {
   useEffect(() => {
     if (!isError) return;
     openToast({
-      message: getApiErrorMessage(error, API_ERROR_MESSAGE.REVIEW_TARGETS),
+      message: getApiErrorMessage(error, ORDER_ERROR_MESSAGE.REVIEW_TARGETS),
     });
   }, [isError, error, openToast]);
 
@@ -98,13 +99,13 @@ export default function ReviewPage() {
 
       await Promise.all(requests);
 
-      openToast({ message: "매너 평가가 등록되었어요" });
+      openToast({ message: ORDER_TOAST_MESSAGE.REVIEW_SUCCESS });
       navigate(PATH.HOME, { replace: true });
     } catch (submitError) {
       openToast({
         message: getApiErrorMessage(
           submitError,
-          API_ERROR_MESSAGE.REVIEW_CREATE
+          ORDER_ERROR_MESSAGE.REVIEW_CREATE
         ),
       });
     } finally {

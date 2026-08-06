@@ -1,12 +1,12 @@
 import { isAxiosError } from "axios";
 
-import { API_ERROR_MESSAGE } from "@/constants/errorMessage";
+import { COMMON_ERROR_MESSAGE } from "@/constants/errorMessage/common";
 import type { ApiErrorResponse, ApiFieldErrors } from "@/types/api";
 
 // 서버가 내려준 에러 메시지, 비어 있으면 화면별 기본 문구
 export const getApiErrorMessage = (
   error: unknown,
-  fallback: string = API_ERROR_MESSAGE.DEFAULT
+  fallback: string = COMMON_ERROR_MESSAGE.DEFAULT
 ) => {
   if (isAxiosError<ApiErrorResponse>(error)) {
     return error.response?.data?.message?.trim() || fallback;

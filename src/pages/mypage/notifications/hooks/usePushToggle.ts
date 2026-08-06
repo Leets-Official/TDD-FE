@@ -5,11 +5,9 @@ import {
   useRegisterPushSubscription,
   useUpdatePushSetting,
 } from "@/api/notification/query";
-import {
-  API_ERROR_MESSAGE,
-  PUSH_PERMISSION_GUIDE,
-  PUSH_TOAST_MESSAGE,
-} from "@/constants/errorMessage";
+import { USER_ERROR_MESSAGE } from "@/constants/errorMessage/user";
+import { PUSH_PERMISSION_MODAL_PROPS } from "@/constants/guardModal";
+import { PUSH_TOAST_MESSAGE } from "@/constants/toastMessage";
 import { useMe } from "@/hooks/useMe";
 import { useModal } from "@/hooks/useModal";
 import { useToast } from "@/hooks/useToast";
@@ -53,13 +51,7 @@ export function usePushToggle() {
         if (permission !== "granted") {
           // 차단 상태는 팝업을 다시 못 띄우므로 직접 켜는 경로를 안내합니다
           if (permission === "denied") {
-            openModal({
-              props: {
-                title: PUSH_PERMISSION_GUIDE.TITLE,
-                description: PUSH_PERMISSION_GUIDE.DESCRIPTION,
-                primaryLabel: "확인",
-              },
-            });
+            openModal({ props: PUSH_PERMISSION_MODAL_PROPS });
           } else {
             openToast({ message: PUSH_TOAST_MESSAGE.PERMISSION_NEEDED });
           }
@@ -80,7 +72,7 @@ export function usePushToggle() {
       // 저장에 실패하면 화면만 바뀐 상태가 되므로 되돌립니다
       setChanged(previous);
       openToast({
-        message: getApiErrorMessage(error, API_ERROR_MESSAGE.PUSH_SETTING),
+        message: getApiErrorMessage(error, USER_ERROR_MESSAGE.PUSH_SETTING),
       });
     } finally {
       setIsPending(false);

@@ -8,7 +8,7 @@ import { loginSchema, type LoginFormValues } from "@/schemas/auth";
 import { PATH } from "@/routes/paths";
 import { useLogin } from "@/api/auth/query";
 import { getApiErrorMessage, getApiFieldErrors } from "@/api/error";
-import { API_ERROR_MESSAGE } from "@/constants/errorMessage";
+import { AUTH_ERROR_MESSAGE } from "@/constants/errorMessage/auth";
 import { useToast } from "@/hooks/useToast";
 
 const LOGIN_FORM_ID = "login-form";
@@ -44,7 +44,7 @@ export default function LoginPage() {
 
         openToast({
           variant: "error",
-          message: getApiErrorMessage(error, API_ERROR_MESSAGE.LOGIN),
+          message: getApiErrorMessage(error, AUTH_ERROR_MESSAGE.LOGIN),
         });
       },
     });

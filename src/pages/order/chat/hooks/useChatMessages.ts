@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { generatePath, useNavigate, useParams } from "react-router";
 
+import { uploadChatImage } from "@/api/order/chat/api";
 import { useChatMessageHistory } from "@/api/order/chat/query";
 import { getApiErrorMessage } from "@/api/error";
 import {
@@ -12,7 +13,9 @@ import {
 } from "@/api/order/query";
 import { useRequestSettlement } from "@/api/order/settlement/query";
 import { useMyPage } from "@/api/user/query";
-import { API_ERROR_MESSAGE } from "@/constants/errorMessage";
+import { ORDER_ERROR_MESSAGE } from "@/constants/errorMessage/order";
+import { ORDER_TOAST_MESSAGE } from "@/constants/toastMessage";
+import { isUploadImageContentType } from "@/constants/imageUpload";
 import { useModal } from "@/hooks/useModal";
 import { useToast } from "@/hooks/useToast";
 import { PATH } from "@/routes/paths";
@@ -64,10 +67,11 @@ export function useChatMessages() {
     setTrackedOrderId(orderId);
     setRealtimeMessages([]);
   }
-  // 히스토리 조회 결과와 실시간 수신 메시지를 병합 — 소켓이 히스토리보다 먼저 받은 메시지가 덮어쓰지 않도록 병합
+  // 히스토리+실시간 메시지를 합집합으로 병합(메시지 유실 방지). 동일 messageId면 히스토리가 우선 —
+  // 주기적 재조회로 갱신되는 imageUrl(presigned URL)이 오래된 소켓 값에 덮이지 않도록 함
   const chatMessages = [
     ...new Map(
-      [...(messageHistory ?? []), ...realtimeMessages].map((item) => [
+      [...realtimeMessages, ...(messageHistory ?? [])].map((item) => [
         item.messageId,
         item,
       ])
@@ -109,10 +113,7 @@ export function useChatMessages() {
         orderParty(partyId, {
           onError: (error) => {
             openToast({
-              message: getApiErrorMessage(
-                error,
-                API_ERROR_MESSAGE.ORDER_COMPLETE
-              ),
+              message: getApiErrorMessage(error, ORDER_ERROR_MESSAGE.COMPLETE),
             });
           },
         });
@@ -139,7 +140,7 @@ export function useChatMessages() {
             openToast({
               message: getApiErrorMessage(
                 error,
-                API_ERROR_MESSAGE.DELIVERY_COMPLETE
+                ORDER_ERROR_MESSAGE.DELIVERY_COMPLETE
               ),
             });
           },
@@ -174,7 +175,7 @@ export function useChatMessages() {
               openToast({
                 message: getApiErrorMessage(
                   error,
-                  API_ERROR_MESSAGE.SETTLEMENT_REQUEST
+                  ORDER_ERROR_MESSAGE.SETTLEMENT_REQUEST
                 ),
               });
             },
@@ -202,7 +203,7 @@ export function useChatMessages() {
             openToast({
               message: getApiErrorMessage(
                 error,
-                API_ERROR_MESSAGE.SETTLEMENT_COMPLETE
+                ORDER_ERROR_MESSAGE.SETTLEMENT_COMPLETE
               ),
             });
           },
@@ -229,17 +230,17 @@ export function useChatMessages() {
   // 계좌번호 복사 버튼 클릭 시 토스트 - 복사 성공 여부에 따라 문구 분기
   const handleCopyAccountClick = (accountText: string) => {
     if (!accountText) {
-      openToast({ message: "계좌 정보를 불러오지 못했어요" });
+      openToast({ message: ORDER_TOAST_MESSAGE.ACCOUNT_LOAD_FAILED });
       return;
     }
 
     navigator.clipboard
       .writeText(accountText)
       .then(() => {
-        openToast({ message: "계좌번호가 복사되었습니다" });
+        openToast({ message: ORDER_TOAST_MESSAGE.ACCOUNT_COPY_SUCCESS });
       })
       .catch(() => {
-        openToast({ message: "계좌번호 복사에 실패했습니다" });
+        openToast({ message: ORDER_TOAST_MESSAGE.ACCOUNT_COPY_FAILED });
       });
   };
 
@@ -260,7 +261,35 @@ export function useChatMessages() {
     });
 
     if (!sent) {
-      openToast({ message: "연결이 원활하지 않아 메시지를 보내지 못했어요" });
+      openToast({ message: ORDER_TOAST_MESSAGE.MESSAGE_SEND_FAILED });
+    }
+  };
+
+  // 사진첩에서 선택한 이미지를 순서대로 업로드하고, 성공할 때마다 IMAGE 메시지를 전송한다
+  const handleSendImages = async (files: File[]) => {
+    if (!Number.isFinite(partyId)) return;
+
+    for (const file of files) {
+      if (!isUploadImageContentType(file.type)) {
+        openToast({ message: "지원하지 않는 이미지 형식이에요" });
+        continue;
+      }
+
+      try {
+        const key = await uploadChatImage(partyId, file, file.type);
+        const sent = sendMessage({
+          messageType: "IMAGE",
+          content: null,
+          imageUrl: key,
+        });
+
+        if (!sent) {
+          openToast({ message: "이미지를 보내지 못했어요" });
+          break;
+        }
+      } catch {
+        openToast({ message: "이미지 업로드에 실패했어요" });
+      }
     }
   };
 
@@ -283,5 +312,6 @@ export function useChatMessages() {
     handleCopyAccountClick,
     handleReviewClick,
     handleSendMessage,
+    handleSendImages,
   };
 }
