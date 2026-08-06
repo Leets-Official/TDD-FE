@@ -19,6 +19,13 @@ import { PATH } from "@/routes/paths";
 
 export type ParticipationStatus = "none" | "applied" | "matched";
 
+// 이 파일의 확인 모달 셋은 title만 다르다 — 질문은 onConfirm 옆에 남기고 반복되는 라벨만 걷어낸다
+const confirmModalProps = (title: string) => ({
+  title,
+  outlineLabel: "아니요",
+  primaryLabel: "네",
+});
+
 interface UseOrderActionsParams {
   partyId: number;
   orderId?: string;
@@ -70,11 +77,7 @@ export function useOrderActions({ partyId, orderId }: UseOrderActionsParams) {
 
   function handleCancelRecruitClick() {
     openModal({
-      props: {
-        title: "정말로 모집을 \n 취소하시겠습니까?",
-        outlineLabel: "아니요",
-        primaryLabel: "네",
-      },
+      props: confirmModalProps("정말로 모집을 \n 취소하시겠습니까?"),
       onConfirm: () => {
         cancelParty(partyId, {
           onSuccess: () => {
@@ -92,11 +95,7 @@ export function useOrderActions({ partyId, orderId }: UseOrderActionsParams) {
 
   function handleCloseRecruitClick() {
     openModal({
-      props: {
-        title: "정말로 모집을 \n 마감하시겠습니까?",
-        outlineLabel: "아니요",
-        primaryLabel: "네",
-      },
+      props: confirmModalProps("정말로 모집을 \n 마감하시겠습니까?"),
       onConfirm: () => {
         closeParty(partyId, {
           onError: (error) => {
@@ -111,11 +110,7 @@ export function useOrderActions({ partyId, orderId }: UseOrderActionsParams) {
 
   function handleCancelClick() {
     openModal({
-      props: {
-        title: "정말로 배달팟 참여를 \n 취소하시겠습니까?",
-        outlineLabel: "아니요",
-        primaryLabel: "네",
-      },
+      props: confirmModalProps("정말로 배달팟 참여를 \n 취소하시겠습니까?"),
       onConfirm: () => {
         leaveParty(partyId, {
           onSuccess: () => {
