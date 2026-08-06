@@ -23,37 +23,49 @@ function isKeyboardTarget(element: Element | null) {
   return false;
 }
 
-// iOS는 키보드가 올라와도 dvh가 줄지 않아, 키보드가 가리는 높이를 직접 재서 --keyboard-inset에 반영합니다
+const KEYBOARD_THRESHOLD = 80;
+
+// 실제로 보이는 viewport 높이를 앱 높이로 사용합니다.
+// dvh와 키보드 높이를 조합하면 브라우저에 따라 키보드 높이가 두 번 빠질 수 있습니다.
 export function useKeyboardInset() {
   useEffect(() => {
     const viewport = window.visualViewport;
     if (!viewport) return;
 
-    // offsetTop(페이지 팬 오프셋)은 제외합니다. 포함하면 사용자가 팬할 때 inset이 같이 변해 레이아웃이 흔들립니다
     const update = () => {
-      // iOS는 스크롤 중 주소창·툴바를 접었다 펴는데 두 높이가 같은 프레임에 갱신되지 않아,
-      // 키보드가 없어도 0이 아닌 값이 잡힙니다. 입력 포커스가 없으면 키보드도 없으므로 0으로 고정합니다
-      const inset = isKeyboardTarget(document.activeElement)
-        ? Math.max(0, window.innerHeight - viewport.height)
-        : 0;
+      const viewportGap = Math.max(0, window.innerHeight - viewport.height);
+      const isKeyboardOpen =
+        isKeyboardTarget(document.activeElement) &&
+        viewportGap > KEYBOARD_THRESHOLD;
 
       document.documentElement.style.setProperty(
-        "--keyboard-inset",
-        `${inset}px`
+        "--app-viewport-height",
+        `${viewport.height}px`
+      );
+      document.documentElement.style.setProperty(
+        "--app-safe-area-bottom",
+        isKeyboardOpen ? "0px" : "env(safe-area-inset-bottom)"
       );
     };
 
+    let focusFrame = 0;
+    const updateAfterFocusChange = () => {
+      cancelAnimationFrame(focusFrame);
+      focusFrame = requestAnimationFrame(update);
+    };
+
     update();
-    // scroll은 구독하지 않습니다 — offsetTop을 안 쓰므로 값이 바뀔 일이 없고, 크롬이 흔들리는 순간에만 재계산돼 떨림을 만듭니다
     viewport.addEventListener("resize", update);
-    window.addEventListener("focusin", update);
-    window.addEventListener("focusout", update);
+    window.addEventListener("focusin", updateAfterFocusChange);
+    window.addEventListener("focusout", updateAfterFocusChange);
 
     return () => {
+      cancelAnimationFrame(focusFrame);
       viewport.removeEventListener("resize", update);
-      window.removeEventListener("focusin", update);
-      window.removeEventListener("focusout", update);
-      document.documentElement.style.removeProperty("--keyboard-inset");
+      window.removeEventListener("focusin", updateAfterFocusChange);
+      window.removeEventListener("focusout", updateAfterFocusChange);
+      document.documentElement.style.removeProperty("--app-viewport-height");
+      document.documentElement.style.removeProperty("--app-safe-area-bottom");
     };
   }, []);
 }
