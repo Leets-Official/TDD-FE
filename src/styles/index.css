@@ -12,6 +12,9 @@ body {
   overscroll-behavior: none;
   /* 확대는 접근성상 열어두고 실수로 걸리는 더블탭 줌만 막습니다 */
   touch-action: manipulation;
+  /* 스크롤은 항상 페이지 내부의 overflow-y-auto 영역(PageShell main)에서만 일어나야 합니다 */
+  height: 100%;
+  overflow: hidden;
 }
 
 body {
