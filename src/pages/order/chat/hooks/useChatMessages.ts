@@ -67,10 +67,11 @@ export function useChatMessages() {
     setTrackedOrderId(orderId);
     setRealtimeMessages([]);
   }
-  // 히스토리 조회 결과와 실시간 수신 메시지를 병합 — 소켓이 히스토리보다 먼저 받은 메시지가 덮어쓰지 않도록 병합
+  // 히스토리+실시간 메시지를 합집합으로 병합(메시지 유실 방지). 동일 messageId면 히스토리가 우선 —
+  // 주기적 재조회로 갱신되는 imageUrl(presigned URL)이 오래된 소켓 값에 덮이지 않도록 함
   const chatMessages = [
     ...new Map(
-      [...(messageHistory ?? []), ...realtimeMessages].map((item) => [
+      [...realtimeMessages, ...(messageHistory ?? [])].map((item) => [
         item.messageId,
         item,
       ])
