@@ -1,4 +1,4 @@
-import { Fragment, useState } from "react";
+import { Fragment, useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router";
 
 import { ChatInput } from "@/components/chatInput/ChatInput";
@@ -46,6 +46,12 @@ export default function ChatPage() {
     handleSendMessage(value);
     setMessageValue("");
   };
+
+  // 메시지가 추가될 때(입장 시 히스토리 로드 포함)마다 맨 아래로 스크롤
+  const bottomRef = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    bottomRef.current?.scrollIntoView();
+  }, [chatMessages.length]);
 
   // 가장 최근 정산 요청 메시지를 찾아 실제 계좌 정보를 가져온다
   const settlementRequestMessage = chatMessages.findLast(
@@ -218,6 +224,7 @@ export default function ChatPage() {
             />
           );
         })}
+        <div ref={bottomRef} />
       </div>
     </PageShell>
   );
